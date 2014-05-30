@@ -31,7 +31,7 @@ gdt_entry gdt[GDT_COUNT] = {
     /* limit decimal 187648 */
     /* limit hexa 0x2DD00 */
     [GDT_IDX_CODE_0] = (gdt_entry) {
-        (unsigned short)    0xDD00,         /* limit[0:15]  */
+        (unsigned short)    0xDCFF,         /* limit[0:15]  */
         (unsigned short)    0x0000,         /* base[0:15]   */
         (unsigned char)     0x00,           /* base[23:16]  */
         (unsigned char)     0x0A,           /* type         */
@@ -49,7 +49,7 @@ gdt_entry gdt[GDT_COUNT] = {
     /* segmento de codigo */
     /* Offset = 0x0A */
     [GDT_IDX_CODE_3] = (gdt_entry) {
-        (unsigned short)    0xDD00,         /* limit[0:15]  */
+        (unsigned short)    0xDCFF,         /* limit[0:15]  */
         (unsigned short)    0x0000,         /* base[0:15]   */
         (unsigned char)     0x00,           /* base[23:16]  */
         (unsigned char)     0x0A,           /* type         */
@@ -67,7 +67,7 @@ gdt_entry gdt[GDT_COUNT] = {
     /* segmento de dato */
     /* Offset = 0x0B */
     [GDT_IDX_DATA_0] = (gdt_entry) {
-        (unsigned short)    0xDD00,         /* limit[0:15]  */
+        (unsigned short)    0xDCFF,         /* limit[0:15]  */
         (unsigned short)    0x0000,         /* base[0:15]   */
         (unsigned char)     0x00,           /* base[23:16]  */
         (unsigned char)     0x02,           /* type         */
@@ -85,7 +85,7 @@ gdt_entry gdt[GDT_COUNT] = {
     /* segmento de dato */
     /* Offset = 0x0C */
     [GDT_IDX_DATA_3] = (gdt_entry) {
-        (unsigned short)    0xDD00,         /* limit[0:15]  */
+        (unsigned short)    0xDCFF,         /* limit[0:15]  */
         (unsigned short)    0x0000,         /* base[0:15]   */
         (unsigned char)     0x00,           /* base[23:16]  */
         (unsigned char)     0x02,           /* type         */
@@ -106,7 +106,7 @@ gdt_entry gdt[GDT_COUNT] = {
     /* limit 4000 (0xFA0) */
 
     [GDT_IDX_VIDEO] = (gdt_entry) {
-        (unsigned short)    0x0FA0,         /* limit[0:15]  */
+        (unsigned short)    0x0F9F,         /* limit[0:15]  */
         (unsigned short)    0x8000,         /* base[0:15]   */
         (unsigned char)     0x0B,           /* base[23:16]  */
         (unsigned char)     0x02,           /* type         */

@@ -7,6 +7,10 @@
 
 global start
 
+; GDT
+extern GDT_DESC
+
+extern limpiar_pantalla
 
 ;; Saltear seccion de datos
 jmp start
@@ -42,7 +46,7 @@ start:
     
 
     ; Habilitar A20
-    call habilitar_a20
+    call habilitar_A20
     ;cli
 
     ; Cargar la GDT
@@ -54,7 +58,7 @@ start:
     mov CR0, EAX
 
     ; Saltar a modo protegido
-    
+    xchg bx, bx
     jmp 0x48:modo_protegido ; 0100 1 | 0 | 00
 
     BITS 32
@@ -62,7 +66,7 @@ start:
 
     ; Establecer selectores de segmentos
     xor EAX, EAX 
-    mov AX, 0X48    ;0100 1000 ; cargo el selector de segmento de datos level 0: 9|0|00
+    mov AX, 0X58    ;0101 1000 ; cargo el selector de segmento de datos level 0: 11|0|00
     mov DS, AX
     mov ES, AX
     mov GS, AX
@@ -76,8 +80,10 @@ start:
     mov ESP, EBP
 
     ; Imprimir mensaje de bienvenida
-    
+    imprimir_texto_mp iniciando_mp_msg, iniciando_mp_len, 0x07, 2, 0
+
     ; Inicializar pantalla
+    call limpiar_pantalla
     
     ; Inicializar el manejador de memoria
     
