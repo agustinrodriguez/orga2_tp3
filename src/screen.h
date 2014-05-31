@@ -15,6 +15,10 @@
 #define VIDEO_COLS 80
 #define VIDEO_BASE 0xb8000
 
+typedef struct video_elem {
+	unsigned char ascii, modo;
+} __attribute__((packed)) video_elem;
+
 void limpiar_pantalla();
 
 #endif  /* !__SCREEN_H__ */
