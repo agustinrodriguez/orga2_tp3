@@ -35,6 +35,9 @@ _isr%1:
     mov ebx, 0xFFFF
     mov ecx, 0xFFFF
     mov edx, 0xFFFF
+    call print_error ;segun los docentes ese print deberia dar por pantalla la EXCEPCION producida dependiendo cada isr
+    ;pense en hacer esta funcion en c y pasarle como parametro el numero del isr y en c
+    ;dependiendo el numerito mostrar por pantalla el error, funciona printf aca? ni a palos no?
     jmp $
 %endmacro
 
@@ -49,6 +52,27 @@ isrClock:            db '|/-\'
 ;; Rutina de atención de las EXCEPCIONES
 ;; -------------------------------------------------------------------------- ;;
 ISR 0
+ISR 1
+ISR 2
+ISR 3
+ISR 4
+ISR 5
+ISR 6
+ISR 7
+ISR 8
+ISR 9
+ISR 10
+ISR 11
+ISR 12
+ISR 13
+ISR 14
+ISR 15
+ISR 16
+ISR 17
+ISR 18
+ISR 19
+ISR 31
+ISR 32
 
 ;;
 ;; Rutina de atención del RELOJ
