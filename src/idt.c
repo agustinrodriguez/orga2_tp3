@@ -43,7 +43,7 @@ idt_descriptor IDT_DESC = {
 
 
 unsigned int idt_inicializar() {
-        IDT_ENTRY(0);
+    IDT_ENTRY(0);
     IDT_ENTRY(1);
     IDT_ENTRY(2);
     IDT_ENTRY(3);
@@ -65,5 +65,6 @@ unsigned int idt_inicializar() {
     IDT_ENTRY(19);
     IDT_ENTRY(31);
     IDT_ENTRY(32);
-     return (unsigned int)tss_tanques;
+    
+    return (unsigned int)tss_tanques;
 }
