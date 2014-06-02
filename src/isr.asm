@@ -21,6 +21,7 @@ extern game_mover
 extern game_misil
 extern game_minar
 
+extern print_error
 ;;
 ;; Definición de MACROS
 ;; -------------------------------------------------------------------------- ;;
@@ -37,7 +38,8 @@ _isr%1:
     mov edx, 0xFFFF
     call print_error ;segun los docentes ese print deberia dar por pantalla la EXCEPCION producida dependiendo cada isr
     ;pense en hacer esta funcion en c y pasarle como parametro el numero del isr y en c
-    ;dependiendo el numerito mostrar por pantalla el error, funciona printf aca? ni a palos no?
+    ;dependiendo el numerito mostrar por pantalla el error, usando el struct q creo agus recorriendo el
+    ;error e imprimiendo cada caracter del error
     jmp $
 %endmacro
 
@@ -71,8 +73,7 @@ ISR 16
 ISR 17
 ISR 18
 ISR 19
-ISR 31
-ISR 32
+
 
 ;;
 ;; Rutina de atención del RELOJ

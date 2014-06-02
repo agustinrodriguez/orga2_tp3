@@ -36,11 +36,14 @@ idt_descriptor IDT_DESC = {
 
 #define IDT_ENTRY(numero)                                                                                        \
     idt[numero].offset_0_15 = (unsigned short) ((unsigned int)(&_isr ## numero) & (unsigned int) 0xFFFF);        \
-    idt[numero].segsel = (unsigned short) 0x00;                                                                  \
-    idt[numero].attr = (unsigned short) 0x0000;                                                                  \
+    idt[numero].segsel = (unsigned short) GDT_IDX_CODE_0;                                                                  \
+    idt[numero].attr = (unsigned short) 0x8E00;                                                                  \
     idt[numero].offset_16_31 = (unsigned short) ((unsigned int)(&_isr ## numero) >> 16 & (unsigned int) 0xFFFF);
 
-
+// attr
+//1 00 01110 000 00000
+//1000 1110 0000 0000
+//8E00
 
 unsigned int idt_inicializar() {
     IDT_ENTRY(0);
@@ -63,8 +66,6 @@ unsigned int idt_inicializar() {
     IDT_ENTRY(17);
     IDT_ENTRY(18);
     IDT_ENTRY(19);
-    IDT_ENTRY(31);
-    IDT_ENTRY(32);
     
     return (unsigned int)tss_tanques;
 }

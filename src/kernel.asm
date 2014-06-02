@@ -11,6 +11,7 @@ global start
 extern GDT_DESC
 
 extern limpiar_pantalla
+extern idt_inicializar
 
 ;; Saltear seccion de datos
 jmp start
@@ -102,7 +103,13 @@ start:
     ; Inicializar el scheduler
     
     ; Inicializar la IDT
-    
+    call idt_inicializar
+    xor edx, edx
+    xor eax, eax
+    xor ecx, ecx
+    mov eax, 4
+    mov ecx, 0
+    div ecx
     ; Inicializar Game
     
     ; Cargar IDT

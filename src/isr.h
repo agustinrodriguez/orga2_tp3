@@ -4,6 +4,7 @@
 ================================================================================
   definicion de las rutinas de atencion de interrupciones
 */
+#include "screen.h"
 
 #ifndef __ISR_H__
 #define __ISR_H__
@@ -28,7 +29,5 @@ void _isr16();
 void _isr17();
 void _isr18();
 void _isr19();
-void _isr31();
-void _isr32();
 
 #endif  /* !__ISR_H__ */
