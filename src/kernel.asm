@@ -9,6 +9,7 @@ global start
 
 ; GDT
 extern GDT_DESC
+extern IDT_DESC
 
 extern limpiar_pantalla
 extern idt_inicializar
@@ -103,12 +104,18 @@ start:
     ; Inicializar el scheduler
     
     ; Inicializar la IDT
+    xchg bx, bx
     call idt_inicializar
+    lidt [IDT_DESC]
+    xchg bx, bx
     xor edx, edx
     xor eax, eax
     xor ecx, ecx
     mov eax, 4
     mov ecx, 0
+    sti
+    nop
+    xchg bx, bx
     div ecx
     ; Inicializar Game
     
