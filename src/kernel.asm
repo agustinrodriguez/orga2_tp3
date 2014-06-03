@@ -49,7 +49,7 @@ start:
 
     ; Habilitar A20
     call habilitar_A20
-    ;cli
+    cli
 
     ; Cargar la GDT
     LGDT [GDT_DESC]
@@ -60,7 +60,6 @@ start:
     mov CR0, EAX
 
     ; Saltar a modo protegido
-    xchg bx, bx
     jmp 0x48:modo_protegido ; 0100 1 | 0 | 00
 
     BITS 32
@@ -104,19 +103,30 @@ start:
     ; Inicializar el scheduler
     
     ; Inicializar la IDT
-    xchg bx, bx
     call idt_inicializar
     lidt [IDT_DESC]
+    
+   ; xchg bx, bx
+    ;xor edx, edx
+    ;xor eax, eax
+    ;xor ecx, ecx
+    ;mov eax, 4
+    ;mov ecx, 0
+   sti
+   ; nop
+  ; xchg bx, bx
+   ; div ecx
+
+    
+  ;  nop
     xchg bx, bx
-    xor edx, edx
-    xor eax, eax
-    xor ecx, ecx
-    mov eax, 4
-    mov ecx, 0
-    sti
-    nop
+   ;mov ecx, 1 
+   xor edx, edx
+   ; mov ecx, 0xFFFFFFFF
+   ; sti
+   ; nop
     xchg bx, bx
-    div ecx
+    ADD edx, ecx
     ; Inicializar Game
     
     ; Cargar IDT
@@ -132,12 +142,12 @@ start:
     ; Saltar a la primera tarea: Idle
 
     ; Ciclar infinitamente (por si algo sale mal...)
-    mov eax, 0xFFFF
-    mov ebx, 0xFFFF
-    mov ecx, 0xFFFF
-    mov edx, 0xFFFF
-    jmp $
-    jmp $
+   ; mov eax, 0xFFFF
+   ; mov ebx, 0xFFFF
+   ; mov ecx, 0xFFFF
+   ; mov edx, 0xFFFF
+   ; jmp $
+   ; jmp $
 
 ;; -------------------------------------------------------------------------- ;;
 

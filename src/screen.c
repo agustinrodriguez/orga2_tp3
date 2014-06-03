@@ -40,7 +40,7 @@ void imprimir_texto(char * mensaje, int len) {
 }
 
 /*se puede usar el imprimir texto de asm?*/
-void print_error(int eflags, int cs, int eip, int error_code) {
+void print_error(int error_code) {
 	//int aux = eflags;
 	if (error_code == 0)
 	{

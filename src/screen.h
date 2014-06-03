@@ -19,7 +19,7 @@ typedef struct video_elem {
 } __attribute__((packed)) video_elem;
 
 void limpiar_pantalla();
-void print_error(int eflags, int cs, int eip, int error_code);
+void print_error(int error_code);
 void imprimir_texto(char * mensaje, int len);
 
 #endif  /* !__SCREEN_H__ */
