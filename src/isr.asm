@@ -93,6 +93,7 @@ ISR 19
 
 ;; Funciones Auxiliares
 ;; -------------------------------------------------------------------------- ;;
+global proximo_reloj
 proximo_reloj:
         pushad
         inc DWORD [isrnumero]

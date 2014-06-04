@@ -12,7 +12,7 @@ void limpiar_pantalla() {
 	unsigned char *mem_video = (unsigned char *) VIDEO_BASE;
 	video_elem *elemento;
 
-	modo = modo + C_FG_GREEN * 16; // asigno el color de fondo verde al modo
+	modo = modo + C_FG_BLACK * 16; // asigno el color de fondo verde al modo
 
 	for (fila = 0; fila < VIDEO_FILS; fila++) {
 		for (col = 0; col < VIDEO_COLS; col++) {
@@ -125,3 +125,95 @@ Interrupt 18—Machine-Check Exception (#MC) . . . . . . . . . . . . . . . . . .
 Interrupt 19—SIMD Floating-Point Exception (#XM) . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6-48
 Interrupt 20—Virtualization Exception (#VE) . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6-50
 Interrupts 32 to 255—User Defined Interrupts . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6-51*/
+
+void pantalla_juego(){
+	int fila, col, modo = 0;
+	unsigned char *mem_video = (unsigned char *) VIDEO_BASE;
+	unsigned char *mem_video1 = (unsigned char *) VIDEO_BASE;
+	video_elem *elemento;
+//PRIMERO PINTO EL CAMPO DE JUEGO
+	modo = modo + C_FG_GREEN * 16; // asigno el color de fondo verde al modo
+
+	for (fila = 0; fila < 50; fila++) {
+		for (col = 0; col < 50; col++) {
+			elemento = (video_elem *) mem_video;
+			elemento->modo = (unsigned char) modo; //00100000b (verde);
+			elemento->ascii = (unsigned char) 0; // caracter nulo
+			mem_video = mem_video + 2;
+		}
+		if (fila == 5){
+			mem_video1 = mem_video + 4;
+		}
+		mem_video = mem_video + 60; //COMO MI PANTALLA LLEGA HASTA 80 Y YO VI 50 TENGO Q SUMARLE LO FALTANTE (30 * 2)
+		
+	}
+
+//HAGO EL BLOQUE ROJO Y EL GRIS
+//CORRO dos lugares mas 
+	modo = 0;
+	modo = modo + C_FG_LIGHT_GREY  * 16; // asigno el color de fondo verde al modo
+	int modored = 0;
+	modored = modored + C_FG_RED * 16;
+	for (fila = 5; fila < 39; fila++) {
+			for (col = 53; col < 80; col++) {
+				if (fila == 5){
+					elemento = (video_elem *) mem_video1;
+					elemento->modo = (unsigned char) modored; //00100000b (rojo);
+					elemento->ascii = (unsigned char) 0; // caracter nulo
+					mem_video1 = mem_video1 + 2;
+				}else{
+					elemento = (video_elem *) mem_video1;
+					elemento->modo = (unsigned char) modo; //00100000b (gris);
+					elemento->ascii = (unsigned char) 0; // caracter nulo
+					mem_video1 = mem_video1 + 2;
+				}
+			}
+		//COMO TRABAJO DE BYTES "PARES" EL ULTIMO LO TENGO Q HACER AFUERA EN ESTE CASO PORQ RECORRI IMPAR
+			if (fila == 5){
+				elemento = (video_elem *) mem_video1;
+				elemento->modo = (unsigned char) modored; //00100000b (rojo);
+				elemento->ascii = (unsigned char) 0; // caracter nulo
+				mem_video1 = mem_video1 + 106; //COMO MI PANTALLA LLEGA HASTA 80 Y YO QUIERO VER DESDE EL 53 TENGO Q SUMARLE LO FALTANTE (53 * 2)
+			}else{				
+				elemento = (video_elem *) mem_video1;
+				elemento->modo = (unsigned char) modo; //00100000b (gris);
+				elemento->ascii = (unsigned char) 0; // caracter nulo
+				mem_video1 = mem_video1 + 106; //COMO MI PANTALLA LLEGA HASTA 80 Y YO QUIERO VER DESDE EL 53 TENGO Q SUMARLE LO FALTANTE (53 * 2)
+			}
+	}
+// HAGO EL ULTIMO BLOQUE DE ROJO
+	mem_video1 = mem_video1 + 160;
+	modo = 0;
+	modo = modo + C_FG_RED * 16; // asigno el color de fondo ROJO al modo
+
+	for (fila = 39; fila < 42; fila++) {
+		for (col = 53; col < 80; col++) {
+			elemento = (video_elem *) mem_video1;
+			elemento->modo = (unsigned char) modo; //00100000b (ROJO);
+			elemento->ascii = (unsigned char) 0; // caracter nulo
+			mem_video1 = mem_video1 + 2;
+		}
+		//como quedo recorriendo impar me queda el ultimo pixel sin pintar
+		elemento = (video_elem *) mem_video1;
+		elemento->modo = (unsigned char) modo; //00100000b (gris);
+		elemento->ascii = (unsigned char) 0; // caracter nulo
+		mem_video1 = mem_video1 + 106; //COMO MI PANTALLA LLEGA HASTA 80 Y YO QUIERO VOLVER A LA COLUMNA 53 TENGO Q SUMARLE LO FALTANTE 
+	}
+
+// HAGO EL ULTIMO BLOQUE DE GRIS
+	mem_video = mem_video1;
+	mem_video = mem_video + 480;
+	modo = 0;
+	modo = modo + C_FG_LIGHT_GREY * 16; // asigno el color de fondo ROJO al modo
+
+	for (fila = 46; fila < 50; fila++) {
+		for (col = 53; col < 71; col++) {
+			elemento = (video_elem *) mem_video;
+			elemento->modo = (unsigned char) modo; //00100000b (ROJO);
+			elemento->ascii = (unsigned char) 0; // caracter nulo
+			mem_video = mem_video + 2;
+		}
+		mem_video = mem_video + 124; //COMO MI PANTALLA LLEGA HASTA 80 Y YO VI 71 TENGO Q SUMARLE LO FALTANTE PARA IR A LA POSICION CORRECTA 
+	}
+
+}

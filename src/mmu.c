@@ -8,7 +8,7 @@
 #include "mmu.h"
 
 void mmu_inicializar() {
-	int i, j;
+	/*int i, j;
 	str_page_directory_entry pd[1024];
 
 	str_page_table_entry pt1[1024];
@@ -69,7 +69,6 @@ void mmu_inicializar() {
 			(unsigned int)	i * 4096		//   base_12_31:20;
 		}
 	}
-/*
 	0x00000000 a 0x00DC3FFF
 	14434303 bytes = 3 m y 11288575 bytes
 

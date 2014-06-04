@@ -21,5 +21,6 @@ typedef struct video_elem {
 void limpiar_pantalla();
 void print_error(int error_code);
 void imprimir_texto(char * mensaje, int len);
+void pantalla_juego();
 
 #endif  /* !__SCREEN_H__ */

@@ -13,6 +13,7 @@ extern IDT_DESC
 
 extern limpiar_pantalla
 extern idt_inicializar
+extern pantalla_juego
 
 ;; Saltear seccion de datos
 jmp start
@@ -67,7 +68,7 @@ start:
 
     ; Establecer selectores de segmentos
     xor EAX, EAX 
-    mov AX, 0X58    ;0101 1000 ; cargo el selector de segmento de datos level 0: 11|0|00
+    mov AX, 0x58    ;0101 1000 ; cargo el selector de segmento de datos level 0: 11|0|00
     mov DS, AX
     mov ES, AX
     mov GS, AX
@@ -85,7 +86,7 @@ start:
 
     ; Inicializar pantalla
     call limpiar_pantalla
-    
+    call pantalla_juego ; este lo puse aca no tengo idea donde va ja
     ; Inicializar el manejador de memoria
     
     ; Inicializar el directorio de paginas
@@ -103,31 +104,26 @@ start:
     ; Inicializar el scheduler
     
     ; Inicializar la IDT
-    call idt_inicializar
-    lidt [IDT_DESC]
-    xchg bx, bx
-    sti ; habilitamos interrupciones
+        call idt_inicializar
+    
 
-    ; xchg bx, bx
-    xor edx, edx
-    xor eax, eax
-    xor ecx, ecx
-    mov eax, 4
-    mov ecx, 0
-    xchg bx, bx
-    div ecx
-
-    ;xor edi, edi
-    ; INTO
-    ; mov edx, 0x7FFFFFFF
-    ; mov eax, 0x7FFFFFFF
-
-    ; add eax, edx
+   
 
     ; Inicializar Game
     
     ; Cargar IDT
-    
+        lidt [IDT_DESC]
+        xchg bx, bx
+       ; sti ; habilitamos interrupciones
+
+        ; xchg bx, bx
+        xor edx, edx
+        xor eax, eax
+        xor ecx, ecx
+        mov eax, 4
+        mov ecx, 0
+        xchg bx, bx
+        div ecx
     ; Configurar controlador de interrupciones
     
     ; pintar posiciones inciales de tanques
