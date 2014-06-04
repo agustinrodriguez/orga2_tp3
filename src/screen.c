@@ -39,92 +39,68 @@ void imprimir_texto(char * mensaje, int len) {
 	}
 }
 
-/*se puede usar el imprimir texto de asm?*/
 void print_error(int error_code) {
-	//int aux = eflags;
-	if (error_code == 0)
-	{
-		imprimir_texto("Divide Error Exception (#DE)",28);
-	}
-	if (error_code == 1)
-	{
-		imprimir_texto("Debug Exception (#DB)",21);
-	}
-	if (error_code == 2)
-	{
-		imprimir_texto("NMI Interrupt",13); //Esta no habria que hacerla en este momento
-	}
-	if (error_code == 3)
-	{
-		imprimir_texto("Breakpoint Exception (#BP)",26);
-	}
-	if (error_code == 4)
-	{
-		imprimir_texto("Overflow Exception (#OF)",25);		
-	}
-	if (error_code == 5)
-	{
-		imprimir_texto("BOUND Range Exceeded Exception (#BR)",37);		
-	}
-	if (error_code == 6)
-	{
-		imprimir_texto("Invalid Opcode Exception (#UD)",31);		
-	}
-	if (error_code == 7)
-	{
-		imprimir_texto("Device Not Available Exception (#NM)",36);
-	}
-	if (error_code == 8)
-	{
-		imprimir_texto("Double Fault Exception (#DF)",28);		
-	}
-	/*if (error_code == 9)
-	{
-		
-	}*/
-	if (error_code == 10)
-	{
-		imprimir_texto("Invalid TSS Exception (#TS)",27);
-	}
-	if (error_code == 11)
-	{
-		imprimir_texto("Segment Not Present (#NP)",25);
-	}
-	if (error_code == 12)
-	{
-		imprimir_texto("Stack Fault Exception (#SS)",27);
-	}
-	if (error_code == 13)
-	{
-		imprimir_texto("General Protection Exception (#GP)",34);
-	}
-	if (error_code == 14)
-	{
-		imprimir_texto("Page-Fault Exception (#PF)",26);
-	}
-	/*if (error_code == 15)
-	{
-		
-	}*/
-	if (error_code == 16)
-	{
-		imprimir_texto("x87 FPU Floating-Point Error (#MF)",34);
-	}
-	if (error_code == 17)
-	{
-		imprimir_texto("Alignment Check Exception (#AC)",31);
-	}
-	if (error_code == 18)
-	{
-		imprimir_texto("Machine-Check Exception (#MC)",30);
-	}
-	if (error_code == 19)
-	{
-		imprimir_texto("SIMD Floating-Point Exception (#XM)",35);
-	}
-	if (error_code == 20)
-	{
-		imprimir_texto("Virtualization Exception (#VE)",30);
+	switch(error_code) {
+		case 0:
+			imprimir_texto("Divide Error Exception (#DE)", 28);
+			break;
+		case 1:
+			imprimir_texto("Debug Exception (#DB)", 21);
+			break;
+		case 2:
+			imprimir_texto("NMI Interrupt", 13);
+			break;
+		case 3:
+			imprimir_texto("Breakpoint Exception (#BP)", 26);
+			break;
+		case 4:
+			imprimir_texto("Overflow Exception (#OF)", 25);
+			break;
+		case 5:
+			imprimir_texto("BOUND Range Exceeded Exception (#BR)", 37);
+			break;
+		case 6:
+			imprimir_texto("Invalid Opcode Exception (#UD)", 31);
+			break;
+		case 7:
+			imprimir_texto("Device Not Available Exception (#NM)", 36);
+			break;
+		case 8:
+			imprimir_texto("Double Fault Exception (#DF)", 28);
+			break;
+		case 9:
+			imprimir_texto("Coprocessor Segment Overrun (reserved)", 38);
+			break;
+		case 10:
+			imprimir_texto("Invalid TSS Exception (#TS)", 27);
+			break;
+		case 11:
+			imprimir_texto("Segment Not Present (#NP)", 25);
+			break;
+		case 12:
+			imprimir_texto("Stack Fault Exception (#SS)", 27);
+			break;
+		case 13:
+			imprimir_texto("General Protection Exception (#GP)", 34);
+			break;
+		case 14:
+			imprimir_texto("Page-Fault Exception (#PF)", 26);
+			break;
+		case 15:
+			imprimir_texto("Intel reserved. Do not use.", 27);
+			break;
+		case 16:
+			imprimir_texto("x87 FPU Floating-Point Error (#MF)", 34);
+			break;
+		case 17:
+			imprimir_texto("Alignment Check Exception (#AC)", 31);
+			break;
+		case 18:
+			imprimir_texto("Machine-Check Exception (#MC)", 30);
+			break;
+		case 19:
+			imprimir_texto("SIMD Floating-Point Exception (#XM)", 35);
+			break;
 	}
 }
 /*EXCEPTION AND INTERRUPT REFERENCE . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6-19

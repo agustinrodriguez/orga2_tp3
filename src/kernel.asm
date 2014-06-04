@@ -105,28 +105,25 @@ start:
     ; Inicializar la IDT
     call idt_inicializar
     lidt [IDT_DESC]
-    
-   ; xchg bx, bx
-    ;xor edx, edx
-    ;xor eax, eax
-    ;xor ecx, ecx
-    ;mov eax, 4
-    ;mov ecx, 0
-   sti
-   ; nop
-  ; xchg bx, bx
-   ; div ecx
+    xchg bx, bx
+    sti ; habilitamos interrupciones
 
-    
-  ;  nop
+    ; xchg bx, bx
+    xor edx, edx
+    xor eax, eax
+    xor ecx, ecx
+    mov eax, 4
+    mov ecx, 0
     xchg bx, bx
-   ;mov ecx, 1 
-   xor edx, edx
-   ; mov ecx, 0xFFFFFFFF
-   ; sti
-   ; nop
-    xchg bx, bx
-    ADD edx, ecx
+    div ecx
+
+    ;xor edi, edi
+    ; INTO
+    ; mov edx, 0x7FFFFFFF
+    ; mov eax, 0x7FFFFFFF
+
+    ; add eax, edx
+
     ; Inicializar Game
     
     ; Cargar IDT
