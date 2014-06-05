@@ -4,7 +4,7 @@
 ; ==============================================================================
 
 %include "imprimir.mac"
-
+%define MAINPAGEDIR             0x00027000
 global start
 
 ; GDT
@@ -14,6 +14,7 @@ extern IDT_DESC
 extern limpiar_pantalla
 extern idt_inicializar
 extern pantalla_juego
+extern imprimir_nombre_grupo
 
 ;; Saltear seccion de datos
 jmp start
@@ -26,6 +27,9 @@ iniciando_mr_len equ    $ - iniciando_mr_msg
 
 iniciando_mp_msg db     'Iniciando kernel (Modo Protegido)...'
 iniciando_mp_len equ    $ - iniciando_mp_msg
+
+equipo_mp_msg db     'Colombia/Arepa'
+equipo_mp_len equ    $ - equipo_mp_msg
 
 ;;
 ;; Seccion de código.
@@ -87,13 +91,21 @@ start:
     ; Inicializar pantalla
     call limpiar_pantalla
     call pantalla_juego ; este lo puse aca no tengo idea donde va ja
+    imprimir_texto_mp equipo_mp_msg, equipo_mp_len, 0x07, 0, 53
+    
     ; Inicializar el manejador de memoria
     
     ; Inicializar el directorio de paginas
-    
+    ;call mmu_inicializar
     ; Cargar directorio de paginas
     
     ; Habilitar paginacion
+   ; mov eax, MAINPAGEDIR
+   ; mov cr3, eax
+   ; mov eax, cr0
+   ; or eax, 0x80000000
+   ; mov cr0, eax
+
     
     ; Inicializar tss
     

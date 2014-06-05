@@ -36,4 +36,7 @@
 /* -------------------------------------------------------------------------- */
 #define GDT_OFF_NULL_DESC           (GDT_IDX_NULL_DESC      << 3)
 
+/*OFFSET DE PAGINACION*/
+
+
 #endif  /* !__DEFINES_H__ */

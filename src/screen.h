@@ -22,5 +22,6 @@ void limpiar_pantalla();
 void print_error(int error_code);
 void imprimir_texto(char * mensaje, int len);
 void pantalla_juego();
+void imprimir_nombre_grupo();
 
 #endif  /* !__SCREEN_H__ */

@@ -217,3 +217,22 @@ void pantalla_juego(){
 	}
 
 }
+
+void imprimir_nombre_grupo(){
+	int  i, modo = 0;
+	unsigned char *mem_video = (unsigned char *) VIDEO_BASE;
+	mem_video = mem_video + (55*2);
+	char * mensaje = "Colombia";
+	int len = 8;
+	video_elem *elemento;	
+	modo = modo + C_FG_GREEN * 16;
+	for (i = 0; i<len; i++) {
+		elemento = (video_elem *) mem_video;
+		elemento->modo = (unsigned char) modo; //00100000b (verde);
+		elemento->ascii = mensaje[i];
+		mem_video = mem_video + 2;
+	}
+
+}
+
+
