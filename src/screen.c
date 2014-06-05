@@ -151,7 +151,7 @@ void pantalla_juego(){
 //HAGO EL BLOQUE ROJO Y EL GRIS
 //CORRO dos lugares mas 
 	modo = 0;
-	modo = modo + C_FG_LIGHT_GREY  * 16; // asigno el color de fondo verde al modo
+	modo = modo + C_FG_LIGHT_GREY  * 16; // asigno el color de fondo gris al modo
 	int modored = 0;
 	modored = modored + C_FG_RED * 16;
 	for (fila = 5; fila < 39; fila++) {

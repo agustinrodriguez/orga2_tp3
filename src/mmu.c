@@ -8,71 +8,105 @@
 #include "mmu.h"
 
 void mmu_inicializar() {
-	/*int i, j;
+	int i, j;
 	str_page_directory_entry pd[1024];
 
-	str_page_table_entry pt1[1024];
-	str_page_table_entry pt2[1024];
-	str_page_table_entry pt3[1024];
-	str_page_table_entry pt4[1024];
+	//str_page_table_entry pt1[1024];
+	//str_page_table_entry pt2[1024];  ESTAS SON NECESARIAS O LAS CREAMOS DIRECTAMENTE EN EL FOR?
+	//str_page_table_entry pt3[1024];
+	//str_page_table_entry pt4[1024];
 
 	for (i = 0; i < 4; i++) {
 		pd[i] = (str_page_directory_entry) {
-			(unsigned char)	0x01			//   p:1;
-			(unsigned char)	0x01			//   rw:1;
-			(unsigned char)	0x00			//   us:1;
-			(unsigned char)	0x00			//   pwt:1;
-			(unsigned char)	0x00			//   pcd:1;
-			(unsigned char)	0x00			//   a:1;
-			(unsigned char)	0x00			//   ignored:1;
-			(unsigned char)	0x00			//   ps:1;
-			(unsigned char)	0x00			//   g:1;
-			(unsigned char)	0x00			//   available:3;
-			(unsigned int)	i * 4096		//   base_12_31:20;
-		}
-
+			(unsigned char)	0x01,			//   p:1;
+			(unsigned char)	0x01,			//   rw:1;
+			(unsigned char)	0x00,			//   us:1;
+			(unsigned char)	0x00,			//   pwt:1;
+			(unsigned char)	0x00,			//   pcd:1;
+			(unsigned char)	0x00,			//   a:1;
+			(unsigned char)	0x00,			//   ignored:1;
+			(unsigned char)	0x00,			//   ps:1;
+			(unsigned char)	0x00,			//   g:1;
+			(unsigned char)	0x00,			//   available:3;
+			(unsigned int)	i * 4096,		//   base_12_31:20;
+		};
+		//QUEDA HACER LOS PUNTEROS A LAS TABLAS!!
 		str_page_table_entry pt[1024];
 		if (i != 3) {
 			for (j = 0; j < 1024; j++) {
 				pt[j] = (str_page_table_entry) {
-					(unsigned char)	0x01			//   p:1;
-					(unsigned char)	0x01			//   rw:1;
-					(unsigned char)	0x00			//   us:1;
-					(unsigned char)	0x00			//   pwt:1;
-					(unsigned char)	0x00			//   pcd:1;
-					(unsigned char)	0x00			//   a:1;
-					(unsigned char)	0x00			//   d:1;
-					(unsigned char)	0x00			//   pat:1;
-					(unsigned char)	0x00			//   g:1;
-					(unsigned char)	0x00			//   available:3;
-					(unsigned int)	j * 4096		//   base_12_31:20;
-				}
+					(unsigned char)	0x01,			//   p:1;
+					(unsigned char)	0x01,			//   rw:1;
+					(unsigned char)	0x00,			//   us:1;
+					(unsigned char)	0x00,			//   pwt:1;
+					(unsigned char)	0x00,			//   pcd:1;
+					(unsigned char)	0x00,			//   a:1;
+					(unsigned char)	0x00,			//   d:1;
+					(unsigned char)	0x00,			//   pat:1;
+					(unsigned char)	0x00,			//   g:1;
+					(unsigned char)	0x00,			//   available:3;
+					(unsigned int)	j * 4096,		//   base_12_31:20;
+				};
 			}
 		} else {
-
+			for (j = 0; j < 452; j++) {
+				pt[j] = (str_page_table_entry) {
+					(unsigned char)	0x01,			//   p:1;
+					(unsigned char)	0x01,			//   rw:1;
+					(unsigned char)	0x00,			//   us:1;
+					(unsigned char)	0x00,			//   pwt:1;
+					(unsigned char)	0x00,			//   pcd:1;
+					(unsigned char)	0x00,			//   a:1;
+					(unsigned char)	0x00,			//   d:1;
+					(unsigned char)	0x00,			//   pat:1;
+					(unsigned char)	0x00,			//   g:1;
+					(unsigned char)	0x00,			//   available:3;
+					(unsigned int)	j * 4096,		//   base_12_31:20;
+				};
+			}
+			
+			for (j = 452; j < 1024; j++) {
+				pt[j] = (str_page_table_entry) {
+					(unsigned char)	0x00,			//   p:1;
+					(unsigned char)	0x00,			//   rw:1;
+					(unsigned char)	0x00,			//   us:1;
+					(unsigned char)	0x00,			//   pwt:1;
+					(unsigned char)	0x00,			//   pcd:1;
+					(unsigned char)	0x00,			//   a:1;
+					(unsigned char)	0x00,			//   d:1;
+					(unsigned char)	0x00,			//   pat:1;
+					(unsigned char)	0x00,			//   g:1;
+					(unsigned char)	0x00,			//   available:3;
+					(unsigned int)	j * 4096,		//   base_12_31:20;
+				};
+			}
 		}
-
 	}
-
 	for (i = 4; i < 1024; i++) {
 		pd[i] = (str_page_directory_entry) {
-			(unsigned char)	0x00			//   p:1;
-			(unsigned char)	0x00			//   rw:1;
-			(unsigned char)	0x00			//   us:1;
-			(unsigned char)	0x00			//   pwt:1;
-			(unsigned char)	0x00			//   pcd:1;
-			(unsigned char)	0x00			//   a:1;
-			(unsigned char)	0x00			//   ignored:1;
-			(unsigned char)	0x00			//   ps:1;
-			(unsigned char)	0x00			//   g:1;
-			(unsigned char)	0x00			//   available:3;
-			(unsigned int)	i * 4096		//   base_12_31:20;
-		}
+			(unsigned char)	0x00,			//   p:1;
+			(unsigned char)	0x00,			//   rw:1;
+			(unsigned char)	0x00,			//   us:1;
+			(unsigned char)	0x00,			//   pwt:1;
+			(unsigned char)	0x00,			//   pcd:1;
+			(unsigned char)	0x00,			//   a:1;
+			(unsigned char)	0x00,			//   ignored:1;
+			(unsigned char)	0x00,			//   ps:1;
+			(unsigned char)	0x00,			//   g:1;
+			(unsigned char)	0x00,			//   available:3;
+			(unsigned int)	i * 4096,		//   base_12_31:20;
+		};
 	}
-	0x00000000 a 0x00DC3FFF
+	/*0x00000000 a 0x00DC3FFF
 	14434303 bytes = 3 m y 11288575 bytes
+	14434304 bytes = 
+ 
+ 	1 tabla tiene = 4194304 bytes
+	
+	1851392bytes esto divido 4k osea 1 bloque = 452 REDONDO!
 
 
+ 	0,44140625
 
 1 pt -> 4 m
 
