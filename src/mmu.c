@@ -8,94 +8,72 @@
 #include "mmu.h"
 
 void mmu_inicializar() {
-	int i, j;
-	str_page_directory_entry pd[1024];
+	mmu_inicializar_dir_kernel();	
+}
 
-	//str_page_table_entry pt1[1024];
-	//str_page_table_entry pt2[1024];  ESTAS SON NECESARIAS O LAS CREAMOS DIRECTAMENTE EN EL FOR?
-	//str_page_table_entry pt3[1024];
-	//str_page_table_entry pt4[1024];
+void define_page_directory_entry(page_directory_entry * directorio, 
+	unsigned char present, unsigned char rw, unsigned char us, unsigned int base) {
+		directorio->p = present;
+		directorio->rw = rw;
+		directorio->us = us;
+		directorio->pwt = 0x00;
+		directorio->pcd = 0x00;
+		directorio->a = 0x00;
+		directorio->ignored = 0x00;
+		directorio->ps = 0x00;
+		directorio->g = 0x00;
+		directorio->available = 0x00;
+		directorio->base_12_31 = base >> 12;
+}
 
-	for (i = 0; i < 4; i++) {
-		pd[i] = (str_page_directory_entry) {
-			(unsigned char)	0x01,			//   p:1;
-			(unsigned char)	0x01,			//   rw:1;
-			(unsigned char)	0x00,			//   us:1;
-			(unsigned char)	0x00,			//   pwt:1;
-			(unsigned char)	0x00,			//   pcd:1;
-			(unsigned char)	0x00,			//   a:1;
-			(unsigned char)	0x00,			//   ignored:1;
-			(unsigned char)	0x00,			//   ps:1;
-			(unsigned char)	0x00,			//   g:1;
-			(unsigned char)	0x00,			//   available:3;
-			(unsigned int)	i * 4096,		//   base_12_31:20;
-		};
-		//QUEDA HACER LOS PUNTEROS A LAS TABLAS!!
-		str_page_table_entry pt[1024];
-		if (i != 3) {
-			for (j = 0; j < 1024; j++) {
-				pt[j] = (str_page_table_entry) {
-					(unsigned char)	0x01,			//   p:1;
-					(unsigned char)	0x01,			//   rw:1;
-					(unsigned char)	0x00,			//   us:1;
-					(unsigned char)	0x00,			//   pwt:1;
-					(unsigned char)	0x00,			//   pcd:1;
-					(unsigned char)	0x00,			//   a:1;
-					(unsigned char)	0x00,			//   d:1;
-					(unsigned char)	0x00,			//   pat:1;
-					(unsigned char)	0x00,			//   g:1;
-					(unsigned char)	0x00,			//   available:3;
-					(unsigned int)	j * 4096,		//   base_12_31:20;
-				};
-			}
-		} else {
-			for (j = 0; j < 452; j++) {
-				pt[j] = (str_page_table_entry) {
-					(unsigned char)	0x01,			//   p:1;
-					(unsigned char)	0x01,			//   rw:1;
-					(unsigned char)	0x00,			//   us:1;
-					(unsigned char)	0x00,			//   pwt:1;
-					(unsigned char)	0x00,			//   pcd:1;
-					(unsigned char)	0x00,			//   a:1;
-					(unsigned char)	0x00,			//   d:1;
-					(unsigned char)	0x00,			//   pat:1;
-					(unsigned char)	0x00,			//   g:1;
-					(unsigned char)	0x00,			//   available:3;
-					(unsigned int)	j * 4096,		//   base_12_31:20;
-				};
-			}
-			
-			for (j = 452; j < 1024; j++) {
-				pt[j] = (str_page_table_entry) {
-					(unsigned char)	0x00,			//   p:1;
-					(unsigned char)	0x00,			//   rw:1;
-					(unsigned char)	0x00,			//   us:1;
-					(unsigned char)	0x00,			//   pwt:1;
-					(unsigned char)	0x00,			//   pcd:1;
-					(unsigned char)	0x00,			//   a:1;
-					(unsigned char)	0x00,			//   d:1;
-					(unsigned char)	0x00,			//   pat:1;
-					(unsigned char)	0x00,			//   g:1;
-					(unsigned char)	0x00,			//   available:3;
-					(unsigned int)	j * 4096,		//   base_12_31:20;
-				};
-			}
-		}
-	}
+void define_page_table_entry(page_table_entry * tabla, 
+	unsigned char present, unsigned char rw, unsigned char us, unsigned int base) {
+		tabla->p = present;
+		tabla->rw = rw;
+		tabla->us = us;
+		tabla->pwt = 0x00;
+		tabla->pcd = 0x00;
+		tabla->a = 0x00;
+		tabla->d = 0x00;
+		tabla->pat = 0x00;
+		tabla->g = 0x00;
+		tabla->available = 0x00;
+		tabla->base_12_31 = base >> 12;
+}
+
+void mmu_inicializar_dir_kernel() {
+	int i;
+	page_directory_entry * page_dir = (page_directory_entry *) MAINPAGEDIR;
+	page_table_entry * page_table1 = (page_table_entry *) FIRSTPAGETABLE;
+	page_table_entry * page_table2 = (page_table_entry *) SECONDPAGETABLE;
+	page_table_entry * page_table3 = (page_table_entry *) TRHEEPAGETABLE;
+	page_table_entry * page_table4 = (page_table_entry *) FOURPAGETABLE;
+
+	unsigned char present = 0x01, rw = 0x01, us = 0x00;
+
+	define_page_directory_entry(&page_dir[0], present, rw, us, (unsigned int) page_table1);
+	define_page_directory_entry(&page_dir[1], present, rw, us, (unsigned int) page_table2);
+	define_page_directory_entry(&page_dir[2], present, rw, us, (unsigned int) page_table3);
+	define_page_directory_entry(&page_dir[3], present, rw, us, (unsigned int) page_table4);
+
 	for (i = 4; i < 1024; i++) {
-		pd[i] = (str_page_directory_entry) {
-			(unsigned char)	0x00,			//   p:1;
-			(unsigned char)	0x00,			//   rw:1;
-			(unsigned char)	0x00,			//   us:1;
-			(unsigned char)	0x00,			//   pwt:1;
-			(unsigned char)	0x00,			//   pcd:1;
-			(unsigned char)	0x00,			//   a:1;
-			(unsigned char)	0x00,			//   ignored:1;
-			(unsigned char)	0x00,			//   ps:1;
-			(unsigned char)	0x00,			//   g:1;
-			(unsigned char)	0x00,			//   available:3;
-			(unsigned int)	i * 4096,		//   base_12_31:20;
-		};
+		define_page_directory_entry(&page_dir[i], 0, rw, us, 0);
+	}
+	
+	for (i = 0; i < 1024; i++) {
+		define_page_table_entry(&page_table1[i], present, rw, us, i * 4096);
+		define_page_table_entry(&page_table2[i], present, rw, us, (1024 * 4096) + i * 4096);
+		define_page_table_entry(&page_table3[i], present, rw, us, (2 * 1024 * 4096) + i * 4096);
+	}
+
+	// 452 entradas presentes en la tabla 4
+	for (i = 0; i < 452; i++) {
+		define_page_table_entry(&page_table4[i], present, rw, us, (3 * 1024 * 4096) + i * 4096);
+	}
+
+	// el resto no presentes
+	for (i = 452; i < 1024; i++) {
+		define_page_table_entry(&page_table4[i], 0, rw, us, (3 * 1024 * 4096) + i * 4096);
 	}
 	/*0x00000000 a 0x00DC3FFF
 	14434303 bytes = 3 m y 11288575 bytes

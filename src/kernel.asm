@@ -15,6 +15,7 @@ extern limpiar_pantalla
 extern idt_inicializar
 extern pantalla_juego
 extern imprimir_nombre_grupo
+extern mmu_inicializar
 
 ;; Saltear seccion de datos
 jmp start
@@ -96,15 +97,15 @@ start:
     ; Inicializar el manejador de memoria
     
     ; Inicializar el directorio de paginas
-    ;call mmu_inicializar
+    call mmu_inicializar
     ; Cargar directorio de paginas
     
     ; Habilitar paginacion
-   ; mov eax, MAINPAGEDIR
-   ; mov cr3, eax
-   ; mov eax, cr0
-   ; or eax, 0x80000000
-   ; mov cr0, eax
+    mov eax, MAINPAGEDIR
+    mov cr3, eax
+    mov eax, cr0
+    or eax, 0x80000000
+    mov cr0, eax
 
     
     ; Inicializar tss
