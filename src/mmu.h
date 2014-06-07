@@ -48,7 +48,10 @@ void define_page_table_entry(page_table_entry * tabla,
 	unsigned char present, unsigned char rw, unsigned char us, unsigned int base);
 void define_page_directory_entry(page_directory_entry * directorio, 
 	unsigned char present, unsigned char rw, unsigned char us, unsigned int base);
-
+page_table_entry * get_descriptor(unsigned int virtual, unsigned int cr3);
+void mmu_mapear_pagina(unsigned int virtual, unsigned int cr3, unsigned int fisica);
+void mmu_unmapear_pagina(unsigned int virtual, unsigned int cr3);
+void null_pagetab_entry(page_table_entry * tablaAVaciar);
 /* Page Directory */
 //extern page_directory_entry pd[];
 
