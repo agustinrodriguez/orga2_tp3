@@ -42,5 +42,7 @@
 #define SECONDPAGETABLE			0x00029000
 #define TRHEEPAGETABLE			0x0002A000
 #define FOURPAGETABLE			0x0002B000
+#define CANT_TAREAS				8
+#define TAMANO_PAGINA           0x00001000
 
 #endif  /* !__DEFINES_H__ */

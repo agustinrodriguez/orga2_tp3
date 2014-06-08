@@ -18,6 +18,8 @@ FIN AREA LIBRE 0x3FFFFF == 4194303
 TOTAL: 3145728 bytes
 EN 4096 = 768 directorios o tablas?
 
+DC3FFF
+
 
 
 */
@@ -73,6 +75,44 @@ void mmu_inicializar_dir_kernel() {
 1 mega -> 1048576 bytes
 3 mega -> 3145728 bytes
 */
+}
+
+/* INICIO MAPA 0X400000 == 4194304
+FIN MAPA 0XDC3FFF == 14434303
+
+total =  10240000 bytes
+
+9 megas y 0,765625
+784 k = 196 paginas
+
+*/
+void mmu_inicializar_dir_tareas(){
+	unsigned char rw;
+	unsigned char us;
+	unsigned char present;
+	int i = 0;
+	unsigned int MEMORIA_RESTANTE = MEMORIA_MAPA; //no se si tengo q arrancar desde la memoria del mapa u otra
+	unsigned int MEMORIA_VIRTUAL = 0x08000000;
+	i = 0;
+	rw = 1;
+	us = 0;
+	present = 1;
+	//CON ESTE CICLO SUPUESTAMENTE ESTOY CREANDO DIRECTORIOS Y DOS PAGINAS POR CADA DIR
+	while(i < CANT_TAREAS){
+		page_directory_entry * pdir = (page_directory_entry *) MEMORIA_RESTANTE;
+		page_table_entry * ptab = (page_table_entry *)MEMORIA_VIRTUAL;
+		MEMORIA_RESTANTE = MEMORIA_RESTANTE + TAMAÑO_PAGINA;
+		MEMORIA_VIRTUAL = MEMORIA_VIRTUAL + TAMAÑO_PAGINA;
+		page_table_entry * ptab2 = (page_table_entry *)MEMORIA_VIRTUAL;
+		MEMORIA_VIRTUAL = MEMORIA_VIRTUAL + TAMAÑO_PAGINA;
+		define_page_directory_entry(&pdir[0],present,rw,us,&ptab); //primer directorio a pagina 0
+		define_page_directory_entry(&pdir[1],present,rw,us,&ptab2); //primer directorio a pagina 0
+		i++;
+		us = 1;
+		//aca deberia ir un ciclo supongo hasta la cantidad de entradas presentes de cada pagina SUPONGO
+		define_page_table_entry(&ptab,present,rw,us,ACA NO SE QUE BASE PONERLE);
+		define_page_table_entry(&ptab1,present,rw,us,ACA NO SE QUE BASE PONERLE);
+	//NO SE COMO IR JUNTANDO LAS PAGINAS SI TODAS VAN CON PRESENTES O COMO
 }
 
 
