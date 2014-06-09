@@ -7,6 +7,8 @@
 
 #include "mmu.h"
 
+unsigned int TASK_CR3[] = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+
 void mmu_inicializar() {
 	mmu_inicializar_dir_kernel();
 }
@@ -25,6 +27,7 @@ DC3FFF
 */
 void mmu_inicializar_dir_kernel() {
 	int i;
+	TASK_CR3[0] = MAINPAGEDIR;
 	page_directory_entry * page_dir = (page_directory_entry *) MAINPAGEDIR;
 	page_table_entry * page_table1 = (page_table_entry *) FIRSTPAGETABLE;
 	page_table_entry * page_table2 = (page_table_entry *) SECONDPAGETABLE;
@@ -92,39 +95,39 @@ void mmu_inicializar_dir_tareas(){
 	unsigned char present;
 	unsigned int cr3_para_dir;
 	int i,j = 0;
-	unsigned int MEMORIA_RESTANTE = MEMORIA_LIBRE; //no se si tengo q arrancar desde la memoria del mapa u otra
+	unsigned int MEMORIA_RESTANTE = SECTORFREEMEM;
 	unsigned int MEMORIA_PARA_COMBATE = LA_ARENA;
 	unsigned int MEMORIA_VIRTUAL = 0x08000000;
-	i = 0;
+
+	i = 1;
 	rw = 1;
 	us = 0;
 	present = 1; //no se si va 1 o no
 	//CON ESTE CICLO SUPUESTAMENTE ESTOY CREANDO DIRECTORIOS Y 4 PAGINAS identity POR CADA DIR + otra no presente q se mapeara a la arena
-	while(i < CANT_TAREAS){
+	while(i < CANT_TAREAS + 1) {
 		page_directory_entry * pdir = (page_directory_entry *) MEMORIA_RESTANTE;
 		
-		cr3_para_dir = MEMORIA_RESTANTE; //ESTO ES ASI??
+		TASK_CR3[i] = MEMORIA_RESTANTE;
+		MEMORIA_RESTANTE += TAMAÑO_PAGINA;
+		page_table_entry * page_table1 = (page_table_entry *) FIRSTPAGETABLE;
+		page_table_entry * page_table2 = (page_table_entry *) SECONDPAGETABLE;
+		page_table_entry * page_table3 = (page_table_entry *) TRHEEPAGETABLE;
+		page_table_entry * page_table4 = (page_table_entry *) FOURPAGETABLE;
+		MEMORIA_RESTANTE += TAMAÑO_PAGINA * 4;
 
-		MEMORIA_RESTANTE = MEMORIA_RESTANTE + TAMAÑO_PAGINA;
-		page_table_entry * ptab = (page_table_entry *)MEMORIA_RESTANTE;
-		MEMORIA_RESTANTE = MEMORIA_RESTANTE + TAMAÑO_PAGINA;
-		page_table_entry * ptab2 = (page_table_entry *)MEMORIA_RESTANTE;
-		MEMORIA_RESTANTE = MEMORIA_RESTANTE + TAMAÑO_PAGINA;
-		page_table_entry * ptab3 = (page_table_entry *)MEMORIA_RESTANTE;
-		MEMORIA_RESTANTE = MEMORIA_RESTANTE + TAMAÑO_PAGINA;
-		page_table_entry * ptab4 = (page_table_entry *)MEMORIA_RESTANTE;
-		MEMORIA_RESTANTE = MEMORIA_RESTANTE + TAMAÑO_PAGINA;
-		page_table_entry * ptab5 = (page_table_entry *)MEMORIA_PARA_COMBATE; //ESTO NO SE SI ESTA BIEN
-		
-		MEMORIA_RESTANTE = MEMORIA_RESTANTE + TAMAÑO_PAGINA;
-		MEMORIA_PARA_COMBATE = MEMORIA_PARA_COMBATE + TAMAÑO_PAGINA;
-		
-		define_page_directory_entry(&pdir[0],present,rw,us,&ptab); //primer directorio a pagina 0
-		define_page_directory_entry(&pdir[1],present,rw,us,&ptab2); //primer directorio a pagina 0
-		define_page_directory_entry(&pdir[2],present,rw,us,&ptab3); //primer directorio a pagina 0
-		define_page_directory_entry(&pdir[3],present,rw,us,&ptab4); //primer directorio a pagina 0
-		define_page_directory_entry(&pdir[4],present,rw,us,&ptab5); //primer directorio a pagina 0
-		
+		define_page_directory_entry(&pdir[0], present, rw, us, (unsigned int) page_table1);
+		define_page_directory_entry(&pdir[1], present, rw, us, (unsigned int) page_table2);
+		define_page_directory_entry(&pdir[2], present, rw, us, (unsigned int) page_table3);
+		define_page_directory_entry(&pdir[3], present, rw, us, (unsigned int) page_table4);
+
+		page_table_entry * page_table5 = (page_table_entry *) MEMORIA_RESTANTE; //ESTO NO SE SI ESTA BIEN
+		MEMORIA_RESTANTE += TAMAÑO_PAGINA;
+		define_page_directory_entry(&pdir[4], present, rw, us, (unsigned int) page_table5);		
+
+		for (j = 5; j < 1024; j++) {
+			null_pagedir_entry(&pdir[j]);
+		}
+
 		//lleno los 1024 sectores de la tabla, haciendo esto mis cuentas no dan
 		j = 0;
 		while(j< 1024){
@@ -146,8 +149,8 @@ void mmu_inicializar_dir_tareas(){
 		MEMORIA_RESTANTE = MEMORIA_RESTANTE + TAMAÑO_PAGINA;
 		MEMORIA_PARA_COMBATE = MEMORIA_PARA_COMBATE + TAMAÑO_PAGINA;
 		i++;
-	//NO SE COMO IR JUNTANDO LAS PAGINAS SI TODAS VAN CON PRESENTES O COMO
-}
+		//NO SE COMO IR JUNTANDO LAS PAGINAS SI TODAS VAN CON PRESENTES O COMO
+	}
 
 
 void define_page_directory_entry(page_directory_entry * directorio, 
@@ -201,17 +204,29 @@ void mmu_unmapear_pagina(unsigned int virtual, unsigned int cr3){
 }
 
 void null_pagetab_entry(page_table_entry * tablaAVaciar){
-		tablaAVaciar->p = 0;
-		tablaAVaciar->rw = 0;
-		tablaAVaciar->us = 0;
-		tablaAVaciar->pwt = 0x00;
-		tablaAVaciar->pcd = 0x00;
-		tablaAVaciar->a = 0x00;
-		tablaAVaciar->d = 0x00;
-		tablaAVaciar->pat = 0x00;
-		tablaAVaciar->g = 0x00;
-		tablaAVaciar->available = 0x00;
-		tablaAVaciar->base_12_31 = 0x00000;
-
+	tablaAVaciar->p = 0;
+	tablaAVaciar->rw = 0;
+	tablaAVaciar->us = 0;
+	tablaAVaciar->pwt = 0x00;
+	tablaAVaciar->pcd = 0x00;
+	tablaAVaciar->a = 0x00;
+	tablaAVaciar->d = 0x00;
+	tablaAVaciar->pat = 0x00;
+	tablaAVaciar->g = 0x00;
+	tablaAVaciar->available = 0x00;
+	tablaAVaciar->base_12_31 = 0x00000;
 }
 
+void null_pagedir_entry(page_dir_entry * directorioAVaciar){
+	directorioAVaciar->p = 0;
+	directorioAVaciar->rw = 0;
+	directorioAVaciar->us = 0;
+	directorioAVaciar->pwt = 0x00;
+	directorioAVaciar->pcd = 0x00;
+	directorioAVaciar->a = 0x00;
+	directorioAVaciar->ignored = 0x00;
+	directorioAVaciar->ps = 0x00;
+	directorioAVaciar->g = 0x00;
+	directorioAVaciar->available = 0x00;
+	directorioAVaciar->base_12_31 = 0x00000;
+}

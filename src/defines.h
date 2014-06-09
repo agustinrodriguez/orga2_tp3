@@ -44,5 +44,6 @@
 #define FOURPAGETABLE			0x0002B000
 #define CANT_TAREAS				8
 #define TAMANO_PAGINA           0x00001000
+#define SECTORFREEMEM 			0x00100000
 
 #endif  /* !__DEFINES_H__ */
