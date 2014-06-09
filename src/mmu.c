@@ -90,28 +90,62 @@ void mmu_inicializar_dir_tareas(){
 	unsigned char rw;
 	unsigned char us;
 	unsigned char present;
-	int i = 0;
-	unsigned int MEMORIA_RESTANTE = MEMORIA_MAPA; //no se si tengo q arrancar desde la memoria del mapa u otra
+	unsigned int cr3_para_dir;
+	int i,j = 0;
+	unsigned int MEMORIA_RESTANTE = MEMORIA_LIBRE; //no se si tengo q arrancar desde la memoria del mapa u otra
+	unsigned int MEMORIA_PARA_COMBATE = LA_ARENA;
 	unsigned int MEMORIA_VIRTUAL = 0x08000000;
 	i = 0;
 	rw = 1;
 	us = 0;
-	present = 1;
-	//CON ESTE CICLO SUPUESTAMENTE ESTOY CREANDO DIRECTORIOS Y DOS PAGINAS POR CADA DIR
+	present = 1; //no se si va 1 o no
+	//CON ESTE CICLO SUPUESTAMENTE ESTOY CREANDO DIRECTORIOS Y 4 PAGINAS identity POR CADA DIR + otra no presente q se mapeara a la arena
 	while(i < CANT_TAREAS){
 		page_directory_entry * pdir = (page_directory_entry *) MEMORIA_RESTANTE;
-		page_table_entry * ptab = (page_table_entry *)MEMORIA_VIRTUAL;
+		
+		cr3_para_dir = MEMORIA_RESTANTE; //ESTO ES ASI??
+
 		MEMORIA_RESTANTE = MEMORIA_RESTANTE + TAMAÑO_PAGINA;
-		MEMORIA_VIRTUAL = MEMORIA_VIRTUAL + TAMAÑO_PAGINA;
-		page_table_entry * ptab2 = (page_table_entry *)MEMORIA_VIRTUAL;
-		MEMORIA_VIRTUAL = MEMORIA_VIRTUAL + TAMAÑO_PAGINA;
+		page_table_entry * ptab = (page_table_entry *)MEMORIA_RESTANTE;
+		MEMORIA_RESTANTE = MEMORIA_RESTANTE + TAMAÑO_PAGINA;
+		page_table_entry * ptab2 = (page_table_entry *)MEMORIA_RESTANTE;
+		MEMORIA_RESTANTE = MEMORIA_RESTANTE + TAMAÑO_PAGINA;
+		page_table_entry * ptab3 = (page_table_entry *)MEMORIA_RESTANTE;
+		MEMORIA_RESTANTE = MEMORIA_RESTANTE + TAMAÑO_PAGINA;
+		page_table_entry * ptab4 = (page_table_entry *)MEMORIA_RESTANTE;
+		MEMORIA_RESTANTE = MEMORIA_RESTANTE + TAMAÑO_PAGINA;
+		page_table_entry * ptab5 = (page_table_entry *)MEMORIA_PARA_COMBATE; //ESTO NO SE SI ESTA BIEN
+		
+		MEMORIA_RESTANTE = MEMORIA_RESTANTE + TAMAÑO_PAGINA;
+		MEMORIA_PARA_COMBATE = MEMORIA_PARA_COMBATE + TAMAÑO_PAGINA;
+		
 		define_page_directory_entry(&pdir[0],present,rw,us,&ptab); //primer directorio a pagina 0
 		define_page_directory_entry(&pdir[1],present,rw,us,&ptab2); //primer directorio a pagina 0
-		i++;
+		define_page_directory_entry(&pdir[2],present,rw,us,&ptab3); //primer directorio a pagina 0
+		define_page_directory_entry(&pdir[3],present,rw,us,&ptab4); //primer directorio a pagina 0
+		define_page_directory_entry(&pdir[4],present,rw,us,&ptab5); //primer directorio a pagina 0
+		
+		//lleno los 1024 sectores de la tabla, haciendo esto mis cuentas no dan
+		j = 0;
+		while(j< 1024){
+			define_page_table_entry(&ptab,present,rw,us,j * 4096);
+			define_page_table_entry(&ptab2,present,rw,us,(j *4096)+4096);
+			define_page_table_entry(&ptab3,present,rw,us,(4096*2)+(j*4096));
+			define_page_table_entry(&ptab4,present,rw,us,(4096*3)+(j*4096));
+			j++
+
+		}
+		//o estoy haciendo mal las cuentas o no se hace asi, porq no em da para hacer todos asi
 		us = 1;
+		present = 0;
 		//aca deberia ir un ciclo supongo hasta la cantidad de entradas presentes de cada pagina SUPONGO
-		define_page_table_entry(&ptab,present,rw,us,ACA NO SE QUE BASE PONERLE);
-		define_page_table_entry(&ptab1,present,rw,us,ACA NO SE QUE BASE PONERLE);
+			
+		define_page_table_entry(&ptab5,present,rw,us,ACA NO SE QUE BASE PONERLE);
+		mmu_mapear_pagina(MEMORIA_VIRTUAL,cr3_para_dir,MEMORIA_PARA_COMBATE)
+		MEMORIA_VIRTUAL = MEMORIA_VIRTUAL + TAMAÑO_PAGINA;
+		MEMORIA_RESTANTE = MEMORIA_RESTANTE + TAMAÑO_PAGINA;
+		MEMORIA_PARA_COMBATE = MEMORIA_PARA_COMBATE + TAMAÑO_PAGINA;
+		i++;
 	//NO SE COMO IR JUNTANDO LAS PAGINAS SI TODAS VAN CON PRESENTES O COMO
 }
 
