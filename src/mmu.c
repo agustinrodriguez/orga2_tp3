@@ -165,7 +165,11 @@ void mmu_inicializar_dir_tareas(){
 		mmu_mapear_pagina(0x08000000, TASK_CR3[i], mapa_pag_1, present, rw, us);
 		mmu_mapear_pagina(0x08001000, TASK_CR3[i], mapa_pag_2, present, rw, us);
 
-		// Lo siguiente que puso guido creo q no va
+		// No se si van los define_page_table_entry, en todo caso irian asi
+		// define_page_table_entry(&page_table5[0], present, rw, us, mapa_pag_1);
+		// define_page_table_entry(&page_table5[1], present, rw, us, mapa_pag_2);
+
+		// Lo siguiente es de Guido
 
 		//capas esto es al reves
 		// rw = 1;
