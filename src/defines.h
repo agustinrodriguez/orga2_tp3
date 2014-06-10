@@ -46,4 +46,18 @@
 #define TAMANO_PAGINA           0x00001000
 #define SECTORFREEMEM 			0x00100000
 
+/* Direcciones fisicas de codigos */
+/* -------------------------------------------------------------------------- */
+/* En estas direcciones estan los códigos de todas las tareas. De aqui se
+ * copiaran al destino indicado por TASK_<i>_CODE_ADDR.
+ */
+#define TASK_1_CODE_ADDR    0x00010000
+#define TASK_2_CODE_ADDR    0x00012000
+#define TASK_3_CODE_ADDR    0x00014000
+#define TASK_4_CODE_ADDR    0x00016000
+#define TASK_5_CODE_ADDR    0x00018000
+#define TASK_6_CODE_ADDR    0x0001A000
+#define TASK_7_CODE_ADDR    0x0001C000
+#define TASK_8_CODE_ADDR    0x0001E000
+
 #endif  /* !__DEFINES_H__ */
