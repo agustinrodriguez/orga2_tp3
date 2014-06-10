@@ -9,6 +9,17 @@
 
 unsigned int TASK_CR3[] = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
 
+unsigned int TASK_PAG_1[] = { 0, 0X100000, 0X102000, 
+							0X104000, 0X106000, 0X108000, 
+							0X10A000, 0X10C000, 0X10E000};
+
+unsigned int TASK_PAG_2[] = { 0, 0X101000, 0X103000, 
+							0X105000, 0X107000, 0X109000, 
+							0X10B000, 0X10D000, 0X10F000};
+
+unsigned int TASK_PAG_3[] = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+
+
 void mmu_inicializar() {
 	mmu_inicializar_dir_kernel();
 }
@@ -103,7 +114,7 @@ void mmu_inicializar_dir_tareas(){
 	rw = 1;
 	us = 0;
 	present = 1; //no se si va 1 o no
-	//CON ESTE CICLO SUPUESTAMENTE ESTOY CREANDO DIRECTORIOS Y 4 PAGINAS identity POR CADA DIR + otra no presente q se mapeara a la arena
+
 	while(i < CANT_TAREAS + 1) {
 		page_directory_entry * pdir = (page_directory_entry *) MEMORIA_RESTANTE;
 		
@@ -128,28 +139,19 @@ void mmu_inicializar_dir_tareas(){
 			null_pagedir_entry(&pdir[j]);
 		}
 
-		//lleno los 1024 sectores de la tabla, haciendo esto mis cuentas no dan
-		j = 0;
-		while(j< 1024){
-			define_page_table_entry(&ptab,present,rw,us,j * 4096);
-			define_page_table_entry(&ptab2,present,rw,us,(j *4096)+4096);
-			define_page_table_entry(&ptab3,present,rw,us,(4096*2)+(j*4096));
-			define_page_table_entry(&ptab4,present,rw,us,(4096*3)+(j*4096));
-			j++
-
-		}
-		//o estoy haciendo mal las cuentas o no se hace asi, porq no em da para hacer todos asi
+		unsigned int mapeo = TASK_PAG_1[i];
+		unsigned int mapeo1 = TASK_PAG_2[i];
+		//capas esto es al reves
 		us = 1;
-		present = 0;
-		//aca deberia ir un ciclo supongo hasta la cantidad de entradas presentes de cada pagina SUPONGO
-			
-		define_page_table_entry(&ptab5,present,rw,us,ACA NO SE QUE BASE PONERLE);
-		mmu_mapear_pagina(MEMORIA_VIRTUAL,cr3_para_dir,MEMORIA_PARA_COMBATE)
+		present = 1;
+				
+		define_page_table_entry(&ptab5[0],present,rw,us,mapeo);
+		define_page_table_entry(&ptab5[1],present,rw,us,mapeo1);
+		mmu_mapear_pagina(MEMORIA_VIRTUAL,TASK_CR3[i],mapeo)
 		MEMORIA_VIRTUAL = MEMORIA_VIRTUAL + TAMAÑO_PAGINA;
-		MEMORIA_RESTANTE = MEMORIA_RESTANTE + TAMAÑO_PAGINA;
-		MEMORIA_PARA_COMBATE = MEMORIA_PARA_COMBATE + TAMAÑO_PAGINA;
+		mmu_mapear_pagina(MEMORIA_VIRTUAL,TASK_CR3[i],mapeo1)
 		i++;
-		//NO SE COMO IR JUNTANDO LAS PAGINAS SI TODAS VAN CON PRESENTES O COMO
+		
 	}
 
 
@@ -196,6 +198,7 @@ page_table_entry * get_descriptor(unsigned int virtual, unsigned int cr3){
 void mmu_mapear_pagina(unsigned int virtual, unsigned int cr3, unsigned int fisica){
 	page_table_entry * descriptor = get_descriptor(virtual, cr3); //con el cr3 tendriamos el puntero al dir?
 	define_page_table_entry(descriptor,1,1,1,fisica);
+	tlbflush();
 }
 
 void mmu_unmapear_pagina(unsigned int virtual, unsigned int cr3){
