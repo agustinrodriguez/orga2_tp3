@@ -15,6 +15,8 @@
 
 void mmu_inicializar();
 void mmu_inicializar_dir_kernel();
+unsigned int mmu_inicializar_dir_tarea(int num_tarea);
+unsigned int get_cr3_task();
 
 typedef struct str_page_directory_entry {
     unsigned char   p:1;
@@ -48,10 +50,12 @@ void define_page_table_entry(page_table_entry * tabla,
 	unsigned char present, unsigned char rw, unsigned char us, unsigned int base);
 void define_page_directory_entry(page_directory_entry * directorio, 
 	unsigned char present, unsigned char rw, unsigned char us, unsigned int base);
-page_table_entry * get_descriptor(unsigned int virtual, unsigned int cr3);
-void mmu_mapear_pagina(unsigned int virtual, unsigned int cr3, unsigned int fisica);
-void mmu_unmapear_pagina(unsigned int virtual, unsigned int cr3);
+void mmu_mapear_pagina(unsigned int dir_virtual, unsigned int cr3, unsigned int fisica, unsigned char present, unsigned char rw, unsigned char us);
+void mmu_unmapear_pagina(unsigned int dir_virtual, unsigned int cr3);
 void null_pagetab_entry(page_table_entry * tablaAVaciar);
+void null_pagedir_entry(page_directory_entry * directorioAVaciar);
+void copiar_pagina(unsigned int origen, unsigned int destino);
+
 /* Page Directory */
 //extern page_directory_entry pd[];
 

@@ -16,6 +16,8 @@ extern idt_inicializar
 extern pantalla_juego
 extern imprimir_nombre_grupo
 extern mmu_inicializar
+extern get_cr3_task
+extern caracter_pintado
 
 ;; Saltear seccion de datos
 jmp start
@@ -107,7 +109,15 @@ start:
     or eax, 0x80000000
     mov cr0, eax
 
-    
+    xor eax, eax
+    call get_cr3_task
+    mov cr3, eax
+    call caracter_pintado
+
+    xchg bx, bx
+    mov eax, MAINPAGEDIR
+    mov cr3, eax
+
     ; Inicializar tss
     
     ; Inicializar tss de la tarea Idle

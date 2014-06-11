@@ -24,6 +24,18 @@ void limpiar_pantalla() {
 	}
 }
 
+void caracter_pintado() {
+	int modo = 0;
+	unsigned char *mem_video = (unsigned char *) VIDEO_BASE;
+	video_elem *elemento;
+
+	modo = modo + C_FG_BLACK * 16; // asigno el color de fondo verde al modo
+	elemento = (video_elem *) mem_video;
+	elemento->modo = (unsigned char) modo; //00100000b (verde);
+	elemento->ascii = (unsigned char) 0; // caracter nulo
+}
+
+
 void imprimir_texto(char * mensaje, int len) {
 	int  i, modo = 0;
 	unsigned char *mem_video = (unsigned char *) VIDEO_BASE;

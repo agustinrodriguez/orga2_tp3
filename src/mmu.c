@@ -18,7 +18,7 @@ unsigned int TASK_CODE_SRC[] = {
 	TASK_6_CODE_ADDR,
 	TASK_7_CODE_ADDR,
 	TASK_8_CODE_ADDR
-}
+};
 
 // ESTO APUNTA A PAGINAS DEL "MAPA"
 unsigned int TASK_PAG_1[] = { 0, 0X400000, 0X402000, 
@@ -31,11 +31,20 @@ unsigned int TASK_PAG_2[] = { 0, 0X401000, 0X403000,
 
 unsigned int TASK_PAG_3[] = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
 
+unsigned int MEMORIA_RESTANTE = SECTORFREEMEM;
 
 void mmu_inicializar() {
+	int i;
 	mmu_inicializar_dir_kernel();
+
+	for (i = 1; i < CANT_TAREAS + 1; i++) {
+		mmu_inicializar_dir_tarea(i);
+	}
 }
 
+unsigned int get_cr3_task() {
+    return TASK_CR3[1];
+}
 /*
 INICIO AREA LIBRE 0x100000 == 1048576
 FIN AREA LIBRE 0x3FFFFF == 4194303
@@ -112,79 +121,56 @@ total =  10240000 bytes
 784 k = 196 paginas
 
 */
-void mmu_inicializar_dir_tareas(){
+unsigned int mmu_inicializar_dir_tarea(int num_tarea) {
 	unsigned char rw;
 	unsigned char us;
 	unsigned char present;
-	unsigned int cr3_para_dir;
-	int i,j = 0;
-	unsigned int MEMORIA_RESTANTE = SECTORFREEMEM;
-	unsigned int MEMORIA_PARA_COMBATE = LA_ARENA;
-	unsigned int MEMORIA_VIRTUAL = 0x08000000;
+	int j = 0;
 
-	i = 1;
 	rw = 1;
 	us = 0;
 	present = 1; //no se si va 1 o no
 
-	while(i < CANT_TAREAS + 1) {
-		page_directory_entry * pdir = (page_directory_entry *) MEMORIA_RESTANTE;
-		
-		TASK_CR3[i] = MEMORIA_RESTANTE;
-		MEMORIA_RESTANTE += TAMAÑO_PAGINA;
-		page_table_entry * page_table1 = (page_table_entry *) FIRSTPAGETABLE;
-		page_table_entry * page_table2 = (page_table_entry *) SECONDPAGETABLE;
-		page_table_entry * page_table3 = (page_table_entry *) TRHEEPAGETABLE;
-		page_table_entry * page_table4 = (page_table_entry *) FOURPAGETABLE;
-		MEMORIA_RESTANTE += TAMAÑO_PAGINA * 4; // esto esta demas?
+	page_directory_entry * pdir = (page_directory_entry *) MEMORIA_RESTANTE;
+	
+	TASK_CR3[num_tarea] = MEMORIA_RESTANTE;
+	MEMORIA_RESTANTE += TAMANO_PAGINA;
+	page_table_entry * page_table1 = (page_table_entry *) FIRSTPAGETABLE;
+	page_table_entry * page_table2 = (page_table_entry *) SECONDPAGETABLE;
+	page_table_entry * page_table3 = (page_table_entry *) TRHEEPAGETABLE;
+	page_table_entry * page_table4 = (page_table_entry *) FOURPAGETABLE;
+	MEMORIA_RESTANTE += TAMANO_PAGINA * 4; // esto esta demas?
 
-		define_page_directory_entry(&pdir[0], present, rw, us, (unsigned int) page_table1);
-		define_page_directory_entry(&pdir[1], present, rw, us, (unsigned int) page_table2);
-		define_page_directory_entry(&pdir[2], present, rw, us, (unsigned int) page_table3);
-		define_page_directory_entry(&pdir[3], present, rw, us, (unsigned int) page_table4);
+	define_page_directory_entry(&pdir[0], present, rw, us, (unsigned int) page_table1);
+	define_page_directory_entry(&pdir[1], present, rw, us, (unsigned int) page_table2);
+	define_page_directory_entry(&pdir[2], present, rw, us, (unsigned int) page_table3);
+	define_page_directory_entry(&pdir[3], present, rw, us, (unsigned int) page_table4);
 
-		page_table_entry * page_table5 = (page_table_entry *) MEMORIA_RESTANTE; //ESTO NO SE SI ESTA BIEN
-		MEMORIA_RESTANTE += TAMAÑO_PAGINA;
-		define_page_directory_entry(&pdir[4], present, rw, us, (unsigned int) page_table5);		
+	 //page_table_entry * page_table5 = (page_table_entry *) MEMORIA_RESTANTE; //ESTO NO SE SI ESTA BIEN
+	 //define_page_directory_entry(&pdir[4], present, rw, us, (unsigned int) page_table5);		
 
-		for (j = 5; j < 1024; j++) {
-			null_pagedir_entry(&pdir[j]);
-		}
-
-		unsigned int codigo_tarea_pag_1 = TASK_CODE_SRC[i];
-		unsigned int codigo_tarea_pag_2 = TASK_CODE_SRC[i] + 0x1000;
-		unsigned int mapa_pag_1 = TASK_PAG_1[i];
-		unsigned int mapa_pag_2 = TASK_PAG_2[i];
-
-		copiar_pagina(codigo_tarea_pag_1, mapa_pag_1);
-		copiar_pagina(codigo_tarea_pag_2, mapa_pag_2);
-
-		rw = 1;
-		us = 1;
-		present = 1;
-		mmu_mapear_pagina(0x08000000, TASK_CR3[i], mapa_pag_1, present, rw, us);
-		mmu_mapear_pagina(0x08001000, TASK_CR3[i], mapa_pag_2, present, rw, us);
-
-		// No se si van los define_page_table_entry, en todo caso irian asi
-		// define_page_table_entry(&page_table5[0], present, rw, us, mapa_pag_1);
-		// define_page_table_entry(&page_table5[1], present, rw, us, mapa_pag_2);
-
-		// Lo siguiente es de Guido
-
-		//capas esto es al reves
-		// rw = 1;
-		// us = 1;
-		// present = 1;
-// 				
-		// define_page_table_entry(&ptab5[0], present, rw, us, mapeo);
-		// define_page_table_entry(&ptab5[1], present, rw, us, mapeo1);
-		// mmu_mapear_pagina(MEMORIA_VIRTUAL, TASK_CR3[i], mapeo);
-		// MEMORIA_VIRTUAL = MEMORIA_VIRTUAL + TAMAÑO_PAGINA;
-		// mmu_mapear_pagina(MEMORIA_VIRTUAL, TASK_CR3[i], mapeo1);
-		i++;
-		
+	for (j = 4; j < 1024; j++) {
+		null_pagedir_entry(&pdir[j]);
 	}
 
+	unsigned int codigo_tarea_pag_1 = TASK_CODE_SRC[num_tarea];
+	unsigned int codigo_tarea_pag_2 = TASK_CODE_SRC[num_tarea] + 0x1000;
+	unsigned int mapa_pag_1 = TASK_PAG_1[num_tarea];
+	unsigned int mapa_pag_2 = TASK_PAG_2[num_tarea];
+
+	copiar_pagina(codigo_tarea_pag_1, mapa_pag_1);
+	copiar_pagina(codigo_tarea_pag_2, mapa_pag_2);
+	MEMORIA_RESTANTE += TAMANO_PAGINA * 2;
+
+	rw = 1;
+	us = 1;
+	present = 1;
+
+	mmu_mapear_pagina(0x08000000, TASK_CR3[num_tarea], mapa_pag_1, present, rw, us);
+	mmu_mapear_pagina(0x08001000, TASK_CR3[num_tarea], mapa_pag_2, present, rw, us);
+
+	return TASK_CR3[num_tarea];
+}
 
 void define_page_directory_entry(page_directory_entry * directorio, 
 	unsigned char present, unsigned char rw, unsigned char us, unsigned int base) {
@@ -216,26 +202,51 @@ void define_page_table_entry(page_table_entry * tabla,
 		tabla->base_12_31 = base >> 12;
 }
 
-page_table_entry * get_descriptor(unsigned int dir_virtual, unsigned int cr3) {
-	page_directory_entry * directorio = (page_directory_entry *) cr3;
-	page_directory_entry * dir = (&directorio[dir_virtual]);
-	// CONSIGO LA TABLA	
-	unsigned int posicion_dir = (dir->base_12_31 << 12);
-	//FRUTA? no se si tengo q usar dir_virtual o cambiarle algo lo movi 12 por los define
-	page_table_entry * tabla = (page_table_entry *) posicion_dir;
-	return tabla;
-}
 
+/*
+0x08000000
+0000 1000 00 | 00 0000 0000 | 0000 0000 0000
+
+pde = cr3 + 0000 1000 00
+
+pte = pde->base + 00 0000 0000
+
+0000 1000 00 | 00 0000 0000
+
+*/
 void mmu_mapear_pagina(unsigned int dir_virtual, unsigned int cr3, unsigned int dir_fisica,
 	unsigned char present, unsigned char rw, unsigned char us) {
-	page_table_entry * descriptor = get_descriptor(dir_virtual, cr3); //con el cr3 tendriamos el puntero al dir?
-	define_page_table_entry(descriptor, present, rw, us, dir_fisica);
+	unsigned int offset_directorio = dir_virtual;
+	offset_directorio = offset_directorio  >> 22;
+	unsigned int offset_tabla = dir_virtual;
+	offset_tabla = (offset_tabla >> 12) & 0x003FF;
+
+	page_directory_entry * page_dir_base = (page_directory_entry *) cr3;
+	page_directory_entry * page_dir = page_dir_base + offset_directorio;
+	page_table_entry * page_table;
+
+	if (page_dir->p) {
+		page_table = (page_table_entry *) (page_dir->base_12_31 & 0xFFFFF) + offset_tabla;
+	} else {
+		define_page_directory_entry(page_dir, present, rw, us, (unsigned int) (page_dir->base_12_31 & 0xFFFFF));
+		page_table = (page_table_entry *) (page_dir->base_12_31 & 0xFFFFF) + offset_tabla;
+	}
+
+	define_page_table_entry(page_table, present, rw, us, dir_fisica);
 	tlbflush();
-}
+}	
 
 void mmu_unmapear_pagina(unsigned int dir_virtual, unsigned int cr3) {
-	page_table_entry * descriptor = get_descriptor(dir_virtual, cr3); //con el cr3 tendriamos q tener la tabla a desmapear
-	null_pagetab_entry(descriptor);
+	unsigned int offset_directorio = dir_virtual;
+	unsigned int offset_tabla = dir_virtual;
+
+	page_directory_entry * page_dir_base = (page_directory_entry *) cr3;
+	page_directory_entry * page_dir = page_dir_base + (offset_directorio  >> 22);
+
+	if (page_dir->p) {
+		page_table_entry * page_table = (page_table_entry *) (page_dir->base_12_31 & 0x000FFFFF) + (offset_tabla >> 12);
+		null_pagetab_entry(page_table);
+	}
 }
 
 void null_pagetab_entry(page_table_entry * tablaAVaciar) {
@@ -252,7 +263,7 @@ void null_pagetab_entry(page_table_entry * tablaAVaciar) {
 	tablaAVaciar->base_12_31 = 0x00000;
 }
 
-void null_pagedir_entry(page_dir_entry * directorioAVaciar) {
+void null_pagedir_entry(page_directory_entry * directorioAVaciar) {
 	directorioAVaciar->p = 0;
 	directorioAVaciar->rw = 0;
 	directorioAVaciar->us = 0;
