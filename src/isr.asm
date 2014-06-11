@@ -74,22 +74,52 @@ ISR 17
 ISR 18
 ISR 19
 
+
+global invalida
+invalida:
+   cli
+    pushad
+    CALL fin_intr_pic1
+    CALL print_error ; en este tengo q devolver error y nada mas
+    popad
+    sti
+    iret
 ;;
 ;; Rutina de atención del RELOJ
 ;; -------------------------------------------------------------------------- ;;
+global screen_proximo_reloj
+screen_proximo_reloj:
+    cli
+    pushad
+    call fin_intr_pic1
+   ; call print_clock ESTO LO Q TENDRIA Q HACER ES IR CAMBIANDO EL CURSOR '|/-\'
+    ;rutina
+.fin:
+    popad
+    sti
+    iret
 
 ;;
 ;; Rutina de atención del TECLADO
 ;; -------------------------------------------------------------------------- ;;
+global int_teclado
+int_teclado:
+iret
 
+;; TASK
+;; ---------------------------------------------------------------
+global int_task
+int_task:
+    cli
+    mov eax, 0x42
+    sti
+    iret
 ;;
 ;; Rutinas de atención de las SYSCALLS
 ;; -------------------------------------------------------------------------- ;;
 %define SYS_MOVER     0x83D
 %define SYS_MISIL     0x911
 %define SYS_MINAR     0x355
-
-
 
 ;; Funciones Auxiliares
 ;; -------------------------------------------------------------------------- ;;

@@ -67,5 +67,31 @@ unsigned int idt_inicializar() {
     IDT_ENTRY(18);
     IDT_ENTRY(19);
     
+    int i;
+    for (i = 20; i < 256; ++i) //no se si es 20 o 21 por la q no se usa
+    {
+        idt[i].offset_0_15 = (unsigned short) ((unsigned int)(&invalida) & (unsigned int) 0xFFFF);
+        idt[i].segsel = (unsigned short) (GDT_IDX_CODE_0 * 8);   //puse code 0 * 8 ya que estoy alineado y las interrupciones van a code
+        idt[i].attr = (unsigned short) 0x8E00;
+        idt[i].offset_16_31 = (unsigned short) ((unsigned int)(&invalida) >> 16 & (unsigned int) 0xFFFF);
+        i++;
+    } //supongo que de la 20 a la 256 va a la misma macro, salvo la de teclado
+     //Interrupcion de reloj.
+    idt[interrupcion_clock].offset_0_15 = (unsigned short) ((unsigned int)(&screen_proximo_reloj) & (unsigned int) 0xFFFF);
+    idt[interrupcion_clock].segsel = (unsigned short) (GDT_IDX_CODE_0 * 8);    
+    idt[interrupcion_clock].attr = (unsigned short) 0x8E00;
+    idt[interrupcion_clock].offset_16_31 = (unsigned short) ((unsigned int)(&screen_proximo_reloj) >> 16 & (unsigned int) 0xFFFF);
+
+    //Interrupcion de Teclado.
+    idt[interrupcion_teclado].offset_0_15 = (unsigned short) ((unsigned int)(&int_teclado) & (unsigned int) 0xFFFF);
+    idt[interrupcion_teclado].segsel = (unsigned short) (GDT_IDX_CODE_0 * 8);  
+    idt[interrupcion_teclado].attr = (unsigned short) 0x8E00;
+    idt[interrupcion_teclado].offset_16_31 = (unsigned short) ((unsigned int)(&int_teclado) >> 16 & (unsigned int) 0xFFFF);
+//como son de tipo instruccion se matiene el 8E00
+
+    idt[interrupcion_software].offset_0_15 = (unsigned short) ((unsigned int)(&int_task) & (unsigned int) 0xFFFF);
+    idt[interrupcion_teclado].segsel = (unsigned short) (GDT_IDX_CODE_0 * 8);  
+    idt[interrupcion_teclado].attr = (unsigned short) 0xEE00;
+    idt[interrupcion_teclado].offset_16_31 = (unsigned short) ((unsigned int)(&int_task) >> 16 & (unsigned int) 0xFFFF);
     return (unsigned int)tss_tanques;
 }

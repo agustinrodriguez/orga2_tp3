@@ -18,6 +18,9 @@ extern imprimir_nombre_grupo
 extern mmu_inicializar
 extern get_cr3_task
 extern caracter_pintado
+extern deshabilitar_pic
+extern resetear_pic
+extern habilitar_pic
 
 ;; Saltear seccion de datos
 jmp start
@@ -114,7 +117,6 @@ start:
     mov cr3, eax
     call caracter_pintado
 
-    xchg bx, bx
     mov eax, MAINPAGEDIR
     mov cr3, eax
 
@@ -130,14 +132,15 @@ start:
         call idt_inicializar
     
 
-   
-
     ; Inicializar Game
     
     ; Cargar IDT
         lidt [IDT_DESC]
-        xchg bx, bx
-       ; sti ; habilitamos interrupciones
+        call deshabilitar_pic
+        call resetear_pic
+        call habilitar_pic
+        ;con esto supuestamente me queda remapeadas las irq    
+        sti ; habilitamos interrupciones
 
         ; xchg bx, bx
         xor edx, edx

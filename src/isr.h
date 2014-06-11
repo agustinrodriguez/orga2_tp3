@@ -29,5 +29,9 @@ void _isr16();
 void _isr17();
 void _isr18();
 void _isr19();
+void invalida();
+void int_task();
+void screen_proximo_reloj();
+void int_teclado();
 
 #endif  /* !__ISR_H__ */

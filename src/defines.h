@@ -46,6 +46,12 @@
 #define TAMANO_PAGINA           0x00001000
 #define SECTORFREEMEM 			0x00100000
 
+
+/*INTERRUPCIONES*/
+#define interrupcion_clock 32 	
+#define interrupcion_teclado 33
+#define interrupcion_software 52
+
 /* Direcciones fisicas de codigos */
 /* -------------------------------------------------------------------------- */
 /* En estas direcciones estan los códigos de todas las tareas. De aqui se

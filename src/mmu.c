@@ -21,13 +21,13 @@ unsigned int TASK_CODE_SRC[] = {
 };
 
 // ESTO APUNTA A PAGINAS DEL "MAPA"
-unsigned int TASK_PAG_1[] = { 0, 0X400000, 0X402000, 
-							0X404000, 0X406000, 0X408000, 
-							0X40A000, 0X40C000, 0X40E000};
+unsigned int TASK_PAG_1[] = { 0, 0X00400000, 0X00402000, 
+							0X00404000, 0X00406000, 0X00408000, 
+							0X0040A000, 0X0040C000, 0X0040E000};
 
-unsigned int TASK_PAG_2[] = { 0, 0X401000, 0X403000, 
-							0X405000, 0X407000, 0X409000, 
-							0X40B000, 0X40D000, 0X40F000};
+unsigned int TASK_PAG_2[] = { 0, 0X00401000, 0X00403000, 
+							0X00405000, 0X00407000, 0X00409000, 
+							0X0040B000, 0X0040D000, 0X0040F000};
 
 unsigned int TASK_PAG_3[] = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
 
@@ -43,7 +43,7 @@ void mmu_inicializar() {
 }
 
 unsigned int get_cr3_task() {
-    return TASK_CR3[1];
+    return TASK_CR3[6];
 }
 /*
 INICIO AREA LIBRE 0x100000 == 1048576
@@ -129,29 +129,25 @@ unsigned int mmu_inicializar_dir_tarea(int num_tarea) {
 
 	rw = 1;
 	us = 0;
-	present = 1; //no se si va 1 o no
+	present = 1;
 
 	page_directory_entry * pdir = (page_directory_entry *) MEMORIA_RESTANTE;
 	
+	for (j = 0; j < 1024; j++) {
+		null_pagedir_entry(&pdir[j]);
+	}
+	
 	TASK_CR3[num_tarea] = MEMORIA_RESTANTE;
-	MEMORIA_RESTANTE += TAMANO_PAGINA;
 	page_table_entry * page_table1 = (page_table_entry *) FIRSTPAGETABLE;
 	page_table_entry * page_table2 = (page_table_entry *) SECONDPAGETABLE;
 	page_table_entry * page_table3 = (page_table_entry *) TRHEEPAGETABLE;
 	page_table_entry * page_table4 = (page_table_entry *) FOURPAGETABLE;
-	MEMORIA_RESTANTE += TAMANO_PAGINA * 4; // esto esta demas?
+	MEMORIA_RESTANTE += TAMANO_PAGINA * 4;
 
 	define_page_directory_entry(&pdir[0], present, rw, us, (unsigned int) page_table1);
 	define_page_directory_entry(&pdir[1], present, rw, us, (unsigned int) page_table2);
 	define_page_directory_entry(&pdir[2], present, rw, us, (unsigned int) page_table3);
 	define_page_directory_entry(&pdir[3], present, rw, us, (unsigned int) page_table4);
-
-	 //page_table_entry * page_table5 = (page_table_entry *) MEMORIA_RESTANTE; //ESTO NO SE SI ESTA BIEN
-	 //define_page_directory_entry(&pdir[4], present, rw, us, (unsigned int) page_table5);		
-
-	for (j = 4; j < 1024; j++) {
-		null_pagedir_entry(&pdir[j]);
-	}
 
 	unsigned int codigo_tarea_pag_1 = TASK_CODE_SRC[num_tarea];
 	unsigned int codigo_tarea_pag_2 = TASK_CODE_SRC[num_tarea] + 0x1000;
@@ -160,7 +156,6 @@ unsigned int mmu_inicializar_dir_tarea(int num_tarea) {
 
 	copiar_pagina(codigo_tarea_pag_1, mapa_pag_1);
 	copiar_pagina(codigo_tarea_pag_2, mapa_pag_2);
-	MEMORIA_RESTANTE += TAMANO_PAGINA * 2;
 
 	rw = 1;
 	us = 1;
@@ -213,23 +208,34 @@ pte = pde->base + 00 0000 0000
 
 0000 1000 00 | 00 0000 0000
 
+0x08001000
+
+0000 1000 00 | 00 0000 0001 | 0000 0000 0000
+
 */
 void mmu_mapear_pagina(unsigned int dir_virtual, unsigned int cr3, unsigned int dir_fisica,
 	unsigned char present, unsigned char rw, unsigned char us) {
 	unsigned int offset_directorio = dir_virtual;
 	offset_directorio = offset_directorio  >> 22;
 	unsigned int offset_tabla = dir_virtual;
-	offset_tabla = (offset_tabla >> 12) & 0x003FF;
+	offset_tabla = (dir_virtual >> 12) & 0x3FF;
+	int i;
 
 	page_directory_entry * page_dir_base = (page_directory_entry *) cr3;
-	page_directory_entry * page_dir = page_dir_base + offset_directorio;
+	page_directory_entry * page_dir = &page_dir_base[offset_directorio];
 	page_table_entry * page_table;
 
 	if (page_dir->p) {
 		page_table = (page_table_entry *) (page_dir->base_12_31 & 0xFFFFF) + offset_tabla;
 	} else {
-		define_page_directory_entry(page_dir, present, rw, us, (unsigned int) (page_dir->base_12_31 & 0xFFFFF));
-		page_table = (page_table_entry *) (page_dir->base_12_31 & 0xFFFFF) + offset_tabla;
+		define_page_directory_entry(page_dir, present, rw, us, 
+			(unsigned int) MEMORIA_RESTANTE);
+
+		page_table = (page_table_entry *) MEMORIA_RESTANTE + offset_tabla;
+		for (i = 0; i < 1024; i++) {
+			null_pagetab_entry(&page_table[i]);
+		}
+		MEMORIA_RESTANTE += TAMANO_PAGINA;
 	}
 
 	define_page_table_entry(page_table, present, rw, us, dir_fisica);
@@ -281,7 +287,7 @@ void copiar_pagina(unsigned int origen, unsigned int destino) {
 	int* pag_origen = (int*)(origen);
 	int* pag_destino= (int*)(destino);
 	int i;
-	for (i = 0; i < 2014; i++) {
+	for (i = 0; i < 1024; i++) {
 		pag_destino[i] = pag_origen[i];
 	}
 }
