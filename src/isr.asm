@@ -51,6 +51,16 @@ _isr%1:
 isrnumero:           dd 0x00000000
 isrClock:            db '|/-\'
 limpieza:            db '    '
+uno:                 db '1'
+dos:                 db '2'
+tres:                db '3'
+cuatro:              db '4'
+cinco:              db '5'
+seis:              db '6'
+siete:              db '7'
+ocho:              db '8'
+nueve:              db '9'
+cero:              db '0'
 
 ;;
 ;; Rutina de atención de las EXCEPCIONES
@@ -147,7 +157,94 @@ screen_proximo_reloj:
 ;; -------------------------------------------------------------------------- ;;
 global int_teclado
 int_teclado:
-iret
+    cli
+    pushad
+    xor al, al
+    xchg bx, bx
+    in al ,0x60
+    mov ah, al
+    or al, 0x80             
+    out 0x61, al            ;Lo envio al controlador de teclado
+    mov al, ah
+    out 0x61, al            ;Vuelvo a como estaba antes el controlador.
+    and ah, 0x80            ;me quedo con el valor sacandole el 80 
+    jnz .fin_teclado
+    
+    cmp al, 0x02
+    je .el1
+    
+    cmp al, 0x03
+    je .el2
+    
+    cmp al, 0x04
+    je .el3
+    
+    cmp al, 0x05
+    je .el4
+    
+    cmp al, 0x06
+    je .el5
+    
+    cmp al, 0x07
+    je .el6
+    
+    cmp al, 0x08
+    je .el7
+    
+    cmp al, 0x09
+    je .el8
+    
+    cmp al, 0x0a
+    je .el9
+    
+    cmp al, 0x0b
+    je .el0
+
+.el1:
+    imprimir_texto_mp uno, 1, 0x0f, 10, 10
+    jmp .fin_teclado
+
+.el2:
+    imprimir_texto_mp dos, 1, 0x0f, 10, 10
+    jmp .fin_teclado
+
+.el3:
+    imprimir_texto_mp tres, 1, 0x0f, 10, 10
+    jmp .fin_teclado
+
+.el4:
+    imprimir_texto_mp cuatro, 1, 0x0f, 10, 10
+    jmp .fin_teclado
+
+.el5:
+    imprimir_texto_mp cinco, 1, 0x0f, 10, 10
+    jmp .fin_teclado
+
+.el6:
+    imprimir_texto_mp seis, 1, 0x0f, 10, 10
+    jmp .fin_teclado
+
+.el7:
+    imprimir_texto_mp siete, 1, 0x0f, 10, 10
+    jmp .fin_teclado
+
+.el8:
+    imprimir_texto_mp ocho, 1, 0x0f, 10, 10
+    jmp .fin_teclado
+
+.el9:
+    imprimir_texto_mp nueve, 1, 0x0f, 10, 10
+    jmp .fin_teclado
+
+.el0:
+    imprimir_texto_mp cero, 1, 0x0f, 10, 10
+    jmp .fin_teclado
+
+.fin_teclado:
+    call fin_intr_pic1
+    popad
+    sti
+    iret
 
 ;; TASK
 ;; ---------------------------------------------------------------
