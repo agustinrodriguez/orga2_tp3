@@ -37,6 +37,8 @@ iniciando_mp_len equ    $ - iniciando_mp_msg
 equipo_mp_msg db     'Colombia/Arepa'
 equipo_mp_len equ    $ - equipo_mp_msg
 
+isrClock:            db '|/-\'
+
 ;;
 ;; Seccion de código.
 ;; -------------------------------------------------------------------------- ;;
@@ -142,14 +144,16 @@ start:
         ;con esto supuestamente me queda remapeadas las irq    
         sti ; habilitamos interrupciones
 
-        ; xchg bx, bx
+ .hola:
+        xchg bx, bx
         xor edx, edx
         xor eax, eax
         xor ecx, ecx
         mov eax, 4
         mov ecx, 0
-        xchg bx, bx
-        div ecx
+    ;    xchg bx, bx
+        ;div ecx
+ ;       jmp .hola
     ; Configurar controlador de interrupciones
     
     ; pintar posiciones inciales de tanques
@@ -165,8 +169,8 @@ start:
    ; mov ebx, 0xFFFF
    ; mov ecx, 0xFFFF
    ; mov edx, 0xFFFF
-   ; jmp $
-   ; jmp $
+    jmp $
+    jmp $
 
 ;; -------------------------------------------------------------------------- ;;
 

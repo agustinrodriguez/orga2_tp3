@@ -10,6 +10,7 @@ BITS 32
 
 sched_tarea_offset:     dd 0x00
 sched_tarea_selector:   dw 0x00
+contador_reloj:      db 0
 
 ;; PIC
 extern fin_intr_pic1
@@ -49,6 +50,7 @@ _isr%1:
 ; Scheduler
 isrnumero:           dd 0x00000000
 isrClock:            db '|/-\'
+limpieza:            db '    '
 
 ;;
 ;; Rutina de atención de las EXCEPCIONES
@@ -92,8 +94,49 @@ screen_proximo_reloj:
     cli
     pushad
     call fin_intr_pic1
-   ; call print_clock ESTO LO Q TENDRIA Q HACER ES IR CAMBIANDO EL CURSOR '|/-\'
-    ;rutina
+    mov eax, [contador_reloj]
+  ;  xchg bx, bx  Break para ver como va moviendose el cursor 
+    cmp eax, 0
+    je .primero
+    cmp eax, 1
+    je .segundo
+    cmp eax, 2
+    je .tercero
+    cmp eax, 4
+    je .cuarto
+    cmp eax, 5
+    je .quinto
+
+    .primero:
+        imprimir_texto_mp isrClock, 1, 0x0f, 47, 59
+        inc eax
+        mov [contador_reloj], eax
+        jmp .fin
+
+    .segundo:
+        imprimir_texto_mp isrClock, 2, 0x0f, 47, 59
+        inc eax
+        mov [contador_reloj], eax
+        jmp .fin
+
+    .tercero:
+        imprimir_texto_mp isrClock, 3, 0x0f, 47, 59
+        inc eax
+        mov [contador_reloj], eax
+        jmp .fin
+
+    .cuarto:
+        imprimir_texto_mp isrClock, 4, 0x0f, 47, 59
+        inc eax
+        mov [contador_reloj], eax
+        jmp .fin
+
+    .quinto:
+        imprimir_texto_mp limpieza, 4, 0x0f, 47, 59
+        xor eax,eax
+        mov [contador_reloj], eax
+        jmp .fin
+
 .fin:
     popad
     sti
