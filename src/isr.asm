@@ -106,6 +106,7 @@ screen_proximo_reloj:
     call fin_intr_pic1
     mov eax, [contador_reloj]
   ;  xchg bx, bx  Break para ver como va moviendose el cursor 
+    
     cmp eax, 0
     je .primero
     cmp eax, 1
@@ -161,7 +162,7 @@ int_teclado:
     pushad
     xor al, al
     xchg bx, bx
-    in al ,0x60
+    in al, 0x60
     mov ah, al
     or al, 0x80             
     out 0x61, al            ;Lo envio al controlador de teclado

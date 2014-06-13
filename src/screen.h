@@ -24,5 +24,6 @@ void imprimir_texto(char * mensaje, int len);
 void pantalla_juego();
 void imprimir_nombre_grupo();
 void caracter_pintado();
+void imprimir_numero_teclado(unsigned char tecla);
 
 #endif  /* !__SCREEN_H__ */

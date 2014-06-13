@@ -247,4 +247,22 @@ void imprimir_nombre_grupo(){
 
 }
 
+/*void imprimir_caracter(unsigned char c, unsigned char forecolour, unsigned char backcolour, int x, int y)
+{
+	int modo = 0;
+	unsigned char *mem_video = (unsigned char *) VIDEO_BASE;
+	video_elem *elemento;
 
+	modo = modo + forecolour * 16; // asigno el color de fondo verde al modo
+	elemento = (video_elem *) mem_video;
+	elemento->modo = (unsigned char) modo; //00100000b (verde);
+	elemento->ascii = (unsigned char) c;
+}
+
+void imprimir_numero_teclado(unsigned char tecla) {
+	if (tecla == 0x0B) {
+		imprimir_caracter('0', C_FG_WHITE, C_FG_BLACK, 0, 0);
+	} else {
+		imprimir_caracter(tecla + (unsigned char) + 29, C_FG_WHITE, tecla - (unsigned char) 30, 0, 0);
+	}
+}*/

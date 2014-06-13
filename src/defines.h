@@ -32,6 +32,11 @@
 #define GDT_IDX_DATA_0				11
 #define GDT_IDX_DATA_3				12
 #define GDT_IDX_VIDEO				13
+#define GDT_IDX_TAREA_INICIAL		14
+#define GDT_IDX_TAREA_1				15
+#define GDT_IDX_TAREA_2				16
+
+
 /* Offsets en la gdt */
 /* -------------------------------------------------------------------------- */
 #define GDT_OFF_NULL_DESC           (GDT_IDX_NULL_DESC      << 3)
