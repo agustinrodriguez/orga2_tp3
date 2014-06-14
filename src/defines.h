@@ -51,7 +51,8 @@
 #define TAMANO_PAGINA           0x00001000
 #define SECTORFREEMEM 			0x00100000
 
-
+#define PILA_KERNEL				0x26000			//FRUTA? SEGUN LA IMAGENCITA ES ESTE EL VALOR
+#define EIP_IDLE				0x00020000			
 /*INTERRUPCIONES*/
 #define interrupcion_clock 32 	
 #define interrupcion_teclado 33
