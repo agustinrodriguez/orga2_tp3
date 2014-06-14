@@ -160,13 +160,13 @@ void definir_tss(tss *task, unsigned int cr3, unsigned int esp0, unsigned int ei
     unsigned int Codigo;
 //en teoria segun como nos dijo marco, nos caen todas las tss nivel 0 por ende no haria falta este if
 
-   // if(us == 3){   
-   //     Datos = (GDT_IDX_DATA_3 << 3) + 0x03; 
-   //     Codigo = (GDT_IDX_CODE_3 << 3) + 0x03;
-   // }else{                  
+    if(us == 3){   
+        Datos = (GDT_IDX_DATA_3 << 3) + 0x03; 
+        Codigo = (GDT_IDX_CODE_3 << 3) + 0x03;
+    }else{                  
         Datos = (GDT_IDX_DATA_0 << 3); 
         Codigo = (GDT_IDX_CODE_0 << 3);
-   // }
+    }
 
     task->cs = Codigo;
     task->ds = Datos;
