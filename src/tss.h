@@ -11,6 +11,7 @@
 #include "defines.h"
 #include "i386.h"
 #include "gdt.h"
+#include "mmu.h"
 
 typedef struct str_tss {
     unsigned short  ptl;
@@ -66,7 +67,7 @@ void tss_inicializar_tarea_tanque(unsigned int id);
 void tss_inicializar_tareas_tanques();
 void tss_copy(tss* tss_src, tss* tss_dst);
 void definir_tss(tss * task, unsigned int cr3, unsigned int esp0, unsigned int eip, unsigned int us, unsigned int pila);
-void limpiar_para_interrumpir(tss * task);
+void limpiar_tss(tss * task);
 unsigned int tss_get_cr3(unsigned int id);
 
 #endif  /* !__TSS_H__ */

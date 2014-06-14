@@ -37,9 +37,9 @@ void mmu_inicializar() {
 	int i;
 	mmu_inicializar_dir_kernel();
 
-	for (i = 1; i < CANT_TAREAS + 1; i++) {
+	/*for (i = 1; i < CANT_TAREAS + 1; i++) {
 		mmu_inicializar_dir_tarea(i);
-	}
+	}*/
 }
 
 unsigned int get_cr3_task() {
@@ -142,7 +142,7 @@ unsigned int mmu_inicializar_dir_tarea(int num_tarea) {
 	page_table_entry * page_table2 = (page_table_entry *) SECONDPAGETABLE;
 	page_table_entry * page_table3 = (page_table_entry *) TRHEEPAGETABLE;
 	page_table_entry * page_table4 = (page_table_entry *) FOURPAGETABLE;
-	MEMORIA_RESTANTE += TAMANO_PAGINA * 4;
+	MEMORIA_RESTANTE += TAMANO_PAGINA;
 
 	define_page_directory_entry(&pdir[0], present, rw, us, (unsigned int) page_table1);
 	define_page_directory_entry(&pdir[1], present, rw, us, (unsigned int) page_table2);
@@ -290,4 +290,12 @@ void copiar_pagina(unsigned int origen, unsigned int destino) {
 	for (i = 0; i < 1024; i++) {
 		pag_destino[i] = pag_origen[i];
 	}
+}
+
+unsigned int dame_pagina_libre() {
+	unsigned int pagina_libre = MEMORIA_RESTANTE;
+
+	MEMORIA_RESTANTE += TAMANO_PAGINA;
+
+	return pagina_libre;
 }

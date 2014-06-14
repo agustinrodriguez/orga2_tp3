@@ -55,6 +55,7 @@ void mmu_unmapear_pagina(unsigned int dir_virtual, unsigned int cr3);
 void null_pagetab_entry(page_table_entry * tablaAVaciar);
 void null_pagedir_entry(page_directory_entry * directorioAVaciar);
 void copiar_pagina(unsigned int origen, unsigned int destino);
+unsigned int dame_pagina_libre();
 
 /* Page Directory */
 //extern page_directory_entry pd[];
