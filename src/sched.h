@@ -33,7 +33,7 @@ typedef struct sched_t
 struct tarea_t tarea;
 struct sched_t sched;
 /*DESALOJAR_TAREA: Desaloja la tarea actual y salta a la tarea IDLE.*/
-void desalojar_tarea();
+void desalojar_tarea(int tarea);
 
 unsigned short sched_proximo_indice();
 void sched_inicializar();

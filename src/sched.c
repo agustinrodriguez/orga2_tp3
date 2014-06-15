@@ -36,3 +36,9 @@ void sched_inicializar(){
 	sched.CONTEXTO = 0;
 	sched.TASKS_UP = CANT_TAREAS;
 }
+
+void desalojar_tarea(int tarea){
+	sched.tareas[tarea].estado = 0;
+	sched.TASKS_UP--;
+	//faltaria hacer una funcion q muestre porq exploto
+}
