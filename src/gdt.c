@@ -122,19 +122,20 @@ gdt_entry gdt[GDT_COUNT] = {
         (unsigned char)     0x01,           /* g            */
         (unsigned char)     0x00,           /* base[31:24]  */
     },
-
+};
+void gdt_set_tss(){
     /* tarea inicial */
     /* Offset = 0x0E */
     /* &tss_inicial 0x00000000 */
-    [GDT_IDX_TAREA_INICIAL] = define_gdt_tss((unsigned int) &tss_inicial),
+    gdt[GDT_IDX_TAREA_INICIAL] = define_gdt_tss((unsigned int)&tss_inicial);
 
-    /* tarea 1 */
+   /* tarea 1 */
     /* Offset = 0x0F */
-    [GDT_IDX_TAREA_1] = define_gdt_tss((unsigned int)&tss_next_1),
+    gdt[GDT_IDX_TAREA_1] = define_gdt_tss((unsigned int)&tss_next_1);
 
     /* tarea 2 */
     /* Offset = 0x10 */
-    [GDT_IDX_TAREA_2] = define_gdt_tss((unsigned int)&tss_next_2),
+    gdt[GDT_IDX_TAREA_2] = define_gdt_tss((unsigned int)&tss_next_2);
 };
 
 gdt_descriptor GDT_DESC = {

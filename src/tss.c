@@ -28,9 +28,11 @@ void tss_inicializar_tarea_idle() {
 
 void tss_inicializar_tareas_tanques() {
     unsigned int cr3_tarea;
+    int i;
 
-    for (int i = 0; i < CANT_TANQUES; i++) {
+    for (i = 0; i < CANT_TANQUES; i++) {
         cr3_tarea = mmu_inicializar_dir_tarea(i + 1);
+        unsigned int pila_tarea;
         pila_tarea = dame_pagina_libre() + 4095;
         tss_inicializar_tareas_tanque(i, cr3_tarea, pila_tarea);
     }
@@ -176,7 +178,7 @@ void definir_tss(tss *task, unsigned int cr3, unsigned int esp0, unsigned int ei
     task->ss = Datos; 
 };
 
-unsigned int tss_get_cr3(unsigned int id) {
+/*unsigned int tss_get_cr3(unsigned int id) {
 
-}
+}*/
 

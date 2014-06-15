@@ -34,7 +34,7 @@ unsigned int TASK_PAG_3[] = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
 unsigned int MEMORIA_RESTANTE = SECTORFREEMEM;
 
 void mmu_inicializar() {
-	int i;
+	//int i;
 	mmu_inicializar_dir_kernel();
 
 	/*for (i = 1; i < CANT_TAREAS + 1; i++) {

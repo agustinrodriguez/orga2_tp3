@@ -38,5 +38,6 @@ extern gdt_entry gdt[];
 extern gdt_descriptor GDT_DESC;
 
 gdt_entry define_gdt_tss(unsigned int dir_tarea);
+void gdt_set_tss();
 
 #endif  /* !__GDT_H__ */

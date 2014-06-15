@@ -63,7 +63,7 @@ extern tss tss_next_2;
 
 void tss_inicializar();
 void tss_inicializar_tarea_idle();
-void tss_inicializar_tarea_tanque(unsigned int id);
+void tss_inicializar_tareas_tanque(int num_tanque, unsigned int cr3_tarea, unsigned int pila_tarea);
 void tss_inicializar_tareas_tanques();
 void tss_copy(tss* tss_src, tss* tss_dst);
 void definir_tss(tss * task, unsigned int cr3, unsigned int esp0, unsigned int eip, unsigned int us, unsigned int pila);
