@@ -122,6 +122,7 @@ gdt_entry gdt[GDT_COUNT] = {
         (unsigned char)     0x01,           /* g            */
         (unsigned char)     0x00,           /* base[31:24]  */
     },
+    
 };
 void gdt_set_tss(){
     /* tarea inicial */

@@ -21,6 +21,7 @@ extern caracter_pintado
 extern deshabilitar_pic
 extern resetear_pic
 extern habilitar_pic
+extern tss_inicializar
 
 ;; Saltear seccion de datos
 jmp start
@@ -113,16 +114,18 @@ start:
     mov eax, cr0
     or eax, 0x80000000
     mov cr0, eax
+;ese call hay q comentarlo ya q no se usa esta funcion fue de prueba cuando hicimos paginacion
+   ;; xor eax, eax
+   ; call get_cr3_task
+   ; mov cr3, eax
+   ; call caracter_pintado
 
-    xor eax, eax
-    call get_cr3_task
-    mov cr3, eax
-    call caracter_pintado
-
-    mov eax, MAINPAGEDIR
-    mov cr3, eax
+    ;mov eax, MAINPAGEDIR
+    ;mov cr3, eax
 
     ; Inicializar tss
+    
+    CALL tss_inicializar
     
     ; Inicializar tss de la tarea Idle
     
@@ -144,13 +147,13 @@ start:
         ;con esto supuestamente me queda remapeadas las irq    
         sti ; habilitamos interrupciones
 
- .hola:
-        xchg bx, bx
-        xor edx, edx
-        xor eax, eax
-        xor ecx, ecx
-        mov eax, 4
-        mov ecx, 0
+ ;;.hola:
+ ;       xchg bx, bx
+ ;       xor edx, edx
+ ;       xor eax, eax
+ ;       xor ecx, ecx
+ ;       mov eax, 4
+ ;       mov ecx, 0
     ;    xchg bx, bx
         ;div ecx
  ;       jmp .hola
@@ -159,14 +162,15 @@ start:
     ; pintar posiciones inciales de tanques
     
     ; Cargar tarea inicial
+    ;xchg bx, bx
     mov ax, 0x0E ; GDT_IDX_TAREA_INICIAL
     ltr ax
 
     ; Habilitar interrupciones
  
     ; Saltar a la primera tarea: Idle
-    mov ax, ax
-    jmp 0x0F:0x0 ; GDT_IDX_TAREA_1
+    ;mov ax, ax
+    ;jmp 0x0F:0x0 ; GDT_IDX_TAREA_1
 
     ; Ciclar infinitamente (por si algo sale mal...)
    ; mov eax, 0xFFFF
