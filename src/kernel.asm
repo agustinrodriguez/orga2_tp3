@@ -22,6 +22,7 @@ extern deshabilitar_pic
 extern resetear_pic
 extern habilitar_pic
 extern tss_inicializar
+extern gdt_set_tss
 
 ;; Saltear seccion de datos
 jmp start
@@ -124,8 +125,8 @@ start:
     ;mov cr3, eax
 
     ; Inicializar tss
-    
-    CALL tss_inicializar
+    call gdt_set_tss ; primero inicializo las entradas de la gdt de las tsss
+    call tss_inicializar
     
     ; Inicializar tss de la tarea Idle
     
@@ -162,8 +163,8 @@ start:
     ; pintar posiciones inciales de tanques
     
     ; Cargar tarea inicial
-    ;xchg bx, bx
-    mov ax, 0x0E ; GDT_IDX_TAREA_INICIAL
+    ; xchg bx, bx
+    mov ax, 0x70 ; GDT_IDX_TAREA_INICIAL ; 0x0E * 8 = 0111 0000 = 0x70
     ltr ax
 
     ; Habilitar interrupciones
