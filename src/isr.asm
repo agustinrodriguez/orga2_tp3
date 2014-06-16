@@ -251,9 +251,26 @@ int_teclado:
 ;; ---------------------------------------------------------------
 global int_task
 int_task:
+    pushad ;esto puede no ser necesario chequear!
     cli
-    mov eax, 0x42
+    CMP EAX, 0x83D
+    je .moviendo
+    CMP EAX, 0x911
+    je .misil
+    CMP EAX, 0x355
+    je .minar
+    .moviendo:
+
+        jmp .fin
+    .misil:
+        jmp .fin
+
+    .minar: 
+        jmp .fin
+
+    .fin:
     sti
+    popad
     iret
 ;;
 ;; Rutinas de atención de las SYSCALLS

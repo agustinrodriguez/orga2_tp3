@@ -23,6 +23,7 @@ extern resetear_pic
 extern habilitar_pic
 extern tss_inicializar
 extern gdt_set_tss
+extern sched_inicializar
 
 ;; Saltear seccion de datos
 jmp start
@@ -133,7 +134,7 @@ start:
     ; Inicializar tss de las tanques
     
     ; Inicializar el scheduler
-    
+        call sched_inicializar
     ; Inicializar la IDT
         call idt_inicializar
     
