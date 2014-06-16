@@ -58,6 +58,9 @@
 #define interrupcion_teclado 33
 #define interrupcion_software 52
 
+/*TAREAS*/
+#define QUANTUM_TAREA 3 //FRUTA?
+
 /* Direcciones fisicas de codigos */
 /* -------------------------------------------------------------------------- */
 /* En estas direcciones estan los códigos de todas las tareas. De aqui se

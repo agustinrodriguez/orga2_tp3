@@ -163,15 +163,15 @@ start:
     ; pintar posiciones inciales de tanques
     
     ; Cargar tarea inicial
-    ; xchg bx, bx
+    ; xchg bx, bx               0000 1110   000
     mov ax, 0x70 ; GDT_IDX_TAREA_INICIAL ; 0x0E * 8 = 0111 0000 = 0x70
     ltr ax
 
     ; Habilitar interrupciones
  
     ; Saltar a la primera tarea: Idle
-    ;mov ax, ax
-    ;jmp 0x0F:0x0 ; GDT_IDX_TAREA_1
+    mov ax, AX
+    jmp 0x78:0x0 ; GDT_IDX_TAREA_1  ;0x0F * 8 = 0111 1000 
 
     ; Ciclar infinitamente (por si algo sale mal...)
    ; mov eax, 0xFFFF
