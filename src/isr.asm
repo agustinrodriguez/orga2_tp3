@@ -51,6 +51,8 @@ _isr%1:
 isrnumero:           dd 0x00000000
 isrClock:            db '|/-\'
 limpieza:            db '    '
+offset:                 dd 0
+selector:               dw 0
 uno:                 db '1'
 dos:                 db '2'
 tres:                db '3'
@@ -259,20 +261,47 @@ int_task:
     je .misil
     CMP EAX, 0x355
     je .minar
-    .moviendo:
-
+    .moviendo: 
+    ;tiene un solo parametro q va por ebx
+        push ebx 
+        call game_mover
+        pop ebx 
         jmp .fin
     .misil:
+        push ebx
+        push ecx
+        push edx
+        push esi
+        call game_misil
+        pop esi
+        pop edx
+        pop ecx
+        pop ebx
         jmp .fin
 
     .minar: 
+        push ebx
+        call game_minar
+        pop ebx
         jmp .fin
 
     .fin:
+    call fin_intr_pic1
+    call vuelvo_idle
     sti
     popad
     iret
 ;;
+
+global vuelvo_idle
+vuelvo_idle:
+    pushad
+    mov ax, 0x78
+    mov [selector], ax
+    jmp far [offset]
+    popad
+    ret
+
 ;; Rutinas de atención de las SYSCALLS
 ;; -------------------------------------------------------------------------- ;;
 %define SYS_MOVER     0x83D

@@ -134,7 +134,7 @@ start:
     ; Inicializar tss de las tanques
     
     ; Inicializar el scheduler
-        call sched_inicializar
+       ; call sched_inicializar
     ; Inicializar la IDT
         call idt_inicializar
     
