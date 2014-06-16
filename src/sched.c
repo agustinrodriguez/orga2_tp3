@@ -7,11 +7,11 @@
 
 #include "sched.h"
 
-unsigned int indices_tareas = {GDT_IDX_TAREA_1,GDT_IDX_TAREA_2,GDT_IDX_TAREA_1,GDT_IDX_TAREA_2,
-	GDT_IDX_TAREA_1,GDT_IDX_TAREA_2,GDT_IDX_TAREA_1,GDT_IDX_TAREA_2};
+//unsigned int indices_tareas = {GDT_IDX_TAREA_1,GDT_IDX_TAREA_2,GDT_IDX_TAREA_1,GDT_IDX_TAREA_2,
+//	GDT_IDX_TAREA_1,GDT_IDX_TAREA_2,GDT_IDX_TAREA_1,GDT_IDX_TAREA_2};
 //segun el enunciado se pide q 1)tss1 ..2)tss2 y asi intercalado CHEQUEAR ESTO
 
-unsigned short sched_proximo_indice() {
+/*unsigned short sched_proximo_indice() {
   return 0;
 }
 
@@ -41,4 +41,4 @@ void desalojar_tarea(int tarea){
 	sched.tareas[tarea].estado = 0;
 	sched.TASKS_UP--;
 	//faltaria hacer una funcion q muestre porq exploto
-}
+}*/
