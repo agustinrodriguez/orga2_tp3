@@ -40,9 +40,26 @@ _isr%1:
     cli
     xor ecx, ecx
     mov ecx, %1
-    xor eax,eax
     xchg bx, bx
+    ;hago los q tengo en pila
     mov [estado_error], eax ; EAX
+    mov eax, ds
+    mov [estado_error+52], eax ;ds
+     ;mov eax, eip
+    pop eax ; error code
+
+    pop eax
+    mov [estado_error+32], eax ;eip
+    ;mov eax, cs
+    pop eax 
+    mov [estado_error+48], eax ;cs
+   ; mov eax, ds 
+
+    pop eax
+    mov [estado_error+72], eax ;eflags
+
+    push eax ; alineo pila
+
     mov eax, ebx
     mov [estado_error+4], eax
     mov eax, ecx
@@ -71,7 +88,6 @@ _isr%1:
     mov [estado_error+64], eax
     mov eax, ss    ;mov eax, ss
     mov [estado_error+68], eax
-    
 
     push ecx
     call print_error

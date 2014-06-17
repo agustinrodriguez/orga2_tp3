@@ -147,7 +147,7 @@ start:
         call resetear_pic
         call habilitar_pic
         ;con esto supuestamente me queda remapeadas las irq    
-        sti ; habilitamos interrupciones
+        ;sti ; habilitamos interrupciones
 
  ;;.hola:
         
@@ -169,16 +169,17 @@ start:
     ltr ax
 
     ; Habilitar interrupciones
+    sti ; habilitamos interrupciones
  
     ; Saltar a la primera tarea: Idle
-    ;mov ax, AX
-    ;jmp 0x78:0x0 ; GDT_IDX_TAREA_1  ;0x0F * 8 = 0111 1000 
+    mov ax, AX
+    jmp 0x78:0x0 ; GDT_IDX_TAREA_1  ;0x0F * 8 = 0111 1000 
 
     ; Ciclar infinitamente (por si algo sale mal...)
-   ; mov eax, 0xFFFF
-   ; mov ebx, 0xFFFF
-   ; mov ecx, 0xFFFF
-   ; mov edx, 0xFFFF
+    mov eax, 0xFFFF
+    mov ebx, 0xFFFF
+    mov ecx, 0xFFFF
+    mov edx, 0xFFFF
     jmp $
     jmp $
 
