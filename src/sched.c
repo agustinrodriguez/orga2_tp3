@@ -7,38 +7,90 @@
 
 #include "sched.h"
 
-unsigned int indices_tareas[] = {GDT_IDX_TAREA_1,GDT_IDX_TAREA_2,GDT_IDX_TAREA_1,GDT_IDX_TAREA_2,
-	GDT_IDX_TAREA_1,GDT_IDX_TAREA_2,GDT_IDX_TAREA_1,GDT_IDX_TAREA_2};
-//segun el enunciado se pide q 1)tss1 ..2)tss2 y asi intercalado CHEQUEAR ESTO
-
 unsigned short sched_proximo_indice() {
-  return 0;
-}
+	unsigned short indice_gdt;
 
-void sched_inicializar(){
-	struct tarea_t tarea_idle;
-	tarea_idle.tarea = (GDT_IDX_TAREA_1 << 3);
-	tarea_idle.estado = 1;
-	tarea_idle.indice = 0;
-	sched.tareas[0] = tarea_idle;
-
-	int i;
-	for (i = 0; i < CANT_TAREAS; i++) 
-	{
-		struct tarea_t tarea_struct;
-		tarea_struct.tarea = (indices_tareas[i] << 3);
-		tarea_struct.estado = 1;
-		tarea_struct.indice = i + 1;
-		sched.tareas[i + 1] = tarea_struct;
+	if (sched.tss_actual == 1) {
+		sched.tss_actual = 2;
+		indice_gdt = GDT_IDX_TAREA_2 << 3;
+		sched.tareas[sched.tarea_anterior].tarea = tss_next_2;
+		tss_next_2 = tarea_siguiente();
+	} else {
+		sched.tss_actual = 1;
+		indice_gdt = GDT_IDX_TAREA_1 << 3;
+		sched.tareas[sched.tarea_anterior].tarea = tss_next_1;
+		tss_next_1 = tarea_siguiente();
 	}
-	sched.QUANTUM_RESTANTE = QUANTUM_TAREA + 1;
-	sched.TAREA_ACTUAL = 0;
-	sched.CONTEXTO = 0;
-	sched.TASKS_UP = CANT_TAREAS;
+
+	sched.tarea_anterior = sched.tarea_actual;
+	sched.tarea_actual = tarea_siguiente().indice;
+	sched.quantum_restante = 0;
+
+	return indice_gdt;
 }
 
-void desalojar_tarea(int tarea){
-	sched.tareas[tarea].estado = 0;
-	sched.TASKS_UP--;
-	//faltaria hacer una funcion q muestre porq exploto
+tarea_t tarea_siguiente() {
+	int i = sched.tarea_actual + 1;
+	while (i != sched.tarea_actual) {
+		if (i == CANT_TAREAS + 1){
+			i = 1;
+		} else {
+			if (sched.tareas[i].estado == 1){
+				return sched.tareas[i];
+			}
+
+			i++;
+		}
+	}
+
+	if (sched.tareas[sched.tarea_actual].estado == 1) {
+		return sched.tareas[sched.tarea_actual];
+	}
+
+	return sched.tareas[0];
+}
+
+void sched_inicializar() {
+    int i;
+	sched.tareas[0].tarea = tss_idle;
+	sched.tareas[0].estado = 1;
+	sched.tareas[0].indice = 0;
+
+    for (i = 1; i < CANT_TAREAS + 1; i++) {
+		sched.tareas[i].tarea = tss_tanques[i];
+		sched.tareas[i].estado = 1;
+		sched.tareas[i].indice = i;
+    }
+
+    sched.quantum_restante = 0;
+    sched.tarea_actual = 0; // idle
+    sched.tarea_anterior = 0; // idle
+    sched.tss_actual = 1; // esto es 1 o 2
+}
+
+void desalojar_tarea() {
+	sched.tareas[sched.tarea_actual].estado = 0;
+	sched_proximo_idle();
+}
+
+unsigned short sched_proximo_idle() {
+	unsigned short indice_gdt;
+
+	if (sched.tss_actual == 1) {
+		sched.tss_actual = 2;
+		indice_gdt = GDT_IDX_TAREA_2 << 3;
+		sched.tareas[sched.tarea_anterior].tarea = tss_next_2;
+		tss_next_2 = sched.tareas[0];
+	} else {
+		sched.tss_actual = 1;
+		indice_gdt = GDT_IDX_TAREA_1 << 3;
+		sched.tareas[sched.tarea_anterior].tarea = tss_next_1;
+		tss_next_1 = sched.tareas[0];
+	}
+
+	sched.tarea_anterior = sched.tarea_actual;
+	sched.tarea_actual = 0;
+	sched.quantum_restante = 0;
+
+	return indice_gdt;
 }

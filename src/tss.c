@@ -24,6 +24,7 @@ void tss_inicializar() {
 void tss_inicializar_tarea_idle() {
     definir_tss(&tss_idle, MAINPAGEDIR,PILA_KERNEL,EIP_IDLE, 0, PILA_KERNEL);
     tss_next_1 = tss_idle;
+    tss_next_2 = tss_idle;
 }
 
 void tss_inicializar_tareas_tanques() {

@@ -5,6 +5,7 @@
   definicion de las rutinas de atencion de interrupciones
 */
 #include "screen.h"
+#include "tss.h"
 
 #ifndef __ISR_H__
 #define __ISR_H__

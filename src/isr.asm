@@ -21,6 +21,7 @@ extern sched_proximo_indice
 extern game_mover
 extern game_misil
 extern game_minar
+extern tss_idle
 
 extern print_error
 ;;
@@ -296,7 +297,7 @@ int_task:
 global vuelvo_idle
 vuelvo_idle:
     pushad
-    mov ax, 0x78
+    mov ax, tss_idle
     mov [selector], ax
     jmp far [offset]
     popad
