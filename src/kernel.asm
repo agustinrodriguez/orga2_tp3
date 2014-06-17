@@ -150,14 +150,14 @@ start:
         sti ; habilitamos interrupciones
 
  ;;.hola:
- ;       xchg bx, bx
- ;       xor edx, edx
- ;       xor eax, eax
- ;       xor ecx, ecx
- ;       mov eax, 4
- ;       mov ecx, 0
-    ;    xchg bx, bx
-        ;div ecx
+        
+        xor edx, edx
+        xor eax, eax
+        xor ecx, ecx
+        mov eax, 4
+        mov ecx, 0
+        xchg bx, bx
+        div ecx
  ;       jmp .hola
     ; Configurar controlador de interrupciones
     
@@ -171,8 +171,8 @@ start:
     ; Habilitar interrupciones
  
     ; Saltar a la primera tarea: Idle
-    mov ax, AX
-    jmp 0x78:0x0 ; GDT_IDX_TAREA_1  ;0x0F * 8 = 0111 1000 
+    ;mov ax, AX
+    ;jmp 0x78:0x0 ; GDT_IDX_TAREA_1  ;0x0F * 8 = 0111 1000 
 
     ; Ciclar infinitamente (por si algo sale mal...)
    ; mov eax, 0xFFFF

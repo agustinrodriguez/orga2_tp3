@@ -22,6 +22,7 @@ extern game_mover
 extern game_misil
 extern game_minar
 extern tss_idle
+extern estado_error
 
 extern print_error
 ;;
@@ -37,6 +38,9 @@ _isr%1:
     ;cli
     xor ecx, ecx
     mov ecx, %1
+    mov eax, 5000
+    xchg bx, bx
+    mov [estado_error], eax
     push ecx
     call print_error
     pop ecx

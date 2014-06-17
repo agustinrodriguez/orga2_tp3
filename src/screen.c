@@ -55,6 +55,7 @@ void print_error(int error_code) {
 	switch(error_code) {
 		case 0:
 			imprimir_texto("Divide Error Exception (#DE)", 28);
+			print_tablaerror();
 			break;
 		case 1:
 			imprimir_texto("Debug Exception (#DB)", 21);
@@ -266,3 +267,124 @@ void imprimir_numero_teclado(unsigned char tecla) {
 		imprimir_caracter(tecla + (unsigned char) + 29, C_FG_WHITE, tecla - (unsigned char) 30, 0, 0);
 	}
 }*/
+
+
+void print_tablaerror(){
+	char * string;
+	string = "        ";
+	int inicio = VIDEO_BASE + 746 + 480;
+	int inicio_y = VIDEO_BASE + 746 + 480;
+	imprimir_texto_para_tanques("eax",3,inicio);
+	inicio = inicio + 8;
+	imprimir_texto_para_tanques(convertir_a_string(estado_error.eax,string,4),8,inicio);
+	inicio = inicio + 312;
+	imprimir_texto_para_tanques("ebx",3,inicio);
+	inicio = inicio + 8;
+	imprimir_texto_para_tanques(convertir_a_string(estado_error.ebx,string,4),8,inicio);
+	inicio = inicio + 312;
+	imprimir_texto_para_tanques("ecx",3,inicio);
+	inicio = inicio + 8;
+	imprimir_texto_para_tanques(convertir_a_string(estado_error.ecx,string,4),8,inicio);
+	inicio = inicio + 312;
+	imprimir_texto_para_tanques("edx",3,inicio);
+	inicio = inicio + 8;
+	imprimir_texto_para_tanques(convertir_a_string(estado_error.edx,string,4),8,inicio);
+	inicio = inicio + 312;
+	imprimir_texto_para_tanques("esi",3,inicio);
+	inicio = inicio + 8;
+	imprimir_texto_para_tanques(convertir_a_string(estado_error.esi,string,4),8,inicio);
+	inicio = inicio + 312;
+	imprimir_texto_para_tanques("edi",3,inicio);
+	inicio = inicio + 8;
+	imprimir_texto_para_tanques(convertir_a_string(estado_error.edi,string,4),8,inicio);
+	inicio = inicio + 312;
+	imprimir_texto_para_tanques("ebp",3,inicio);
+	inicio = inicio + 8;
+	imprimir_texto_para_tanques(convertir_a_string(estado_error.ebp,string,4),8,inicio);
+	inicio = inicio + 312;
+	imprimir_texto_para_tanques("esp",3,inicio);
+	inicio = inicio + 8;
+	imprimir_texto_para_tanques(convertir_a_string(estado_error.esp,string,4),8,inicio);
+	inicio = inicio + 312;
+	imprimir_texto_para_tanques("eip",3,inicio);
+	inicio = inicio + 8;
+	imprimir_texto_para_tanques(convertir_a_string(estado_error.eip,string,4),8,inicio);
+	inicio = inicio + 312;
+	imprimir_texto_para_tanques("cs",2,inicio);
+	inicio = inicio + 8;
+	imprimir_texto_para_tanques(convertir_a_string(estado_error.cs,string,4),8,inicio);
+	inicio = inicio + 312;
+	imprimir_texto_para_tanques("ds",2,inicio);
+	inicio = inicio + 8;
+	imprimir_texto_para_tanques(convertir_a_string(estado_error.ds,string,4),8,inicio);
+	inicio = inicio + 312;
+	imprimir_texto_para_tanques("es",2,inicio);
+	inicio = inicio + 8;
+	imprimir_texto_para_tanques(convertir_a_string(estado_error.es,string,4),8,inicio);
+	inicio = inicio + 312;
+	imprimir_texto_para_tanques("fs",2,inicio);
+	inicio = inicio + 8;
+	imprimir_texto_para_tanques(convertir_a_string(estado_error.fs,string,4),8,inicio);
+	inicio = inicio + 312;
+	imprimir_texto_para_tanques("gs",2,inicio);
+	inicio = inicio + 8;
+	imprimir_texto_para_tanques(convertir_a_string(estado_error.gs,string,4),8,inicio);
+	inicio = inicio + 312;
+	imprimir_texto_para_tanques("ss",2,inicio);
+	inicio = inicio + 8;
+	imprimir_texto_para_tanques(convertir_a_string(estado_error.ss,string,4),8,inicio);
+	inicio = inicio + 312;
+	imprimir_texto_para_tanques("eflags",8,inicio);
+	inicio = inicio + 8;
+	imprimir_texto_para_tanques(convertir_a_string(estado_error.eflags,string,4),8,inicio);
+
+
+	inicio_y = inicio_y + 28;
+	imprimir_texto_para_tanques("cr0",3,inicio_y);
+	inicio_y = inicio_y + 8;
+	imprimir_texto_para_tanques(convertir_a_string(estado_error.cr0,string,4),8,inicio_y);
+	inicio_y = inicio_y + 312;
+	imprimir_texto_para_tanques("cr2",3,inicio_y);
+	inicio_y = inicio_y + 8;
+	imprimir_texto_para_tanques(convertir_a_string(estado_error.cr2,string,4),8,inicio_y);
+	inicio_y = inicio_y + 312;
+	imprimir_texto_para_tanques("cr3",3,inicio_y);
+	inicio_y = inicio_y + 8;
+	imprimir_texto_para_tanques(convertir_a_string(estado_error.cr3,string,4),8,inicio_y);
+	
+
+
+}
+
+
+void imprimir_texto_para_tanques(char * mensaje, int len, int inicio) {
+	int  i, modo = 0;
+	unsigned char *mem_video = (unsigned char *) inicio;
+	video_elem *elemento;
+
+	modo = modo + C_FG_LIGHT_GREY * 16;
+
+	for (i = 0; i<len; i++) {
+		elemento = (video_elem *) mem_video;
+		elemento->modo = (unsigned char) modo; //00100000b (verde);
+		elemento->ascii = mensaje[i];
+		mem_video = mem_video + 2;
+	}
+}
+
+char * convertir_a_string(int registro, char * txt, int inicio){
+	int posicion = 7 + inicio; //voy de atras para adelante
+	int valor;
+	while(posicion >= inicio){
+		valor = registro & 0xF;
+		if(valor < 10){
+		 valor += ASCII_first_num;
+		}else{ 
+			valor -= 10; valor += ASCII_first_let;
+		}
+		txt[posicion] = valor;
+		registro = registro >> 4;
+		posicion--;
+	}
+	return txt;
+};
