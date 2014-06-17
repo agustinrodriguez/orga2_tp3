@@ -12,6 +12,7 @@ sched_tarea_offset:     dd 0x00
 sched_tarea_selector:   dw 0x00
 contador_reloj:      db 0
 
+
 ;; PIC
 extern fin_intr_pic1
 
@@ -23,8 +24,9 @@ extern game_misil
 extern game_minar
 extern tss_idle
 extern estado_error
-
+extern desalojar_tarea
 extern print_error
+extern sched_proximo_indice
 ;;
 ;; Definición de MACROS
 ;; -------------------------------------------------------------------------- ;;
@@ -35,17 +37,50 @@ global _isr%1
 _isr%1:
 .loopear:
     ; To Infinity And Beyond!!
-    ;cli
+    cli
     xor ecx, ecx
     mov ecx, %1
-    mov eax, 5000
+    xor eax,eax
     xchg bx, bx
-    mov [estado_error], eax
+    mov [estado_error], eax ; EAX
+    mov eax, ebx
+    mov [estado_error+4], eax
+    mov eax, ecx
+    mov [estado_error+8], eax
+    mov eax, edx    
+    mov [estado_error+12], eax
+    mov eax, esi
+    mov [estado_error+16], eax
+    mov eax, edi
+    mov [estado_error+20], eax
+    mov eax, ebp
+    mov [estado_error+24], eax
+    mov eax, esp
+    mov [estado_error+28], eax
+    mov eax, cr0
+    mov [estado_error+36], eax
+    mov eax, cr2
+    mov [estado_error+40], eax
+    mov eax, cr3
+    mov [estado_error+44], eax
+    mov eax, es
+    mov [estado_error+56], eax
+    mov eax, fs
+    mov [estado_error+60], eax
+    mov eax, gs
+    mov [estado_error+64], eax
+    mov eax, ss    ;mov eax, ss
+    mov [estado_error+68], eax
+    
+
     push ecx
     call print_error
     pop ecx
+    call desalojar_tarea
+    call vuelvo_idle
+
     jmp $
-    ;sti
+    sti
     iret
 %endmacro
 
@@ -106,6 +141,28 @@ invalida:
 ;;
 ;; Rutina de atención del RELOJ
 ;; -------------------------------------------------------------------------- ;;
+
+global _isr32
+_isr32:
+      pushad   
+      call proximo_reloj   
+      call sched_proximo_indice   
+      cmp ax, 0   
+      je  .nojump      
+      mov [selector], ax      
+      call fin_intr_pic1      
+      jmp far [offset]      
+      jmp .end   
+      
+    .nojump:   
+  
+        call fin_intr_pic1   
+    
+    .end:   
+        popad 
+        iret
+
+
 global screen_proximo_reloj
 screen_proximo_reloj:
     cli

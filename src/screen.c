@@ -270,14 +270,13 @@ void imprimir_numero_teclado(unsigned char tecla) {
 
 
 void print_tablaerror(){
-	char * string;
-	string = "        ";
+	//char string[] = "??? ????????";
 	int inicio = VIDEO_BASE + 746 + 480;
-	int inicio_y = VIDEO_BASE + 746 + 480;
+	//int inicio_y = VIDEO_BASE + 746 + 480;
 	imprimir_texto_para_tanques("eax",3,inicio);
 	inicio = inicio + 8;
-	imprimir_texto_para_tanques(convertir_a_string(estado_error.eax,string,4),8,inicio);
-	inicio = inicio + 312;
+	imprimir_texto_para_tanques(estado_error.eax,8,inicio);
+	/*inicio = inicio + 312;
 	imprimir_texto_para_tanques("ebx",3,inicio);
 	inicio = inicio + 8;
 	imprimir_texto_para_tanques(convertir_a_string(estado_error.ebx,string,4),8,inicio);
@@ -353,7 +352,7 @@ void print_tablaerror(){
 	imprimir_texto_para_tanques(convertir_a_string(estado_error.cr3,string,4),8,inicio_y);
 	
 
-
+*/
 }
 
 
@@ -372,19 +371,20 @@ void imprimir_texto_para_tanques(char * mensaje, int len, int inicio) {
 	}
 }
 
-char * convertir_a_string(int registro, char * txt, int inicio){
-	int posicion = 7 + inicio; //voy de atras para adelante
-	int valor;
+char * convertir_a_string(char * registro, char * txt, int inicio){
+	/*int posicion = 7 + inicio; //voy de atras para adelante
+	char * valor;
 	while(posicion >= inicio){
-		valor = registro & 0xF;
+		valor = registro;
 		if(valor < 10){
 		 valor += ASCII_first_num;
 		}else{ 
 			valor -= 10; valor += ASCII_first_let;
 		}
 		txt[posicion] = valor;
-		registro = registro >> 4;
+		registro = registro;
 		posicion--;
 	}
+	//txt[1] = *(char *) registro;*/
 	return txt;
-};
+}
