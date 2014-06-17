@@ -14,12 +14,12 @@ unsigned short sched_proximo_indice() {
 		sched.tss_actual = 2;
 		indice_gdt = GDT_IDX_TAREA_2 << 3;
 		sched.tareas[sched.tarea_anterior].tarea = tss_next_2;
-		tss_next_2 = tarea_siguiente();
+		tss_next_2 = tarea_siguiente().tarea;
 	} else {
 		sched.tss_actual = 1;
 		indice_gdt = GDT_IDX_TAREA_1 << 3;
 		sched.tareas[sched.tarea_anterior].tarea = tss_next_1;
-		tss_next_1 = tarea_siguiente();
+		tss_next_1 = tarea_siguiente().tarea;
 	}
 
 	sched.tarea_anterior = sched.tarea_actual;
@@ -29,7 +29,7 @@ unsigned short sched_proximo_indice() {
 	return indice_gdt;
 }
 
-tarea_t tarea_siguiente() {
+tarea_ tarea_siguiente() {
 	int i = sched.tarea_actual + 1;
 	while (i != sched.tarea_actual) {
 		if (i == CANT_TAREAS + 1){
@@ -80,12 +80,12 @@ unsigned short sched_proximo_idle() {
 		sched.tss_actual = 2;
 		indice_gdt = GDT_IDX_TAREA_2 << 3;
 		sched.tareas[sched.tarea_anterior].tarea = tss_next_2;
-		tss_next_2 = sched.tareas[0];
+		tss_next_2 = sched.tareas[0].tarea;
 	} else {
 		sched.tss_actual = 1;
 		indice_gdt = GDT_IDX_TAREA_1 << 3;
 		sched.tareas[sched.tarea_anterior].tarea = tss_next_1;
-		tss_next_1 = sched.tareas[0];
+		tss_next_1 = sched.tareas[0].tarea;
 	}
 
 	sched.tarea_anterior = sched.tarea_actual;
