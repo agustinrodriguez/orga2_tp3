@@ -37,5 +37,6 @@ void imprimir_numero_teclado(unsigned char tecla);
 void imprimir_texto_para_tanques(char * mensaje, int len, int inicio, char color);
 void print_tablaerror();
 void convertir_a_string(unsigned int valor, char * cadena);
+void imprimir_desalojo(unsigned int error);
 
 #endif  /* !__SCREEN_H__ */

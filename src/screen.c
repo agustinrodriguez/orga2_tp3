@@ -24,6 +24,25 @@ void limpiar_pantalla() {
 	}
 }
 
+void imprimir_desalojo(unsigned int error){
+	int inicio = VIDEO_BASE + 6346;
+	switch(error){
+		case 1:
+			imprimir_texto_para_tanques("Interrupcion Intel", 18 , inicio, C_FG_WHITE);
+			break;
+		case 2:
+			imprimir_texto_para_tanques("Destruccion por Mina", 20 , inicio, C_FG_WHITE);
+			break;
+		case 3:
+			imprimir_texto_para_tanques("Destruccion por Misil", 21 , inicio, C_FG_WHITE);
+			break;
+		case 4:
+			imprimir_texto_para_tanques("Destruccion por Superposición", 29 , inicio, C_FG_WHITE);
+			break;	
+	}
+}
+
+
 void caracter_pintado() {
 	int modo = 0;
 	unsigned char *mem_video = (unsigned char *) VIDEO_BASE;
