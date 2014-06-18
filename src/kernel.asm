@@ -134,7 +134,7 @@ start:
     ; Inicializar tss de las tanques
     
     ; Inicializar el scheduler
-       ; call sched_inicializar
+        call sched_inicializar
     ; Inicializar la IDT
         call idt_inicializar
     
@@ -143,9 +143,6 @@ start:
     
     ; Cargar IDT
         lidt [IDT_DESC]
-        call deshabilitar_pic
-        call resetear_pic
-        call habilitar_pic
         ;con esto supuestamente me queda remapeadas las irq    
         ;sti ; habilitamos interrupciones
 
@@ -156,8 +153,8 @@ start:
         xor ecx, ecx
         mov eax, 4
         mov ecx, 0
-        xchg bx, bx
-        div ecx
+   ;     xchg bx, bx
+   ;     div ecx
  ;       jmp .hola
     ; Configurar controlador de interrupciones
     
@@ -169,10 +166,13 @@ start:
     ltr ax
 
     ; Habilitar interrupciones
+      call deshabilitar_pic
+        call resetear_pic
+        call habilitar_pic
+      
     sti ; habilitamos interrupciones
  
     ; Saltar a la primera tarea: Idle
-    mov ax, AX
     jmp 0x78:0x0 ; GDT_IDX_TAREA_1  ;0x0F * 8 = 0111 1000 
 
     ; Ciclar infinitamente (por si algo sale mal...)

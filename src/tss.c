@@ -157,7 +157,7 @@ void definir_tss(tss *task, unsigned int cr3, unsigned int esp0, unsigned int ei
     task->ss0 = GDT_IDX_DATA_0 << 3;
     task->esp = pila;//hay q darle el valor de pila, segun enunciado es la pila del kernel tengo entendido
     task->ebp = task->esp;
-
+    task->eflags = 0x00000202;
     //SELECTORES
     unsigned int Datos;
     unsigned int Codigo;

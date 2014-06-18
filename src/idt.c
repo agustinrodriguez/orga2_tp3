@@ -77,10 +77,10 @@ unsigned int idt_inicializar() {
         i++;
     } //supongo que de la 20 a la 256 va a la misma macro, salvo la de teclado
      //Interrupcion de reloj.
-    idt[interrupcion_clock].offset_0_15 = (unsigned short) ((unsigned int)(&screen_proximo_reloj) & (unsigned int) 0xFFFF);
+    idt[interrupcion_clock].offset_0_15 = (unsigned short) ((unsigned int)(&_isr32) & (unsigned int) 0xFFFF);
     idt[interrupcion_clock].segsel = (unsigned short) (GDT_IDX_CODE_0 * 8);    
     idt[interrupcion_clock].attr = (unsigned short) 0x8E00;
-    idt[interrupcion_clock].offset_16_31 = (unsigned short) ((unsigned int)(&screen_proximo_reloj) >> 16 & (unsigned int) 0xFFFF);
+    idt[interrupcion_clock].offset_16_31 = (unsigned short) ((unsigned int)(&_isr32) >> 16 & (unsigned int) 0xFFFF);
 
     //Interrupcion de Teclado.
     idt[interrupcion_teclado].offset_0_15 = (unsigned short) ((unsigned int)(&int_teclado) & (unsigned int) 0xFFFF);

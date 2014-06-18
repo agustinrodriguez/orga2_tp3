@@ -55,7 +55,6 @@ void print_error(int error_code) {
 	switch(error_code) {
 		case 0:
 			imprimir_texto("Divide Error Exception (#DE)", 28);
-			print_tablaerror();
 			break;
 		case 1:
 			imprimir_texto("Debug Exception (#DB)", 21);

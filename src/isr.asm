@@ -161,11 +161,18 @@ invalida:
 global _isr32
 _isr32:
       pushad   
-      call proximo_reloj   
+     ; cli
+      call proximo_reloj
+      
+      call screen_proximo_reloj   
+      
       call sched_proximo_indice   
+      
       cmp ax, 0   
-      je  .nojump      
+      je  .nojump  
+      xchg bx,bx
       mov [selector], ax      
+      
       call fin_intr_pic1      
       jmp far [offset]      
       jmp .end   
@@ -174,64 +181,67 @@ _isr32:
   
         call fin_intr_pic1   
     
-    .end:   
+    .end: 
+     ;   sti  
         popad 
         iret
 
 
 global screen_proximo_reloj
 screen_proximo_reloj:
-    cli
-    pushad
-    call fin_intr_pic1
-    mov eax, [contador_reloj]
-  ;  xchg bx, bx  Break para ver como va moviendose el cursor 
+   ; cli
+   ; pushad
+   ; call fin_intr_pic1
+   push ecx
+    mov ecx, [contador_reloj]
+    ;xchg bx, bx  ;Break para ver como va moviendose el cursor 
     
-    cmp eax, 0
+    cmp ecx, 0
     je .primero
-    cmp eax, 1
+    cmp ecx, 1
     je .segundo
-    cmp eax, 2
+    cmp ecx, 2
     je .tercero
-    cmp eax, 4
+    cmp ecx, 4
     je .cuarto
-    cmp eax, 5
+    cmp ecx, 5
     je .quinto
 
     .primero:
         imprimir_texto_mp isrClock, 1, 0x0f, 47, 59
-        inc eax
-        mov [contador_reloj], eax
+        inc ecx
+        mov [contador_reloj], ecx
         jmp .fin
 
     .segundo:
         imprimir_texto_mp isrClock, 2, 0x0f, 47, 59
-        inc eax
-        mov [contador_reloj], eax
+        inc ecx
+        mov [contador_reloj], ecx
         jmp .fin
 
     .tercero:
         imprimir_texto_mp isrClock, 3, 0x0f, 47, 59
-        inc eax
-        mov [contador_reloj], eax
+        inc ecx
+        mov [contador_reloj], ecx
         jmp .fin
 
     .cuarto:
         imprimir_texto_mp isrClock, 4, 0x0f, 47, 59
-        inc eax
-        mov [contador_reloj], eax
+        inc ecx
+        mov [contador_reloj], ecx
         jmp .fin
 
     .quinto:
         imprimir_texto_mp limpieza, 4, 0x0f, 47, 59
-        xor eax,eax
-        mov [contador_reloj], eax
+        xor ecx,ecx
+        mov [contador_reloj], ecx
         jmp .fin
 
 .fin:
-    popad
-    sti
-    iret
+    ;popad
+    ;sti
+    pop ecx
+    ret
 
 ;;
 ;; Rutina de atención del TECLADO
@@ -241,7 +251,6 @@ int_teclado:
     cli
     pushad
     xor al, al
-    xchg bx, bx
     in al, 0x60
     mov ah, al
     or al, 0x80             

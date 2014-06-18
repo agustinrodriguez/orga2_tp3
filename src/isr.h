@@ -33,6 +33,7 @@ void _isr19();
 void invalida();
 void int_task();
 void screen_proximo_reloj();
+void _isr32();
 void int_teclado();
 
 #endif  /* !__ISR_H__ */
