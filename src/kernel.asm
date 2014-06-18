@@ -89,7 +89,7 @@ start:
     mov GS, AX
     mov SS, AX
 
-    mov AX, 0x68 ; 0110 1000 ;cargo el selector de segmento de video 13 | 0 | 00
+    mov AX, 0x68 ; 0110 1000 ; cargo el selector de segmento de video 13 | 0 | 00
     mov FS, AX
 
     ; Establecer la base de la pila
@@ -101,7 +101,7 @@ start:
 
     ; Inicializar pantalla
     call limpiar_pantalla
-    call pantalla_juego ; este lo puse aca no tengo idea donde va ja
+    call pantalla_juego
     imprimir_texto_mp equipo_mp_msg, equipo_mp_len, 0x07, 0, 53
     
     ; Inicializar el manejador de memoria
@@ -116,19 +116,18 @@ start:
     mov eax, cr0
     or eax, 0x80000000
     mov cr0, eax
-;ese call hay q comentarlo ya q no se usa esta funcion fue de prueba cuando hicimos paginacion
-   ;; xor eax, eax
-   ; call get_cr3_task
-   ; mov cr3, eax
-   ; call caracter_pintado
 
-    ;mov eax, MAINPAGEDIR
-    ;mov cr3, eax
 
     ; Inicializar tss
     call gdt_set_tss ; primero inicializo las entradas de la gdt de las tsss
     call tss_inicializar
     
+    ;xor eax, eax
+    ;call get_cr3_task
+    ;mov cr3, eax
+    ;call caracter_pintado
+    ;xchg bx, bx
+
     ; Inicializar tss de la tarea Idle
     
     ; Inicializar tss de las tanques
@@ -142,20 +141,17 @@ start:
     ; Inicializar Game
     
     ; Cargar IDT
-        lidt [IDT_DESC]
-        ;con esto supuestamente me queda remapeadas las irq    
-        ;sti ; habilitamos interrupciones
-
- ;;.hola:
+    lidt [IDT_DESC]
+    ;con esto supuestamente me queda remapeadas las irq
         
-        xor edx, edx
-        xor eax, eax
-        xor ecx, ecx
-        mov eax, 4
-        mov ecx, 0
-   ;     xchg bx, bx
-   ;     div ecx
- ;       jmp .hola
+    xor edx, edx
+    xor eax, eax
+    xor ecx, ecx
+    mov eax, 4
+    mov ecx, 0
+    ; xchg bx, bx
+    ; div ecx
+
     ; Configurar controlador de interrupciones
     
     ; pintar posiciones inciales de tanques
@@ -166,10 +162,9 @@ start:
     ltr ax
 
     ; Habilitar interrupciones
-      call deshabilitar_pic
-        call resetear_pic
-        call habilitar_pic
-      
+    call deshabilitar_pic
+    call resetear_pic
+    call habilitar_pic
     sti ; habilitamos interrupciones
  
     ; Saltar a la primera tarea: Idle

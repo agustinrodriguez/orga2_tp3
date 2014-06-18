@@ -43,7 +43,7 @@ void mmu_inicializar() {
 }
 
 unsigned int get_cr3_task() {
-    return TASK_CR3[6];
+    return TASK_CR3[1];
 }
 /*
 INICIO AREA LIBRE 0x100000 == 1048576

@@ -170,7 +170,7 @@ _isr32:
       
       cmp ax, 0   
       je  .nojump  
-      xchg bx,bx
+      xchg bx,bx        
       mov [selector], ax      
       
       call fin_intr_pic1      
