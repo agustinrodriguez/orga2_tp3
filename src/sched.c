@@ -70,7 +70,7 @@ void sched_inicializar() {
 
 void desalojar_tarea() {
 	sched.tareas[sched.tarea_actual].estado = 0;
-	sched_proximo_idle();
+	//sched_proximo_idle();
 }
 
 unsigned short sched_proximo_idle() {

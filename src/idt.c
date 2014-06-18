@@ -90,8 +90,8 @@ unsigned int idt_inicializar() {
 //como son de tipo instruccion se matiene el 8E00
 
     idt[interrupcion_software].offset_0_15 = (unsigned short) ((unsigned int)(&int_task) & (unsigned int) 0xFFFF);
-    idt[interrupcion_teclado].segsel = (unsigned short) (GDT_IDX_CODE_0 * 8);  
-    idt[interrupcion_teclado].attr = (unsigned short) 0xEE00;
-    idt[interrupcion_teclado].offset_16_31 = (unsigned short) ((unsigned int)(&int_task) >> 16 & (unsigned int) 0xFFFF);
+    idt[interrupcion_software].segsel = (unsigned short) (GDT_IDX_CODE_0 * 8);  
+    idt[interrupcion_software].attr = (unsigned short) 0xEE00;
+    idt[interrupcion_software].offset_16_31 = (unsigned short) ((unsigned int)(&int_task) >> 16 & (unsigned int) 0xFFFF);
     return (unsigned int)tss_tanques;
 }

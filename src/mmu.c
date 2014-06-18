@@ -43,7 +43,7 @@ void mmu_inicializar() {
 }
 
 unsigned int get_cr3_task() {
-    return TASK_CR3[1];
+	return TASK_CR3[1];
 }
 /*
 INICIO AREA LIBRE 0x100000 == 1048576
@@ -212,6 +212,8 @@ pte = pde->base + 00 0000 0000
 
 0000 1000 00 | 00 0000 0001 | 0000 0000 0000
 
+0x08001000
+
 */
 void mmu_mapear_pagina(unsigned int dir_virtual, unsigned int cr3, unsigned int dir_fisica,
 	unsigned char present, unsigned char rw, unsigned char us) {
@@ -226,7 +228,7 @@ void mmu_mapear_pagina(unsigned int dir_virtual, unsigned int cr3, unsigned int 
 	page_table_entry * page_table;
 
 	if (page_dir->p) {
-		page_table = (page_table_entry *) (page_dir->base_12_31 & 0xFFFFF) + offset_tabla;
+		page_table = (page_table_entry *) (page_dir->base_12_31 << 12) + offset_tabla;
 	} else {
 		define_page_directory_entry(page_dir, present, rw, us, 
 			(unsigned int) MEMORIA_RESTANTE);

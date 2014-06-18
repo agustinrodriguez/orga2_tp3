@@ -27,6 +27,7 @@ extern estado_error
 extern desalojar_tarea
 extern print_error
 extern sched_proximo_indice
+extern sched_proximo_idle
 ;;
 ;; Definición de MACROS
 ;; -------------------------------------------------------------------------- ;;
@@ -40,7 +41,6 @@ _isr%1:
     cli
     xor ecx, ecx
     mov ecx, %1
-    xchg bx, bx
     ;hago los q tengo en pila
     mov [estado_error], eax ; EAX
     mov eax, ds
@@ -94,9 +94,8 @@ _isr%1:
     pop ecx
     call desalojar_tarea
     call vuelvo_idle
-
-    jmp $
     sti
+    jmp $
     iret
 %endmacro
 
@@ -160,8 +159,9 @@ invalida:
 
 global _isr32
 _isr32:
+      sti  
       pushad   
-     ; cli
+      ;cli
       call proximo_reloj
       
       call screen_proximo_reloj   
@@ -170,10 +170,11 @@ _isr32:
       
       cmp ax, 0   
       je  .nojump  
-      xchg bx,bx        
+              
       mov [selector], ax      
       
-      call fin_intr_pic1      
+      call fin_intr_pic1
+      xchg bx,bx
       jmp far [offset]      
       jmp .end   
       
@@ -182,14 +183,14 @@ _isr32:
         call fin_intr_pic1   
     
     .end: 
-     ;   sti  
+
         popad 
         iret
 
 
 global screen_proximo_reloj
 screen_proximo_reloj:
-   ; cli
+    ; cli
    ; pushad
    ; call fin_intr_pic1
    push ecx
@@ -383,7 +384,7 @@ int_task:
 global vuelvo_idle
 vuelvo_idle:
     pushad
-    mov ax, tss_idle
+    call sched_proximo_idle   
     mov [selector], ax
     jmp far [offset]
     popad

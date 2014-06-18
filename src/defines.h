@@ -56,7 +56,7 @@
 /*INTERRUPCIONES*/
 #define interrupcion_clock 32 	
 #define interrupcion_teclado 33
-#define interrupcion_software 52
+#define interrupcion_software 0x52
 
 /*TAREAS*/
 #define QUANTUM_TAREA 3 //FRUTA?
