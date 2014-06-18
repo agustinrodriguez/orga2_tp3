@@ -1,0 +1,39 @@
+\subsubsection{Interrupt Descriptor Table}
+A trav\'es de la IDT, definimos donde est\'a el c\'odigo de las interrupciones que manejaremos.\\
+La estructura de una entrada en la IDT est\'a definida en idt.h y en idt.c son iniciadas todas las entradas.\\
+Por medio de una macro se cargan las primeras 20 interrupciones del procesador, que van desde la divisi\'on por 0 hasta la interrupci\'on SIMD.\\
+Luego son completadas todas las entradas restantes de la tabla con entradas de interrupciones inv\'alidas con el prop\'osito de manejar 
+de alguna forma todas las interrupciones posibles. Algunas de estas son definidas nuevamente:\\
+\begin{itemize}
+ \item Interrupci\'on 0x32: Clock.
+ \item Interrupci\'on 0x33: Teclado.
+ \item Interrupci\'on 0x50: Servicios del sistema (syscalls).
+ \item Interrupci\'on 0x66: Handlers de las banderas.
+\end{itemize}
+
+En isr.asm se encuentra el c\'odigo donde atendemos estas interrupciones. Por ahora de la 0 a la 19 s\'olo se imprime el c\'odigo de error en pantalla.\\
+
+La estructura de una entrada de la idt, definida en idt.h, es la siguiente:\\
+\begin{itemize}
+ \item offset\_0\_15: primeros 16 bits del offset al entry point, que atender\'a la interrupci\'on
+ \item segsel: selector de segmento de codigo de nivel 0 la gdt
+ \item attr: atributos de la entrada: Present, DPL, D. Esto var\'ian seg\'un si la interrupci\'on es de Reloj o Teclado que llevan DPL = 00b
+o Servicios o Banderas  cuyo DPL = 11b.
+ \item offset\_16\_31: segundos 16 bits del offset al entry point.
+\end{itemize}
+
+
+\begin{tabular}{l l l l l}
+Indice & Descripcion & P & DPL & D\\
+
+\hline
+0...19 & Ins del procesador & 1 & 0 & 1 \\
+32 & Clock & 1 & 0 & 1\\
+33 & Teclado	 & 1 & 0 & 1\\
+80 & Servicios & 1 & 3 & 1\\
+102 & Banderas & 1 & 3 & 1\\
+\end{tabular}
+
+
+
+
