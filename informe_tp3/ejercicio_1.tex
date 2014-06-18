@@ -1,0 +1,73 @@
+\subsubsection{Global Descriptor Table}
+Como ya sabemos, el procesador inicia en ''modo real'', el cual direcciona a 1 MB de memoria y no posee niveles de protecci\'on ni privilegios.\\
+Por eso necesitamos que el procesador pase a ''modo protegido'', para direccionar a m\'as memoria y poder manejar distintos niveles de protecci\'on. Nuestro kernel se encargar\'a de hacer esto.\\
+\\
+Antes de iniciar en modo protegido, es imprescindible tener bien configurado la Tabla de Descriptores Globales, la cual contiene a los descriptores de segmento, con el fin de definir caracter\'isticas de varias \'areas de la memoria.\\
+En el enunciado se piden una segmentacion flat, con 4 segmentos que deben direccionar a 1.75 GB: 2 para c\'odigo de nivel 0 y 3 respectivamente, y 2 para datos, de nivel 0 y 3 tambi\'en.\\
+
+La estructura de un descriptor de segmento es la siguiente:\\
+\begin{itemize}
+  \item L — 64-bit code segment (IA-32e mode only)
+  \item AVL — Available for use by system software
+  \item BASE — Segment base address
+  \item D/B — Default operation size (0 = 16-bit segment; 1 = 32-bit segment)
+  \item DPL — Descriptor privilege level
+  \item G — Granularity
+  \item LIMIT — Segment Limit
+  \item P — Segment present
+  \item S — Descriptor type (0 = system; 1 = code or data)
+  \item TYPE — Segment type
+\end{itemize}
+
+Para definir los segmentos que nos requieren, los items importantes son:\\
+\begin{itemize}
+ \item BASE: este parametro indica el comienzo del segmento. En los 4 casos, este fue 0 ya que se pidió una segmentacion flat.
+ \item P: Present, este parametro indica si el segmento est\'a presente en la memoria. El valor en los 4 segmentos es 0x01 ya que efectivamente estaban presentes.
+ \item DPL: Nivel de privilegios del descriptor. Dado que se piden dos segmentos de código y dos de datos nivel 0 y nivel3, este 
+parametro var\'ia seg\'un cual de estos queremos implementar. Nivel 0 implica DPL = 00b y nivel 3 implica DPL = 11b.
+ \item G. Granularity. Este flag indica si el tamaño del descriptor es mayor o menor que 1 Mb. Esto sucede dado que solo se poseen 20 bits para 
+indicar el tamaño del segmento. En particular, si G = 1 entonces el valor de los 20 bits ser\'a multiplicado por 4 Kb provocando que con 
+ solo 20 bits pueda representar 4Gb de memoria. En nuestro caso queremos un tamaño de 1.75Gb entonces necesitamos G = 1.
+ \item Limit: Tamaño del segmento. Va para los 4 segmentos lo mismo.\\
+  \indent Tenemos que direccionar a 1.75 GB, que son 1792 MB, que equivalen a 1835008 KB.\\
+  \indent Como G vale 0x01, las unidades deben representarse de 4 KB, por eso dividimos por 4.\\
+  \indent $\frac{1835008}{4} = 458752$\\
+  \indent Pero como la memoria empieza desde el 0, debe ser un n\'umero menos: 458751\\
+  \indent $458751 = 0x6FFFF$
+ \item Type: Indica si es un segmento de c\'odigo o de datos. Para el segmento de c\'odigo de nivel 0 ponemos el valor de 0x08, indicando 
+que es ''Execute only''. para el segmento de c\'odigo de nivel 3 se usa 0x0A, \emph{Read / Execute}. Mientras que para los 2 de datos 
+ponemos el valor de 0x02, indicando que son de Read/Write.
+\end{itemize}
+
+Tambi\'en se define un segmento que reservado para el \'area de la pantalla en la memoria. Sabemos que empieza en la direcci\'on base
+0x000B8000, con un tamaño de 0x0F9F. Dado que se utilizar\'a como un segmemto de datos, su tipo es de Lectura/ Escritura.\\\\
+\\
+Tambi\'en necesitamos entradas para cada una de las tareas y sus banderas. Es decir, selectores de 
+TSS. Estos ser\'an definidos de forma din\'amica y no hardcodeados, bas\'andose en la posici\'on de su respectivo TSS. B\'asicamente cada
+una de estas entradas de la GDT para las TSS fue inicada de la siguiente manera:
+\begin{itemize}
+ \item BASE: Direcci\'on donde fue definido el comienzo de la TSS para cada respectiva tarea.
+ \item P: Present. Este flag debe ir seteado para todas las TSS.
+ \item DPL: las tareas corren en nivel 3, por lo tanto, el DPL = 3 salvo para las tareas INICIAL e IDLE que deben correr en nivel 0.
+ \item limit: Como m\'inimo las TSS tienen un tamaño de 104 bytes es decir 0x67. Esto es como m\'inimo ya que existe la posibilidad de
+extender el IO Map Base Address.
+ \item type: este es particular. dado que es un tipo de descriptor de segmento, el valor tiene que ser 0x09.
+ \item S: este flag determina si el descriptor se refiere a un segmento de c\'odigo o datos o si es de sistema. En este caso como los
+descriptores de TSS son de sistema S = 0.
+\end{itemize}
+
+
+
+\subsubsection{Pasaje a modo protegido}
+
+En funci\'on de pasar a ejecutar en modo protegido el manual de \emph{Intel}\footnote{Ver Intel 64 and IA-32 Architectures Software 
+Developer's Manual, Volume 3 System Programming Guide} explicita una serie de pasos que se deben seguir para complir con esto.\\
+\begin{itemize}
+ \item Habilitar A20. al realizar esto habilitamos el acceso a direcciones superiores a 1 Mb de memoria.
+ \item Una vez que tenemos configurada la gdt, guardamos su ubicacion en una variable gdt\_desc. Para que luego la instrucci\'on lgdt 
+pueda cargar la direccion de comienzo de la GDT.
+ \item Seteamos el flag PE del registro CR0, que indica ''Protected Envirnoment''.
+ \item Por \'ultimo para pasar a modo protegido hacemos un jmp al comienzo del segmento de c\'odigo de nivel 0.
+ \item Una vez ah\'i acomodamos todos los segmentos apuntando a datos de nivel 0 y seteamos la pila del Kernel en 0x27000 seg\'un lo
+indicado por el enunciado.
+\end{itemize}

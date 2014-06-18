@@ -1,0 +1,20 @@
+La siguiente secci\'on est\'a dedicada a los \emph{Handlers} o manejadores de las interrupciones. Estos son los c\'odigos que se ejecutan
+cuando alguna porci\'on del systema produce un error o llama a una interrupci\'on mejor conocida como syscall o servicios del sistema.\\
+Nuestro Kernel cuenta con 3 interrupciones que poseen handlers. Estas fueron mencionadas en el punto 3. Procederemos a explicar cada una de
+ellas:
+\begin{itemize}
+ \item Clock: El clock es una interrupci\'on que se ejecuta cada ciertos ticks de reloj. La misma se encarga de buscar el siguiente selector
+de segmento según es especificado en la secci\'on 7. y realizar el salto a dicho selector que puede corresponder a una tarea, una bandera o 
+la tarea IDLE.
+ \item Teclado: La interrupci\'on de teclado cumple la funci\'on de cambiar el estado del juego.
+ \item Servicios o Syscalls: Esta interrupci\'on brinda al systema una serie de servicios o funciones a las tareas:
+  \begin{itemize}
+   \item Minar:
+   \item Lanzar Misil:
+   \item Mover: 
+  \end{itemize}
+
+\end{itemize}
+
+Cabe destacar que las funciones implementadas en C para las syscalls, minar, misil y mover, se encuentran allí dado que manejan p\'aginas
+de memoria haciendo que ubicarlas en mmu.c sea lo m\'as conveniente para aprovechar todas las funciones y estructuras utilizadas. 
