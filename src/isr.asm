@@ -10,7 +10,7 @@ BITS 32
 
 sched_tarea_offset:     dd 0x00
 sched_tarea_selector:   dw 0x00
-contador_reloj:      db 0
+contador_reloj:      dd 0
 
 
 ;; PIC
@@ -32,6 +32,7 @@ extern gama_inicializar
 extern print_tablaerror
 extern imprimir_desalojo
 extern imprimir_reloj_tanque
+extern matar_tarea_actual
 ;;
 ;; Definición de MACROS
 ;; -------------------------------------------------------------------------- ;;
@@ -43,6 +44,7 @@ _isr%1:
 .loopear:
     ; To Infinity And Beyond!!
     cli
+    xchg bx,bx
     xor ecx, ecx
     mov ecx, %1
     ;hago los q tengo en pila
@@ -97,7 +99,7 @@ _isr%1:
     call imprimir_desalojo
     pop ecx
     call print_tablaerror
-    call desalojar_tarea
+    call matar_tarea_actual
     call vuelvo_idle
     sti
     jmp $
@@ -202,11 +204,11 @@ _isr32:
 global screen_proximo_reloj
 screen_proximo_reloj:
     ; cli
-   ; pushad
+    pushad
    ; call fin_intr_pic1
    push ecx
     mov ecx, [contador_reloj]
-    ;xchg bx, bx  ;Break para ver como va moviendose el cursor 
+   ; xchg bx, bx  ;Break para ver como va moviendose el cursor 
     
     cmp ecx, 0
     je .primero
@@ -220,14 +222,18 @@ screen_proximo_reloj:
     je .quinto
 
     .primero:
+        push ecx
         call imprimir_reloj_tanque
+        pop ecx
         inc ecx
         mov [contador_reloj], ecx
         jmp .fin
 
     .segundo:
         ;imprimir_texto_mp isrClock, 2, 0x0f, 47, 59
+        push ecx
         call imprimir_reloj_tanque
+        pop ecx
         inc ecx
         mov [contador_reloj], ecx
 
@@ -235,27 +241,33 @@ screen_proximo_reloj:
 
     .tercero:
         ;imprimir_texto_mp isrClock, 3, 0x0f, 47, 59
+        push ecx
         call imprimir_reloj_tanque
+        pop ecx
         inc ecx
         mov [contador_reloj], ecx
         jmp .fin
 
     .cuarto:
         ;imprimir_texto_mp isrClock, 4, 0x0f, 47, 59
+        push ecx
         call imprimir_reloj_tanque
+        pop ecx
         inc ecx
         mov [contador_reloj], ecx
         jmp .fin
 
     .quinto:
+        push ecx
         call imprimir_reloj_tanque
+        pop ecx
         ;imprimir_texto_mp limpieza, 4, 0x0f, 47, 59
         xor ecx,ecx
         mov [contador_reloj], ecx
         jmp .fin
 
 .fin:
-    ;popad
+    popad
     ;sti
     pop ecx
     ret
@@ -402,8 +414,10 @@ vuelvo_idle:
     pushad
     call sched_proximo_idle   
     mov [selector], ax
+    sti
     jmp far [offset]
     popad
+    sti
     ret
 
 ;; Rutinas de atención de las SYSCALLS

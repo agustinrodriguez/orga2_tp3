@@ -55,25 +55,25 @@ void imprimir_reloj_tanque(int reloj){
 		barra[0] = (unsigned char) 0x5C;
 		imprimir_texto_para_tanques(barra,1,video,C_FG_BLACK);
 		imprimir_texto_para_tanques2("*",1,video +4,C_FG_WHITE);
-		imprimir_texto_para_tanques("/",1,video +10,C_FG_BLACK);
+		imprimir_texto_para_tanques("/",1,video +8,C_FG_BLACK);
 		switch(reloj){
 		case 0:
-		imprimir_texto_para_tanques("-",1,video + 14,C_FG_BLACK);
+		imprimir_texto_para_tanques("-",1,video + 12,C_FG_BLACK);
 		break;
 		case 1:
-		imprimir_texto_para_tanques("-",1,video + 18 ,C_FG_BLACK);
+		imprimir_texto_para_tanques("-",1,video + 16 ,C_FG_BLACK);
 		break;
 		case 2:
-		imprimir_texto_para_tanques("-",1,video + 22 ,C_FG_BLACK);
+		imprimir_texto_para_tanques("-",1,video + 20 ,C_FG_BLACK);
 		break;
 		case 3:
-		imprimir_texto_para_tanques("-",1,video + 26 ,C_FG_BLACK);
+		imprimir_texto_para_tanques("-",1,video + 24 ,C_FG_BLACK);
 		break;
 		case 4:
-		imprimir_texto_para_tanques("-",1,video + 30 ,C_FG_BLACK);
+		imprimir_texto_para_tanques("-",1,video + 28 ,C_FG_BLACK);
 		break;
 		case 5:
-		imprimir_texto_para_tanques("                      ",1,video + 14 ,C_FG_BLACK);
+		imprimir_texto_para_tanques("                      ",10,video + 12 ,C_FG_BLACK);
 		break;
 	}
 }
