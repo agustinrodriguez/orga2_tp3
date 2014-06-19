@@ -24,6 +24,7 @@ extern habilitar_pic
 extern tss_inicializar
 extern gdt_set_tss
 extern sched_inicializar
+extern game_inicializar
 
 ;; Saltear seccion de datos
 jmp start
@@ -140,7 +141,7 @@ start:
     
 
     ; Inicializar Game
-    
+        call game_inicializar
     ; Cargar IDT
     lidt [IDT_DESC]
     ;con esto supuestamente me queda remapeadas las irq
@@ -167,7 +168,7 @@ start:
     call resetear_pic
     call habilitar_pic
     sti ; habilitamos interrupciones
-    nop
+    ;nop
     ; Saltar a la primera tarea: Idle
     jmp 0x78:0x0 ; GDT_IDX_TAREA_1  ;0x0F * 8 = 0111 1000 
 

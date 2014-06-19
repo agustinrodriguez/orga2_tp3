@@ -24,34 +24,75 @@ void limpiar_pantalla() {
 	}
 }
 
+unsigned int pasaje_a_mapa(int direccion){
+	int i = direccion - 0X00400000;
+	i = i/4096;
+	i = i*2;
+	i = i + 0xb8000;
+	return i;
+}
+
 void imprimir_desalojo(unsigned int error){
-	int inicio = VIDEO_BASE + 6346;
-	switch(error){
+	int inicio = VIDEO_BASE + 6666;
+	if (error < 20 && error >= 0){
+		imprimir_texto_para_tanques2("Interrupcion Intel", 18 , inicio, C_FG_WHITE);
+	}
+	if (error == 52){
+		imprimir_texto_para_tanques2("Destruccion por Mina", 20 , inicio, C_FG_WHITE);
+	}
+	if (error == 53){
+		imprimir_texto_para_tanques2("Destruccion por Misil", 21 , inicio, C_FG_WHITE);
+	}
+	if (error == 54){
+		imprimir_texto_para_tanques2("Destruccion por Superposición", 29 , inicio, C_FG_WHITE);
+	}
+			
+}
+
+void imprimir_reloj_tanque(int reloj){
+		int video = VIDEO_BASE+ 7786;
+		char barra[1];
+		barra[0] = (unsigned char) 0x5C;
+		imprimir_texto_para_tanques(barra,1,video,C_FG_BLACK);
+		imprimir_texto_para_tanques2("*",1,video +4,C_FG_WHITE);
+		imprimir_texto_para_tanques("/",1,video +8,C_FG_BLACK);
+		switch(reloj){
+		case 0:
+		imprimir_texto_para_tanques("-",1,video + 12,C_FG_BLACK);
+		break;
 		case 1:
-			imprimir_texto_para_tanques("Interrupcion Intel", 18 , inicio, C_FG_WHITE);
-			break;
+		imprimir_texto_para_tanques("-",1,video + 16 ,C_FG_BLACK);
+		break;
 		case 2:
-			imprimir_texto_para_tanques("Destruccion por Mina", 20 , inicio, C_FG_WHITE);
-			break;
+		imprimir_texto_para_tanques("-",1,video + 20 ,C_FG_BLACK);
+		break;
 		case 3:
-			imprimir_texto_para_tanques("Destruccion por Misil", 21 , inicio, C_FG_WHITE);
-			break;
+		imprimir_texto_para_tanques("-",1,video + 24 ,C_FG_BLACK);
+		break;
 		case 4:
-			imprimir_texto_para_tanques("Destruccion por Superposición", 29 , inicio, C_FG_WHITE);
-			break;	
+		imprimir_texto_para_tanques("-",1,video + 28 ,C_FG_BLACK);
+		break;
+		case 5:
+		imprimir_texto_para_tanques("                      ",10,video + 12 ,C_FG_BLACK);
+		break;
 	}
 }
 
 
-void caracter_pintado() {
+void caracter_pintado(int tanque, int lugar) {
 	int modo = 0;
-	unsigned char *mem_video = (unsigned char *) VIDEO_BASE;
+	//int len = 1;
+	//int i;
+	unsigned char *mem_video = (unsigned char *) lugar;
 	video_elem *elemento;
 
-	modo = modo + C_FG_BLACK * 16; // asigno el color de fondo verde al modo
-	elemento = (video_elem *) mem_video;
-	elemento->modo = (unsigned char) modo; //00100000b (verde);
-	elemento->ascii = (unsigned char) 0; // caracter nulo
+	modo = modo + C_FG_LIGHT_GREY * 16; // asigno el color de fondo verde al modo
+	modo = modo + C_FG_WHITE;
+	
+			elemento = (video_elem *) mem_video;
+			elemento->modo = (unsigned char) modo; //00100000b (verde);
+			elemento->ascii = tanque;
+	
 }
 
 
@@ -289,6 +330,11 @@ void imprimir_numero_teclado(unsigned char tecla) {
 
 void print_tablaerror() {
 	//char string[] = "??? ????????";
+	char tanque[1];
+	int sector_tanque = VIDEO_BASE + 746 + 160;
+	convertir_a_string(sched.quantum_restante, tanque);
+	imprimir_texto_para_tanques2("Tanque", 6 , sector_tanque, C_FG_WHITE);
+	imprimir_texto_para_tanques2(tanque, 1 , sector_tanque + 14, C_FG_WHITE);
 	int inicio = VIDEO_BASE + 746 + 480;
 	char cadena[8];
 	int inicio_y = VIDEO_BASE + 746 + 480;
@@ -368,7 +414,7 @@ void print_tablaerror() {
 	imprimir_texto_para_tanques(cadena, 8, inicio, C_FG_WHITE);
 	inicio = inicio + 312;
 	imprimir_texto_para_tanques("eflags", 8, inicio, C_FG_BLACK);
-	inicio = inicio + 8;
+	inicio = inicio + 14;
 	convertir_a_string(estado_error.eflags, cadena);
 	imprimir_texto_para_tanques(cadena, 8, inicio, C_FG_WHITE);
 
@@ -407,6 +453,24 @@ void imprimir_texto_para_tanques(char * mensaje, int len, int inicio, char color
 		mem_video = mem_video + 2;
 	}
 }
+
+
+void imprimir_texto_para_tanques2(char * mensaje, int len, int inicio, char color) {
+	int  i, modo = 0;
+	unsigned char *mem_video = (unsigned char *) inicio;
+	video_elem *elemento;
+
+	modo = modo + C_FG_RED * 16;
+	modo = modo + (int) color;
+
+	for (i = 0; i<len; i++) {
+		elemento = (video_elem *) mem_video;
+		elemento->modo = (unsigned char) modo; //00100000b (verde);
+		elemento->ascii = mensaje[i];
+		mem_video = mem_video + 2;
+	}
+}
+
 
 void convertir_a_string(unsigned int valor, char * cadena){
 	unsigned int valor_original = valor;

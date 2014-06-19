@@ -87,7 +87,15 @@ unsigned short sched_proximo_idle() {
 
 	sched.tarea_anterior = sched.tarea_actual;
 	sched.tarea_actual = 0;
-	
-
 	return indice_gdt;
+}
+
+void matar_tarea_actual() {
+	sched.tareas[sched.tarea_actual].estado = 0;
+	if (sched.tarea_actual == 8)	{
+		sched.quantum_restante = 0;
+	}else{
+		sched.quantum_restante = sched.tarea_actual;
+	}
+	//sched_proximo_idle();
 }
