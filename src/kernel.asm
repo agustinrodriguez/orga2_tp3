@@ -168,7 +168,7 @@ start:
     call resetear_pic
     call habilitar_pic
     sti ; habilitamos interrupciones
-    nop
+    ;nop
     ; Saltar a la primera tarea: Idle
     jmp 0x78:0x0 ; GDT_IDX_TAREA_1  ;0x0F * 8 = 0111 1000 
 

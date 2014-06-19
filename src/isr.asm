@@ -31,6 +31,7 @@ extern sched_proximo_idle
 extern gama_inicializar
 extern print_tablaerror
 extern imprimir_desalojo
+extern imprimir_reloj_tanque
 ;;
 ;; Definición de MACROS
 ;; -------------------------------------------------------------------------- ;;
@@ -219,31 +220,36 @@ screen_proximo_reloj:
     je .quinto
 
     .primero:
-        imprimir_texto_mp isrClock, 1, 0x0f, 47, 59
+        call imprimir_reloj_tanque
         inc ecx
         mov [contador_reloj], ecx
         jmp .fin
 
     .segundo:
-        imprimir_texto_mp isrClock, 2, 0x0f, 47, 59
+        ;imprimir_texto_mp isrClock, 2, 0x0f, 47, 59
+        call imprimir_reloj_tanque
         inc ecx
         mov [contador_reloj], ecx
+
         jmp .fin
 
     .tercero:
-        imprimir_texto_mp isrClock, 3, 0x0f, 47, 59
+        ;imprimir_texto_mp isrClock, 3, 0x0f, 47, 59
+        call imprimir_reloj_tanque
         inc ecx
         mov [contador_reloj], ecx
         jmp .fin
 
     .cuarto:
-        imprimir_texto_mp isrClock, 4, 0x0f, 47, 59
+        ;imprimir_texto_mp isrClock, 4, 0x0f, 47, 59
+        call imprimir_reloj_tanque
         inc ecx
         mov [contador_reloj], ecx
         jmp .fin
 
     .quinto:
-        imprimir_texto_mp limpieza, 4, 0x0f, 47, 59
+        call imprimir_reloj_tanque
+        ;imprimir_texto_mp limpieza, 4, 0x0f, 47, 59
         xor ecx,ecx
         mov [contador_reloj], ecx
         jmp .fin

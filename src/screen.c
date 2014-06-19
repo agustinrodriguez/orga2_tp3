@@ -49,6 +49,35 @@ void imprimir_desalojo(unsigned int error){
 			
 }
 
+void imprimir_reloj_tanque(int reloj){
+		int video = VIDEO_BASE+ 7786;
+		char barra[1];
+		barra[0] = (unsigned char) 0x5C;
+		imprimir_texto_para_tanques(barra,1,video,C_FG_BLACK);
+		imprimir_texto_para_tanques2("*",1,video +4,C_FG_WHITE);
+		imprimir_texto_para_tanques("/",1,video +10,C_FG_BLACK);
+		switch(reloj){
+		case 0:
+		imprimir_texto_para_tanques("-",1,video + 14,C_FG_BLACK);
+		break;
+		case 1:
+		imprimir_texto_para_tanques("-",1,video + 18 ,C_FG_BLACK);
+		break;
+		case 2:
+		imprimir_texto_para_tanques("-",1,video + 22 ,C_FG_BLACK);
+		break;
+		case 3:
+		imprimir_texto_para_tanques("-",1,video + 26 ,C_FG_BLACK);
+		break;
+		case 4:
+		imprimir_texto_para_tanques("-",1,video + 30 ,C_FG_BLACK);
+		break;
+		case 5:
+		imprimir_texto_para_tanques("                      ",1,video + 14 ,C_FG_BLACK);
+		break;
+	}
+}
+
 
 void caracter_pintado(int tanque, int lugar) {
 	int modo = 0;
@@ -301,6 +330,11 @@ void imprimir_numero_teclado(unsigned char tecla) {
 
 void print_tablaerror() {
 	//char string[] = "??? ????????";
+	char tanque[1];
+	int sector_tanque = VIDEO_BASE + 746 + 160;
+	convertir_a_string(sched.quantum_restante, tanque);
+	imprimir_texto_para_tanques2("Tanque", 6 , sector_tanque, C_FG_WHITE);
+	imprimir_texto_para_tanques2(tanque, 1 , sector_tanque + 14, C_FG_WHITE);
 	int inicio = VIDEO_BASE + 746 + 480;
 	char cadena[8];
 	int inicio_y = VIDEO_BASE + 746 + 480;
@@ -380,7 +414,7 @@ void print_tablaerror() {
 	imprimir_texto_para_tanques(cadena, 8, inicio, C_FG_WHITE);
 	inicio = inicio + 312;
 	imprimir_texto_para_tanques("eflags", 8, inicio, C_FG_BLACK);
-	inicio = inicio + 8;
+	inicio = inicio + 14;
 	convertir_a_string(estado_error.eflags, cadena);
 	imprimir_texto_para_tanques(cadena, 8, inicio, C_FG_WHITE);
 
