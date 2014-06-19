@@ -28,6 +28,9 @@ extern desalojar_tarea
 extern print_error
 extern sched_proximo_indice
 extern sched_proximo_idle
+extern gama_inicializar
+extern print_tablaerror
+extern imprimir_desalojo
 ;;
 ;; Definición de MACROS
 ;; -------------------------------------------------------------------------- ;;
@@ -90,8 +93,9 @@ _isr%1:
     mov [estado_error+68], eax
 
     push ecx
-    call print_error
+    call imprimir_desalojo
     pop ecx
+    call print_tablaerror
     call desalojar_tarea
     call vuelvo_idle
     sti

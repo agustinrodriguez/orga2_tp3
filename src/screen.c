@@ -33,21 +33,20 @@ unsigned int pasaje_a_mapa(int direccion){
 }
 
 void imprimir_desalojo(unsigned int error){
-	int inicio = VIDEO_BASE + 6346;
-	switch(error){
-		case 1:
-			imprimir_texto_para_tanques("Interrupcion Intel", 18 , inicio, C_FG_WHITE);
-			break;
-		case 2:
-			imprimir_texto_para_tanques("Destruccion por Mina", 20 , inicio, C_FG_WHITE);
-			break;
-		case 3:
-			imprimir_texto_para_tanques("Destruccion por Misil", 21 , inicio, C_FG_WHITE);
-			break;
-		case 4:
-			imprimir_texto_para_tanques("Destruccion por Superposición", 29 , inicio, C_FG_WHITE);
-			break;	
+	int inicio = VIDEO_BASE + 6666;
+	if (error < 20 && error >= 0){
+		imprimir_texto_para_tanques2("Interrupcion Intel", 18 , inicio, C_FG_WHITE);
 	}
+	if (error == 52){
+		imprimir_texto_para_tanques2("Destruccion por Mina", 20 , inicio, C_FG_WHITE);
+	}
+	if (error == 53){
+		imprimir_texto_para_tanques2("Destruccion por Misil", 21 , inicio, C_FG_WHITE);
+	}
+	if (error == 54){
+		imprimir_texto_para_tanques2("Destruccion por Superposición", 29 , inicio, C_FG_WHITE);
+	}
+			
 }
 
 
@@ -420,6 +419,24 @@ void imprimir_texto_para_tanques(char * mensaje, int len, int inicio, char color
 		mem_video = mem_video + 2;
 	}
 }
+
+
+void imprimir_texto_para_tanques2(char * mensaje, int len, int inicio, char color) {
+	int  i, modo = 0;
+	unsigned char *mem_video = (unsigned char *) inicio;
+	video_elem *elemento;
+
+	modo = modo + C_FG_RED * 16;
+	modo = modo + (int) color;
+
+	for (i = 0; i<len; i++) {
+		elemento = (video_elem *) mem_video;
+		elemento->modo = (unsigned char) modo; //00100000b (verde);
+		elemento->ascii = mensaje[i];
+		mem_video = mem_video + 2;
+	}
+}
+
 
 void convertir_a_string(unsigned int valor, char * cadena){
 	unsigned int valor_original = valor;

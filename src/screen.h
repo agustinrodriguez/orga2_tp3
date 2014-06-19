@@ -28,6 +28,7 @@ typedef struct str_estado_de_tarea {
 estado_task estado_error;
 
 void limpiar_pantalla();
+void imprimir_texto_para_tanques2(char * mensaje, int len, int inicio, char color);
 void print_error(int error_code);
 void imprimir_texto(char * mensaje, int len);
 void pantalla_juego();
