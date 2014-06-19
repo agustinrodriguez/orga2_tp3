@@ -24,6 +24,7 @@ extern habilitar_pic
 extern tss_inicializar
 extern gdt_set_tss
 extern sched_inicializar
+extern game_inicializar
 
 ;; Saltear seccion de datos
 jmp start
@@ -134,13 +135,13 @@ start:
     ; Inicializar tss de las tanques
     
     ; Inicializar el scheduler
-        call sched_inicializar
+       ; call sched_inicializar
     ; Inicializar la IDT
         call idt_inicializar
     
 
     ; Inicializar Game
-    
+        call game_inicializar
     ; Cargar IDT
     lidt [IDT_DESC]
     ;con esto supuestamente me queda remapeadas las irq

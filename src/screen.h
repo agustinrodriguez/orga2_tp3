@@ -32,11 +32,12 @@ void print_error(int error_code);
 void imprimir_texto(char * mensaje, int len);
 void pantalla_juego();
 void imprimir_nombre_grupo();
-void caracter_pintado();
+void caracter_pintado(int tanque, int lugar);
 void imprimir_numero_teclado(unsigned char tecla);
 void imprimir_texto_para_tanques(char * mensaje, int len, int inicio, char color);
 void print_tablaerror();
 void convertir_a_string(unsigned int valor, char * cadena);
 void imprimir_desalojo(unsigned int error);
+unsigned int pasaje_a_mapa(int direccion);
 
 #endif  /* !__SCREEN_H__ */

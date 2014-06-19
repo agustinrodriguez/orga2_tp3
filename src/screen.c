@@ -24,6 +24,14 @@ void limpiar_pantalla() {
 	}
 }
 
+unsigned int pasaje_a_mapa(int direccion){
+	int i = direccion - 0X00400000;
+	i = i/4096;
+	i = i*2;
+	i = i + 0xb8000;
+	return i;
+}
+
 void imprimir_desalojo(unsigned int error){
 	int inicio = VIDEO_BASE + 6346;
 	switch(error){
@@ -43,15 +51,20 @@ void imprimir_desalojo(unsigned int error){
 }
 
 
-void caracter_pintado() {
+void caracter_pintado(int tanque, int lugar) {
 	int modo = 0;
-	unsigned char *mem_video = (unsigned char *) VIDEO_BASE;
+	//int len = 1;
+	//int i;
+	unsigned char *mem_video = (unsigned char *) lugar;
 	video_elem *elemento;
 
-	modo = modo + C_FG_BLACK * 16; // asigno el color de fondo verde al modo
-	elemento = (video_elem *) mem_video;
-	elemento->modo = (unsigned char) modo; //00100000b (verde);
-	elemento->ascii = (unsigned char) 0; // caracter nulo
+	modo = modo + C_FG_LIGHT_GREY * 16; // asigno el color de fondo verde al modo
+	modo = modo + C_FG_WHITE;
+	
+			elemento = (video_elem *) mem_video;
+			elemento->modo = (unsigned char) modo; //00100000b (verde);
+			elemento->ascii = tanque;
+	
 }
 
 
