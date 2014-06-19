@@ -11,7 +11,6 @@
 #include "defines.h"
 #include "i386.h"
 #include "tss.h"
-#include "game.h"
 
 void mmu_inicializar();
 void mmu_inicializar_dir_kernel();
@@ -56,6 +55,7 @@ void null_pagetab_entry(page_table_entry * tablaAVaciar);
 void null_pagedir_entry(page_directory_entry * directorioAVaciar);
 void copiar_pagina(unsigned int origen, unsigned int destino);
 unsigned int dame_pagina_libre();
+unsigned int dame_direccion_mapa(int num_tarea);
 
 /* Page Directory */
 //extern page_directory_entry pd[];

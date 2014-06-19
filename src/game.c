@@ -19,10 +19,16 @@ unsigned int MAPA_PAG_2[] = { 0, 0X00401000, 0X00403000,
 							0X00405000, 0X00407000, 0X00409000, 
 							0X0040B000, 0X0040D000, 0X0040F000};
 
+unsigned int dame_fisica(unsigned int i, unsigned int j) {
+	unsigned int res = 0X00400000;
+	res = res +((i*50 + j)*4096);
+	return res;
+}
 
-unsigned char (*tablero)[TABLERO_COLS] = (unsigned char (*)[TABLERO_COLS]) (TABLERO_ADDR);
+unsigned char (*tablero)[TABLERO_COLS] = (unsigned char (*)[TABLERO_COLS]) 0x300000;
 unsigned char dame_pos_fila(unsigned char id);
 unsigned char dame_pos_col(unsigned char id);
+
 void game_inicializar() {
 	int f;
 	int c;
@@ -34,29 +40,31 @@ void game_inicializar() {
 		}
 	}
 
-	// Inicialización de jugadores
-	tablero[JUG1_FIL_INIT][JUG1_COL_INIT] = JUG_1;
-	tablero[JUG2_FIL_INIT][JUG2_COL_INIT] = JUG_2;
-	tablero[JUG3_FIL_INIT][JUG3_COL_INIT] = JUG_3;
-	tablero[JUG4_FIL_INIT][JUG4_COL_INIT] = JUG_4;
-	tablero[JUG4_FIL_INIT][JUG4_COL_INIT] = JUG_5;	
-	tablero[JUG4_FIL_INIT][JUG4_COL_INIT] = JUG_6;
-	tablero[JUG4_FIL_INIT][JUG4_COL_INIT] = JUG_7;
-	tablero[JUG4_FIL_INIT][JUG4_COL_INIT] = JUG_8;
+	// Inicialización de tanques (esto ya estaria mapeado)
+	inicializar_tanque(TANQUE1, TANQUE1_FIL_INICIAL, TANQUE1_COL_INICIAL);
+	inicializar_tanque(TANQUE2, TANQUE2_FIL_INICIAL, TANQUE2_COL_INICIAL);
+	inicializar_tanque(TANQUE3, TANQUE3_FIL_INICIAL, TANQUE3_COL_INICIAL);
+	inicializar_tanque(TANQUE4, TANQUE4_FIL_INICIAL, TANQUE4_COL_INICIAL);
+	inicializar_tanque(TANQUE5, TANQUE5_FIL_INICIAL, TANQUE5_COL_INICIAL);
+	inicializar_tanque(TANQUE6, TANQUE6_FIL_INICIAL, TANQUE6_COL_INICIAL);
+	inicializar_tanque(TANQUE7, TANQUE7_FIL_INICIAL, TANQUE7_COL_INICIAL);
+	inicializar_tanque(TANQUE8, TANQUE8_FIL_INICIAL, TANQUE8_COL_INICIAL);
 
-	//char * tanque= " ";
-	/*int i;
-	for (i = 1; i < 9; ++i)
-	{	
-		//convertir_a_string(i,tanque);
-		caracter_pintado(i+48,pasaje_a_mapa(MAPA_PAG_1[i]));
-		caracter_pintado(i+48,pasaje_a_mapa(MAPA_PAG_2[i]));
-	}*/
-	
+}
+
+void inicializar_tanque(unsigned int id, unsigned int fila, unsigned int col) {
+	unsigned int pos_video;
+
+	tablero[fila][col] = id;
+	pos_video = pasaje_a_mapa(dame_fisica(fila, col));
+	caracter_pintado(id + 48, pos_video);
+	tablero[fila][col + 1] = id;
+	pos_video = pasaje_a_mapa(dame_fisica(fila, col + 1));
+	caracter_pintado(id + 48, pos_video);
 }
 
 unsigned int game_mover(unsigned int id, direccion d) {
-    unsigned char i = dame_pos_fila(id);
+    /*unsigned char i = dame_pos_fila(id);
     unsigned char j = dame_pos_col(id);
     if(d == NE){
     	i--;
@@ -90,7 +98,8 @@ unsigned int game_mover(unsigned int id, direccion d) {
     	mmu_mapear_pagina(pagina, tss_get_cr3(id), tablero[i][j], 1, 1, 1);
     	return TRUE;
     }
-    return FALSE;
+    return FALSE;*/
+    return TRUE;
 }
 
 unsigned int game_misil(unsigned int id, int val_x, int val_y, unsigned int misil, unsigned int size) {
@@ -98,7 +107,7 @@ unsigned int game_misil(unsigned int id, int val_x, int val_y, unsigned int misi
 }
 
 unsigned int game_minar(unsigned int id, direccion d) {
-    unsigned char i = dame_pos_fila(id);
+    /*unsigned char i = dame_pos_fila(id);
     unsigned char j = dame_pos_col(id);
     if(d == NE){
     	i--;
@@ -124,7 +133,8 @@ unsigned int game_minar(unsigned int id, direccion d) {
     	tablero[i][j] = TABLERO_CELDA_MINADA;
     return TRUE;
     }
-    return FALSE;
+    return FALSE;*/
+    return TRUE;
 }
 
 unsigned int game_celda_minada(int fil, int col) {
@@ -175,29 +185,3 @@ unsigned int pasaje_a_mapa(int direccion){
 
 
 */
-
-
-unsigned char dame_pos_fila(unsigned char id){
-	unsigned char res;
-	if(id == 1)   res = JUG1_FIL_INIT;
-	if(id == 2)   res = JUG2_FIL_INIT;
-	if(id == 3)   res = JUG3_FIL_INIT;
-	if(id == 4)   res = JUG4_FIL_INIT;
-	if(id == 5)   res = JUG5_FIL_INIT;
-	if(id == 6)   res = JUG6_FIL_INIT;
-	if(id == 7)   res = JUG7_FIL_INIT;
-	if(id == 8)   res = JUG8_FIL_INIT;
-	return res;
-}
-
-unsigned char dame_pos_col(unsigned char id){
-	unsigned char res;
-	if(id == 1) res = JUG1_COL_INIT;
-	if(id == 2) res = JUG2_COL_INIT;
-	if(id == 3) res = JUG3_COL_INIT;
-	if(id == 4) res = JUG4_COL_INIT;
-	if(id == 5) res = JUG5_COL_INIT;
-	if(id == 6) res = JUG6_COL_INIT;
-	if(id == 7) res = JUG8_COL_INIT;
-	return res;
-}

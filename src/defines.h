@@ -48,7 +48,7 @@
 #define TRHEEPAGETABLE			0x0002A000
 #define FOURPAGETABLE			0x0002B000
 #define CANT_TAREAS				8
-#define TAMANO_PAGINA           0x00004000
+#define TAMANO_PAGINA           0x00001000
 #define SECTORFREEMEM 			0x00100000
 
 #define PILA_KERNEL				0x26000			//FRUTA? SEGUN LA IMAGENCITA ES ESTE EL VALOR
@@ -74,5 +74,52 @@
 #define TASK_6_CODE_ADDR    0x0001A000
 #define TASK_7_CODE_ADDR    0x0001C000
 #define TASK_8_CODE_ADDR    0x0001E000
+
+
+/* GAME */
+#define TABLERO_ADDR	0X00400000
+
+
+ 
+#define TABLERO_FILS 		50
+#define TABLERO_COLS 		50
+#define TABLERO_CELDA_VACIA 0
+#define TABLERO_CELDA_MINADA 0xCA
+
+//JUGADORES
+#define TANQUE1 				1
+#define TANQUE2 				2
+#define TANQUE3 				3
+#define TANQUE4 				4
+#define TANQUE5 				5
+#define TANQUE6 				6
+#define TANQUE7 				7
+#define TANQUE8 				8
+
+/* Posiciones iniciales de los jugadores */
+#define TANQUE1_FIL_INICIAL 		5
+#define TANQUE1_COL_INICIAL 		5
+
+#define TANQUE2_FIL_INICIAL 		10
+#define TANQUE2_COL_INICIAL 		10
+
+#define TANQUE3_FIL_INICIAL 		15
+#define TANQUE3_COL_INICIAL 		15
+
+#define TANQUE4_FIL_INICIAL 		20
+#define TANQUE4_COL_INICIAL 		20
+
+#define TANQUE5_FIL_INICIAL 		25
+#define TANQUE5_COL_INICIAL 		25
+
+#define TANQUE6_FIL_INICIAL 		30
+#define TANQUE6_COL_INICIAL 		30
+
+#define TANQUE7_FIL_INICIAL 		35
+#define TANQUE7_COL_INICIAL 		35
+
+#define TANQUE8_FIL_INICIAL 		40
+#define TANQUE8_COL_INICIAL 		40
+
 
 #endif  /* !__DEFINES_H__ */

@@ -20,15 +20,6 @@ unsigned int TASK_CODE_SRC[] = {
 	TASK_8_CODE_ADDR
 };
 
-// ESTO APUNTA A PAGINAS DEL "MAPA"
-unsigned int TASK_PAG_1[] = { 0, 0X00400000, 0X00402000, 
-							0X00404000, 0X00406000, 0X00408000, 
-							0X0040A000, 0X0040C000, 0X0040E000};
-
-unsigned int TASK_PAG_2[] = { 0, 0X00401000, 0X00403000, 
-							0X00405000, 0X00407000, 0X00409000, 
-							0X0040B000, 0X0040D000, 0X0040F000};
-
 unsigned int TASK_PAG_3[] = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
 
 unsigned int MEMORIA_RESTANTE = SECTORFREEMEM;
@@ -151,8 +142,11 @@ unsigned int mmu_inicializar_dir_tarea(int num_tarea) {
 
 	unsigned int codigo_tarea_pag_1 = TASK_CODE_SRC[num_tarea];
 	unsigned int codigo_tarea_pag_2 = TASK_CODE_SRC[num_tarea] + 0x1000;
-	unsigned int mapa_pag_1 = TASK_PAG_1[num_tarea];
-	unsigned int mapa_pag_2 = TASK_PAG_2[num_tarea];
+	/*unsigned int mapa_pag_1 = TASK_PAG_1[num_tarea];
+	unsigned int mapa_pag_2 = TASK_PAG_2[num_tarea];*/
+	unsigned int mapa_pag_1 = dame_direccion_mapa(num_tarea);
+	unsigned int mapa_pag_2 = mapa_pag_1 + 0x1000;
+
 
 	copiar_pagina(codigo_tarea_pag_1, mapa_pag_1);
 	copiar_pagina(codigo_tarea_pag_2, mapa_pag_2);
@@ -165,6 +159,10 @@ unsigned int mmu_inicializar_dir_tarea(int num_tarea) {
 	mmu_mapear_pagina(0x08001000, TASK_CR3[num_tarea], mapa_pag_2, present, rw, us);
 
 	return TASK_CR3[num_tarea];
+}
+
+unsigned int dame_direccion_mapa(int num_tarea) {
+	return dame_fisica(dame_pos_inicial_fila(num_tarea), dame_pos_inicial_col(num_tarea));
 }
 
 void define_page_directory_entry(page_directory_entry * directorio, 
@@ -300,4 +298,33 @@ unsigned int dame_pagina_libre() {
 	MEMORIA_RESTANTE += TAMANO_PAGINA;
 
 	return pagina_libre;
+}
+
+
+
+
+unsigned char dame_pos_inicial_fila(int id) {
+	unsigned char res;
+	if(id == 1)   res = TANQUE1_FIL_INICIAL;
+	if(id == 2)   res = TANQUE2_FIL_INICIAL;
+	if(id == 3)   res = TANQUE3_FIL_INICIAL;
+	if(id == 4)   res = TANQUE4_FIL_INICIAL;
+	if(id == 5)   res = TANQUE5_FIL_INICIAL;
+	if(id == 6)   res = TANQUE6_FIL_INICIAL;
+	if(id == 7)   res = TANQUE7_FIL_INICIAL;
+	if(id == 8)   res = TANQUE8_FIL_INICIAL;
+	return res;
+}
+
+unsigned char dame_pos_inicial_col(int id) {
+	unsigned char res;
+	if(id == 1) res = TANQUE1_COL_INICIAL;
+	if(id == 2) res = TANQUE2_COL_INICIAL;
+	if(id == 3) res = TANQUE3_COL_INICIAL;
+	if(id == 4) res = TANQUE4_COL_INICIAL;
+	if(id == 5) res = TANQUE5_COL_INICIAL;
+	if(id == 6) res = TANQUE6_COL_INICIAL;
+	if(id == 7) res = TANQUE7_COL_INICIAL;
+	if(id == 8) res = TANQUE8_COL_INICIAL;
+	return res;
 }
