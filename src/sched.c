@@ -24,13 +24,13 @@ unsigned short sched_proximo_indice() {
 
 	sched.tarea_anterior = sched.tarea_actual;
 	sched.tarea_actual = tarea_siguiente();
-	sched.quantum_restante = 0;
+	sched.quantum_restante = sched.tarea_actual;
 
 	return indice_gdt;
 }
 
 int tarea_siguiente() {
-	int i = sched.tarea_actual + 1;
+	int i = (sched.quantum_restante + 1);
 	while (i != sched.tarea_actual) {
 		if (i == CANT_TAREAS + 1){
 			i = 1;
@@ -42,11 +42,9 @@ int tarea_siguiente() {
 			i++;
 		}
 	}
-
 	if (sched.tareas[sched.tarea_actual].estado == 1) {
 		return sched.tarea_actual;
 	}
-
 	return 0;
 }
 
@@ -75,7 +73,6 @@ void desalojar_tarea() {
 
 unsigned short sched_proximo_idle() {
 	unsigned short indice_gdt;
-
 	if (sched.tss_actual == 1) {
 		sched.tss_actual = 2;
 		indice_gdt = GDT_IDX_TAREA_2 << 3;
@@ -90,7 +87,7 @@ unsigned short sched_proximo_idle() {
 
 	sched.tarea_anterior = sched.tarea_actual;
 	sched.tarea_actual = 0;
-	sched.quantum_restante = 0;
+	
 
 	return indice_gdt;
 }

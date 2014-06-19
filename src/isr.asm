@@ -177,7 +177,7 @@ _isr32:
 
       popad
       sti
-      xchg bx,bx
+     ; xchg bx,bx
       jmp far [offset]
       cli
       pushad
