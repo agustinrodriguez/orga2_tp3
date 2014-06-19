@@ -40,7 +40,9 @@ void tss_inicializar_tareas_tanques() {
 }
 
 void tss_inicializar_tareas_tanque(int num_tanque, unsigned int cr3_tarea, unsigned int pila_tarea) {
-    tss_tanques[num_tanque] = (tss) {
+    definir_tss(&tss_tanques[num_tanque],cr3_tarea,pila_tarea, (unsigned int) 0x08000000, (unsigned int) 3, (unsigned int) 0x08002000);
+
+    /*tss_tanques[num_tanque] = (tss) {
         .unused0 = 0x0,
         .unused1 = 0x0,
         .unused2 = 0x0,
@@ -88,7 +90,7 @@ void tss_inicializar_tareas_tanque(int num_tanque, unsigned int cr3_tarea, unsig
        
         .dtrap = 0x0,
         .iomap = 0x0,
-    };
+    };*/
 }
 
 void limpiar_tss(tss * task) {
