@@ -159,9 +159,9 @@ invalida:
 
 global _isr32
 _isr32:
-      sti  
+      cli  
       pushad   
-      ;cli
+      
       call proximo_reloj
       
       call screen_proximo_reloj   
@@ -171,11 +171,16 @@ _isr32:
       cmp ax, 0   
       je  .nojump  
               
-      mov [selector], ax      
+      mov [selector], ax
       
       call fin_intr_pic1
+
+      popad
+      sti
       xchg bx,bx
-      jmp far [offset]      
+      jmp far [offset]
+      cli
+      pushad
       jmp .end   
       
     .nojump:   
@@ -184,7 +189,8 @@ _isr32:
     
     .end: 
 
-        popad 
+        popad
+        sti
         iret
 
 

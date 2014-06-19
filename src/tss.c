@@ -58,7 +58,7 @@ void tss_inicializar_tareas_tanque(int num_tanque, unsigned int cr3_tarea, unsig
         .esp1 = 0x0,
         .esp2 = 0x0,
 
-        .ss0 = 0x0,
+        .ss0 = GDT_IDX_DATA_0 << 3,
         .ss1 = 0x0,
         .ss2 = 0x0,
         

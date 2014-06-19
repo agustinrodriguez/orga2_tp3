@@ -14,29 +14,29 @@ unsigned short sched_proximo_indice() {
 		sched.tss_actual = 2;
 		indice_gdt = GDT_IDX_TAREA_2 << 3;
 		sched.tareas[sched.tarea_anterior].tarea = tss_next_2;
-		tss_next_2 = tarea_siguiente().tarea;
+		tss_next_2 = sched.tareas[tarea_siguiente()].tarea;
 	} else {
 		sched.tss_actual = 1;
 		indice_gdt = GDT_IDX_TAREA_1 << 3;
 		sched.tareas[sched.tarea_anterior].tarea = tss_next_1;
-		tss_next_1 = tarea_siguiente().tarea;
+		tss_next_1 = sched.tareas[tarea_siguiente()].tarea;
 	}
 
 	sched.tarea_anterior = sched.tarea_actual;
-	sched.tarea_actual = tarea_siguiente().indice;
+	sched.tarea_actual = tarea_siguiente();
 	sched.quantum_restante = 0;
 
 	return indice_gdt;
 }
 
-tarea_ tarea_siguiente() {
+int tarea_siguiente() {
 	int i = sched.tarea_actual + 1;
 	while (i != sched.tarea_actual) {
 		if (i == CANT_TAREAS + 1){
 			i = 1;
 		} else {
-			if (sched.tareas[i].estado == 1){
-				return sched.tareas[i];
+			if (sched.tareas[i].estado == 1) {
+				return i;
 			}
 
 			i++;
@@ -44,10 +44,10 @@ tarea_ tarea_siguiente() {
 	}
 
 	if (sched.tareas[sched.tarea_actual].estado == 1) {
-		return sched.tareas[sched.tarea_actual];
+		return sched.tarea_actual;
 	}
 
-	return sched.tareas[0];
+	return 0;
 }
 
 void sched_inicializar() {
@@ -57,7 +57,7 @@ void sched_inicializar() {
 	sched.tareas[0].indice = 0;
 
     for (i = 1; i < CANT_TAREAS + 1; i++) {
-		sched.tareas[i].tarea = tss_tanques[i];
+		sched.tareas[i].tarea = tss_tanques[i - 1];
 		sched.tareas[i].estado = 1;
 		sched.tareas[i].indice = i;
     }

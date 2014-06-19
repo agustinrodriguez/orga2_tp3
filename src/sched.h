@@ -38,6 +38,6 @@ void desalojar_tarea();
 unsigned short sched_proximo_indice();
 unsigned short sched_proximo_idle();
 void sched_inicializar();
-tarea_ tarea_siguiente();
+int tarea_siguiente();
 
 #endif	/* !__SCHED_H__ */
