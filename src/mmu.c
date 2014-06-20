@@ -328,3 +328,9 @@ unsigned char dame_pos_inicial_col(int id) {
 	if(id == 8) res = TANQUE8_COL_INICIAL;
 	return res;
 }
+
+unsigned int dame_fisica(unsigned int i, unsigned int j) {
+	unsigned int res = 0X00400000;
+	res = res +((i*50 + j)*4096);
+	return res;
+}

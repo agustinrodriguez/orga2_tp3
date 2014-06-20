@@ -27,8 +27,15 @@ void limpiar_pantalla() {
 unsigned int pasaje_a_mapa(int direccion){
 	int i = direccion - 0X00400000;
 	i = i/4096;
+	if (i > 50)	{
+		int sumo_fila = i/50;
+		int resto_de_columna = i % 50;
+		i = (sumo_fila*80*2) + (resto_de_columna*2);
+		i = i + 0xb8000;
+	}else{
 	i = i*2;
 	i = i + 0xb8000;
+	}
 	return i;
 }
 
@@ -330,11 +337,36 @@ void imprimir_numero_teclado(unsigned char tecla) {
 
 void print_tablaerror() {
 	//char string[] = "??? ????????";
-	char tanque[1];
+	//char tanque[1];
 	int sector_tanque = VIDEO_BASE + 746 + 160;
-	convertir_a_string(sched.quantum_restante, tanque);
+	//convertir_a_string(sched.quantum_restante, tanque);
 	imprimir_texto_para_tanques2("Tanque", 6 , sector_tanque, C_FG_WHITE);
-	imprimir_texto_para_tanques2(tanque, 1 , sector_tanque + 14, C_FG_WHITE);
+	switch(sched.quantum_restante){
+		case 1:
+		imprimir_texto_para_tanques2("1", 1 , sector_tanque + 14, C_FG_WHITE);
+		break;
+		case 2:
+		imprimir_texto_para_tanques2("2", 1 , sector_tanque + 14, C_FG_WHITE);
+		break;
+		case 3:
+		imprimir_texto_para_tanques2("3", 1 , sector_tanque + 14, C_FG_WHITE);
+		break;
+		case 4:
+		imprimir_texto_para_tanques2("4", 1 , sector_tanque + 14, C_FG_WHITE);
+		break;
+		case 5:
+		imprimir_texto_para_tanques2("5", 1 , sector_tanque + 14, C_FG_WHITE);
+		break;
+		case 6:
+		imprimir_texto_para_tanques2("6", 1 , sector_tanque + 14, C_FG_WHITE);
+		break;
+		case 7:
+		imprimir_texto_para_tanques2("7", 1 , sector_tanque + 14, C_FG_WHITE);
+		break;
+		case 8:
+		imprimir_texto_para_tanques2("8", 1 , sector_tanque + 14, C_FG_WHITE);
+		break;
+	}
 	int inicio = VIDEO_BASE + 746 + 480;
 	char cadena[8];
 	int inicio_y = VIDEO_BASE + 746 + 480;

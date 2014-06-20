@@ -44,7 +44,7 @@ _isr%1:
 .loopear:
     ; To Infinity And Beyond!!
     cli
-    xchg bx,bx
+   ; xchg bx,bx
     xor ecx, ecx
     mov ecx, %1
     ;hago los q tengo en pila

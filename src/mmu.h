@@ -56,6 +56,9 @@ void null_pagedir_entry(page_directory_entry * directorioAVaciar);
 void copiar_pagina(unsigned int origen, unsigned int destino);
 unsigned int dame_pagina_libre();
 unsigned int dame_direccion_mapa(int num_tarea);
+unsigned char dame_pos_inicial_col(int id);
+unsigned char dame_pos_inicial_fila(int id);
+unsigned int dame_fisica(unsigned int i, unsigned int j);
 
 /* Page Directory */
 //extern page_directory_entry pd[];
