@@ -19,11 +19,6 @@ unsigned int MAPA_PAG_2[] = { 0, 0X00401000, 0X00403000,
 							0X00405000, 0X00407000, 0X00409000, 
 							0X0040B000, 0X0040D000, 0X0040F000};
 
-unsigned int dame_fisica(unsigned int i, unsigned int j) {
-	unsigned int res = 0X00400000;
-	res = res +((i*50 + j)*4096);
-	return res;
-}
 
 unsigned char (*tablero)[TABLERO_COLS] = (unsigned char (*)[TABLERO_COLS]) 0x300000;
 unsigned char dame_pos_fila(unsigned char id);

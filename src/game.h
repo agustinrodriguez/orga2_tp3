@@ -37,8 +37,6 @@ unsigned int game_celda_minada(int fil, int col);
 
 unsigned int game_posicion_en_rango(int fil, int col);
 
-unsigned int dame_fisica(unsigned int i, unsigned int j);
-
 void inicializar_tanque(unsigned int id, unsigned int fila, unsigned int col);
 
 #endif  /* !__GAME_H__ */

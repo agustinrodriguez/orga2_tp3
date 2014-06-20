@@ -493,3 +493,10 @@ void convertir_a_string(unsigned int valor, char * cadena){
 		j--;
 	}
 }
+
+
+/* 
+1 = 0x00400000
+
+
+ */
