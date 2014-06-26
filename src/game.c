@@ -49,17 +49,78 @@ void game_inicializar() {
 
 void inicializar_tanque(unsigned int id, unsigned int fila, unsigned int col) {
 	unsigned int pos_video;
+    tanque_actual = tanques[id - 1];
+    int i, j;
+
+    for (i = 0; i < TABLERO_FILS; i++) {
+        for (j = 0; j < TABLERO_COLS; j++) {
+            tanque_actual.camino[i][j] = 0;
+        }
+    }
 
 	tablero[fila][col] = id;
-	pos_video = pasaje_a_mapa(dame_fisica(fila, col));
+	pos_video = pasaje_a_mapa_video(dame_fisica(fila, col));
 	caracter_pintado(id + 48, pos_video);
+    tanque_actual.camino[fila][col] = id;
+
 	tablero[fila][col + 1] = id;
-	pos_video = pasaje_a_mapa(dame_fisica(fila, col + 1));
+	pos_video = pasaje_a_mapa_video(dame_fisica(fila, col + 1));
 	caracter_pintado(id + 48, pos_video);
+    tanque_actual.camino[fila][col + 1] = id;
+
+    tanque_actual.id = id;
+    tanque_actual.fila = fila;
+    tanque_actual.col = col + 1;
+    tanque_actual.dir_virtual = 0x08001000;
 }
 
 unsigned int game_mover(unsigned int id, direccion d) {
-    /*unsigned char i = dame_pos_fila(id);
+	tanque tanque_actual = tanques[id - 1];
+    switch (d) {
+        case N:
+            tanque_actual.fila--;
+            break;
+        case NE:
+            tanque_actual.fila--;
+            tanque_actual.col++;
+            break;
+        case NO:
+            tanque_actual.fila--;
+            tanque_actual.col--;
+            break;
+        case E:
+            tanque_actual.col++;
+            break;
+        case O:
+            tanque_actual.col--;
+            break;
+        case SE:
+            tanque_actual.fila++;
+            tanque_actual.col++;
+            break;
+        case SO:
+            tanque_actual.fila++;
+            tanque_actual.col--;
+            break;
+        case S:
+            tanque_actual.fila++;
+            break;
+        case C:
+            break;
+    }
+
+    if (tanque_actual.camino[tanque_actual.fila][tanque_actual.col] != id) {
+        tanque_actual.dir_virtual += 0x1000;
+        mmu_mapear_pagina(tanque_actual.dir_virtual, get_cr3_task(id), 
+            dame_fisica(tanque_actual.fila, tanque_actual.col), 1, 1, 1);
+    }
+    unsigned int pos_video;
+    pos_video = pasaje_a_mapa_video(dame_fisica(tanque_actual.fila, tanque_actual.col));
+    caracter_pintado(id + 48, pos_video);
+    return TRUE;
+
+	/*
+    unsigned char i = dame_pos_fila(id);
     unsigned char j = dame_pos_col(id);
     if(d == NE){
     	i--;
@@ -93,8 +154,8 @@ unsigned int game_mover(unsigned int id, direccion d) {
     	mmu_mapear_pagina(pagina, tss_get_cr3(id), tablero[i][j], 1, 1, 1);
     	return TRUE;
     }
-    return FALSE;*/
-    return TRUE;
+    return FALSE;
+    return TRUE;*/
 }
 
 unsigned int game_misil(unsigned int id, int val_x, int val_y, unsigned int misil, unsigned int size) {

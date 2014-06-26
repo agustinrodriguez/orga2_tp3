@@ -15,7 +15,7 @@
 void mmu_inicializar();
 void mmu_inicializar_dir_kernel();
 unsigned int mmu_inicializar_dir_tarea(int num_tarea);
-unsigned int get_cr3_task();
+unsigned int get_cr3_task(unsigned int id);
 
 typedef struct str_page_directory_entry {
     unsigned char   p:1;

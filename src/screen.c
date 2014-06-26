@@ -24,7 +24,7 @@ void limpiar_pantalla() {
 	}
 }
 
-unsigned int pasaje_a_mapa(int direccion){
+unsigned int pasaje_a_mapa_video(int direccion){
 	int i = direccion - 0X00400000;
 	i = i/4096;
 	if (i > 50)	{

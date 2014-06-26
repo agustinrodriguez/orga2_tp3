@@ -40,7 +40,7 @@ void imprimir_texto_para_tanques(char * mensaje, int len, int inicio, char color
 void print_tablaerror();
 void convertir_a_string(unsigned int valor, char * cadena);
 void imprimir_desalojo(unsigned int error);
-unsigned int pasaje_a_mapa(int direccion);
+unsigned int pasaje_a_mapa_video(int direccion);
 void imprimir_reloj_tanque(int reloj);
 
 #endif  /* !__SCREEN_H__ */

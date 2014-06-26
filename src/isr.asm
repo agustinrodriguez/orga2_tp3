@@ -18,6 +18,7 @@ extern fin_intr_pic1
 
 ;; Sched
 extern sched_proximo_indice
+extern dame_actual
 ;; Game
 extern game_mover
 extern game_misil
@@ -371,6 +372,10 @@ global int_task
 int_task:
     pushad ;esto puede no ser necesario chequear!
     cli
+    push eax
+    call dame_actual
+    mov edi, eax
+    add esp,4
     CMP EAX, 0x83D
     je .moviendo
     CMP EAX, 0x911
@@ -380,25 +385,25 @@ int_task:
     .moviendo: 
     ;tiene un solo parametro q va por ebx
         push ebx 
+        push edi
         call game_mover
-        pop ebx 
+        add esp, 8
         jmp .fin
     .misil:
         push ebx
         push ecx
         push edx
         push esi
+        push edi
         call game_misil
-        pop esi
-        pop edx
-        pop ecx
-        pop ebx
+        add esp, 20
         jmp .fin
 
     .minar: 
         push ebx
+        push edi
         call game_minar
-        pop ebx
+        add esp,8
         jmp .fin
 
     .fin:

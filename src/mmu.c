@@ -33,8 +33,8 @@ void mmu_inicializar() {
 	}*/
 }
 
-unsigned int get_cr3_task() {
-	return TASK_CR3[1];
+unsigned int get_cr3_task(unsigned int id) {
+	return TASK_CR3[id];
 }
 /*
 INICIO AREA LIBRE 0x100000 == 1048576

@@ -99,3 +99,7 @@ void matar_tarea_actual() {
 	}
 	//sched_proximo_idle();
 }
+
+unsigned int dame_actual(){
+	return sched.tarea_actual;
+}

@@ -16,6 +16,16 @@ typedef enum direccion_e { NE = 12, N  = 11, NO = 14,
                            E  = 22, C  = 0,  O  = 44,
                            SE = 32, S  = 33, SO = 34 } direccion;
 
+typedef struct str_tanque{
+	unsigned int camino[TABLERO_FILS][TABLERO_COLS];
+    unsigned int id;
+    unsigned int fila;
+    unsigned int col;
+    unsigned int dir_virtual;
+} tanque;
+
+tanque tanques[CANT_TANQUES];
+struct str_tanque tanque_actual;
 
 void game_inicializar();
 
