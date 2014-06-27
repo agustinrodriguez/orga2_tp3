@@ -10,22 +10,20 @@
 #include "mmu.h"
 #include "screen.h"
 #include "defines.h"
+#include "sched.h"
 
 
 typedef enum direccion_e { NE = 12, N  = 11, NO = 14,
                            E  = 22, C  = 0,  O  = 44,
                            SE = 32, S  = 33, SO = 34 } direccion;
 
-typedef struct str_tanque{
+typedef struct str_tanque {
 	unsigned int camino[TABLERO_FILS][TABLERO_COLS];
     unsigned int id;
-    unsigned int fila;
-    unsigned int col;
+    int fila;
+    int col;
     unsigned int dir_virtual;
-} tanque;
-
-tanque tanques[CANT_TANQUES];
-struct str_tanque tanque_actual;
+} tanque_g;
 
 void game_inicializar();
 
@@ -48,5 +46,11 @@ unsigned int game_celda_minada(int fil, int col);
 unsigned int game_posicion_en_rango(int fil, int col);
 
 void inicializar_tanque(unsigned int id, unsigned int fila, unsigned int col);
+
+void pintar_tanque(tanque_g *tanque, unsigned int color_fondo, unsigned int color_caracter);
+
+void pintar_tanque_superpuesto(tanque_g *tanque);
+
+void pintar_tanque_destruido(tanque_g *tanque);
 
 #endif  /* !__GAME_H__ */

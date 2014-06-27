@@ -86,19 +86,19 @@ void imprimir_reloj_tanque(int reloj){
 }
 
 
-void caracter_pintado(int tanque, int lugar) {
+void imprimir_en_mapa(unsigned int tanque, int lugar, unsigned int color_fondo, unsigned int color_caracter) {
 	int modo = 0;
 	//int len = 1;
 	//int i;
 	unsigned char *mem_video = (unsigned char *) lugar;
 	video_elem *elemento;
 
-	modo = modo + C_FG_LIGHT_GREY * 16; // asigno el color de fondo verde al modo
-	modo = modo + C_FG_WHITE;
+	modo = modo + ((color_fondo << 5) >> 1);
+	modo = modo + color_caracter;
 	
-			elemento = (video_elem *) mem_video;
-			elemento->modo = (unsigned char) modo; //00100000b (verde);
-			elemento->ascii = tanque;
+	elemento = (video_elem *) mem_video;
+	elemento->modo = (unsigned char) modo; //00100000b (verde);
+	elemento->ascii = (unsigned char) tanque;
 	
 }
 

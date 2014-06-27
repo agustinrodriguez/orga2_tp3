@@ -30,9 +30,9 @@ unsigned short sched_proximo_indice() {
 }
 
 int tarea_siguiente() {
-	int i = (sched.quantum_restante + 1);
+	int i = sched.quantum_restante + 1;
 	while (i != sched.tarea_actual) {
-		if (i == CANT_TAREAS + 1){
+		if (i == CANT_TAREAS){
 			i = 1;
 		} else {
 			if (sched.tareas[i].estado == 1) {
@@ -54,7 +54,7 @@ void sched_inicializar() {
 	sched.tareas[0].estado = 1;
 	sched.tareas[0].indice = 0;
 
-    for (i = 1; i < CANT_TAREAS + 1; i++) {
+    for (i = 1; i < CANT_TAREAS; i++) {
 		sched.tareas[i].tarea = tss_tanques[i - 1];
 		sched.tareas[i].estado = 1;
 		sched.tareas[i].indice = i;
@@ -92,7 +92,7 @@ unsigned short sched_proximo_idle() {
 
 void matar_tarea_actual() {
 	sched.tareas[sched.tarea_actual].estado = 0;
-	if (sched.tarea_actual == 8)	{
+	if (sched.tarea_actual == CANT_TAREAS - 1)	{
 		sched.quantum_restante = 0;
 	}else{
 		sched.quantum_restante = sched.tarea_actual;

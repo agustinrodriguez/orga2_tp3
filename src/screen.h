@@ -34,7 +34,7 @@ void print_error(int error_code);
 void imprimir_texto(char * mensaje, int len);
 void pantalla_juego();
 void imprimir_nombre_grupo();
-void caracter_pintado(int tanque, int lugar);
+void imprimir_en_mapa(unsigned int tanque, int lugar, unsigned int color_fondo, unsigned int color_caracter);
 void imprimir_numero_teclado(unsigned char tecla);
 void imprimir_texto_para_tanques(char * mensaje, int len, int inicio, char color);
 void print_tablaerror();

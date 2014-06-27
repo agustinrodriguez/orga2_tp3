@@ -21,7 +21,7 @@ typedef struct tarea_t{
 
 /*Main struct del scheduler*/
 typedef struct sched_t{
-    struct tarea_t tareas[CANT_TAREAS + 1]; // Esto tiene que contener una tarea por cada tarea que haya incluida la IDLE.
+    struct tarea_t tareas[CANT_TAREAS]; // Esto tiene que contener una tarea por cada tarea que haya incluida la IDLE.
     unsigned int quantum_restante;          // QUANTUMS restantes
     unsigned int tarea_actual;              // Indice del array tareas que esta corriendo ahora.
     unsigned int tarea_anterior;            // Indice del array tareas que esta corriendo ahora.

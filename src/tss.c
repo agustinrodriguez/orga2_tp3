@@ -34,7 +34,7 @@ void tss_inicializar_tareas_tanques() {
     for (i = 0; i < CANT_TANQUES; i++) {
         cr3_tarea = mmu_inicializar_dir_tarea(i + 1);
         unsigned int pila_tarea;
-        pila_tarea = dame_pagina_libre() + 4095;
+        pila_tarea = dame_pagina_libre() + 4096;
         tss_inicializar_tareas_tanque(i, cr3_tarea, pila_tarea);
     }
 }

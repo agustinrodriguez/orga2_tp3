@@ -375,7 +375,8 @@ int_task:
     push eax
     call dame_actual
     mov edi, eax
-    add esp,4
+    pop eax
+    xchg bx, bx
     CMP EAX, 0x83D
     je .moviendo
     CMP EAX, 0x911
