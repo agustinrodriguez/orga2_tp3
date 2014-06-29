@@ -376,7 +376,7 @@ int_task:
     call dame_actual
     mov edi, eax
     pop eax
-    xchg bx, bx
+   ; xchg bx, bx
     CMP EAX, 0x83D
     je .moviendo
     CMP EAX, 0x911

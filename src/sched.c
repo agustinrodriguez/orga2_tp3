@@ -32,7 +32,7 @@ unsigned short sched_proximo_indice() {
 int tarea_siguiente() {
 	int i = sched.quantum_restante + 1;
 	while (i != sched.tarea_actual) {
-		if (i == CANT_TAREAS){
+		if (i == CANT_TAREAS +1){
 			i = 1;
 		} else {
 			if (sched.tareas[i].estado == 1) {
@@ -92,7 +92,7 @@ unsigned short sched_proximo_idle() {
 
 void matar_tarea_actual() {
 	sched.tareas[sched.tarea_actual].estado = 0;
-	if (sched.tarea_actual == CANT_TAREAS - 1)	{
+	if (sched.tarea_actual == CANT_TAREAS)	{
 		sched.quantum_restante = 0;
 	}else{
 		sched.quantum_restante = sched.tarea_actual;

@@ -40,57 +40,9 @@ void tss_inicializar_tareas_tanques() {
 }
 
 void tss_inicializar_tareas_tanque(int num_tanque, unsigned int cr3_tarea, unsigned int pila_tarea) {
-    definir_tss(&tss_tanques[num_tanque],cr3_tarea,pila_tarea, (unsigned int) 0x08000000, (unsigned int) 3, (unsigned int) 0x08002000);
+    //tss tanque = tss_tanques[num_tanque];
+    definir_tss(&tss_tanques[num_tanque],cr3_tarea,pila_tarea, 0x08000000, (unsigned int) 3, (unsigned int) 0x08002000);
 
-    /*tss_tanques[num_tanque] = (tss) {
-        .unused0 = 0x0,
-        .unused1 = 0x0,
-        .unused2 = 0x0,
-        .unused3 = 0x0,
-        .unused4 = 0x0,
-        .unused5 = 0x0,
-        .unused6 = 0x0,
-        .unused7 = 0x0,
-        .unused8 = 0x0,
-        .unused9 = 0x0,
-        .unused10 = 0x0,
-
-        .ptl = 0x0,
-        .esp0 = pila_tarea,
-        .esp1 = 0x0,
-        .esp2 = 0x0,
-
-        .ss0 = GDT_IDX_DATA_0 << 3,
-        .ss1 = 0x0,
-        .ss2 = 0x0,
-        
-        .cr3 = cr3_tarea,
-
-        .eip = 0x08000000,
-
-        .eflags = 0x00000202,
-
-        .eax = 0x0,
-        .ecx = 0x0,
-        .edx = 0x0,
-        .ebx = 0x0,
-        .esp = 0x08002000,
-        .ebp = 0x08002000,
-        .esi = 0x0,
-        .edi = 0x0,
-
-        .es = (GDT_IDX_DATA_3 << 3) + 3,
-        .cs = (GDT_IDX_CODE_3 << 3) + 3,
-        .ss = (GDT_IDX_DATA_3 << 3) + 3,
-        .ds = (GDT_IDX_DATA_3 << 3) + 3,
-        .fs = (GDT_IDX_DATA_3 << 3) + 3,
-      
-        .gs = (GDT_IDX_DATA_3 << 3) + 3,
-        .ldt = 0x0,
-       
-        .dtrap = 0x0,
-        .iomap = 0x0,
-    };*/
 }
 
 void limpiar_tss(tss * task) {

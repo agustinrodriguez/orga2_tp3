@@ -140,8 +140,8 @@ unsigned int mmu_inicializar_dir_tarea(int num_tarea) {
 	define_page_directory_entry(&pdir[2], present, rw, us, (unsigned int) page_table3);
 	define_page_directory_entry(&pdir[3], present, rw, us, (unsigned int) page_table4);
 
-	unsigned int codigo_tarea_pag_1 = TASK_CODE_SRC[num_tarea];
-	unsigned int codigo_tarea_pag_2 = TASK_CODE_SRC[num_tarea] + 0x1000;
+	unsigned int codigo_tarea_pag_1 = TASK_CODE_SRC[num_tarea-1];
+	unsigned int codigo_tarea_pag_2 = TASK_CODE_SRC[num_tarea-1] + 0x1000;
 	/*unsigned int mapa_pag_1 = TASK_PAG_1[num_tarea];
 	unsigned int mapa_pag_2 = TASK_PAG_2[num_tarea];*/
 	unsigned int mapa_pag_1 = dame_direccion_mapa(num_tarea);
