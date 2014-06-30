@@ -69,5 +69,6 @@ void tss_copy(tss* tss_src, tss* tss_dst);
 void definir_tss(tss * task, unsigned int cr3, unsigned int esp0, unsigned int eip, unsigned int us, unsigned int pila);
 void limpiar_tss(tss * task);
 unsigned int tss_get_cr3(unsigned int id);
+tss dame_tss(unsigned int tanque);
 
 #endif  /* !__TSS_H__ */

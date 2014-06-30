@@ -11,7 +11,7 @@ BITS 32
 sched_tarea_offset:     dd 0x00
 sched_tarea_selector:   dw 0x00
 contador_reloj:      dd 0
-
+contador_pause:      db 0
 
 ;; PIC
 extern fin_intr_pic1
@@ -34,6 +34,10 @@ extern print_tablaerror
 extern imprimir_desalojo
 extern imprimir_reloj_tanque
 extern matar_tarea_actual
+extern imprimo_tss
+extern sched
+extern cambiar_estado
+extern dame_estado
 ;;
 ;; Definición de MACROS
 ;; -------------------------------------------------------------------------- ;;
@@ -97,9 +101,9 @@ _isr%1:
     mov [estado_error+68], eax
 
     push ecx
-    call imprimir_desalojo
+  ;  call imprimir_desalojo
     pop ecx
-    call print_tablaerror
+  ;  call print_tablaerror
     call matar_tarea_actual
     call vuelvo_idle
     sti
@@ -173,7 +177,11 @@ _isr32:
       call proximo_reloj
       
       call screen_proximo_reloj   
-      
+      ;xchg bx, bx
+      call dame_estado
+      CMP eax, 1
+      JE .vuelvo_idle
+
       call sched_proximo_indice   
       
       cmp ax, 0   
@@ -193,8 +201,14 @@ _isr32:
       
     .nojump:   
   
-        call fin_intr_pic1   
-    
+        call fin_intr_pic1
+        jmp .end 
+
+    .vuelvo_idle:
+      ;  xchg bx,bx
+         call vuelvo_idle
+
+
     .end: 
 
         popad
@@ -314,51 +328,73 @@ int_teclado:
     cmp al, 0x09
     je .el8
     
-    cmp al, 0x0a
-    je .el9
+    cmp al, 0x19
+    je .elp
     
-    cmp al, 0x0b
-    je .el0
+    
 
 .el1:
-    imprimir_texto_mp uno, 1, 0x0f, 10, 10
+    ;mov eax, al
+    push eax
+    call imprimo_tss
     jmp .fin_teclado
 
 .el2:
-    imprimir_texto_mp dos, 1, 0x0f, 10, 10
+    push eax
+    call imprimo_tss
     jmp .fin_teclado
 
 .el3:
-    imprimir_texto_mp tres, 1, 0x0f, 10, 10
+    push eax
+    call imprimo_tss
     jmp .fin_teclado
 
 .el4:
-    imprimir_texto_mp cuatro, 1, 0x0f, 10, 10
+    push eax
+    call imprimo_tss
     jmp .fin_teclado
 
 .el5:
-    imprimir_texto_mp cinco, 1, 0x0f, 10, 10
+    push eax
+    call imprimo_tss
     jmp .fin_teclado
 
 .el6:
-    imprimir_texto_mp seis, 1, 0x0f, 10, 10
+    push eax
+    call imprimo_tss
     jmp .fin_teclado
 
 .el7:
-    imprimir_texto_mp siete, 1, 0x0f, 10, 10
+    push eax
+    call imprimo_tss
     jmp .fin_teclado
 
 .el8:
-    imprimir_texto_mp ocho, 1, 0x0f, 10, 10
+    push eax
+    call imprimo_tss
     jmp .fin_teclado
 
-.el9:
-    imprimir_texto_mp nueve, 1, 0x0f, 10, 10
+.elp:
+    xchg bx,bx
+    mov ecx, [contador_reloj]
+    CMP ecx , 1
+    jne .aPause
+    xor ecx, ecx
+    mov [contador_pause], ecx
+    push ecx
+    call cambiar_estado
+    add esp, 4
     jmp .fin_teclado
+
+.aPause:
+    mov ecx, 1
+    mov [contador_reloj], ecx
+    push ecx
+    call cambiar_estado
+    add esp, 4
 
 .el0:
-    imprimir_texto_mp cero, 1, 0x0f, 10, 10
-    jmp .fin_teclado
+   
 
 .fin_teclado:
     call fin_intr_pic1

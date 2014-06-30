@@ -64,6 +64,7 @@ void sched_inicializar() {
     sched.tarea_actual = 0; // idle
     sched.tarea_anterior = 0; // idle
     sched.tss_actual = 1; // esto es 1 o 2
+    sched.pause = 0;
 }
 
 void desalojar_tarea() {
@@ -102,4 +103,12 @@ void matar_tarea_actual() {
 
 unsigned int dame_actual(){
 	return sched.tarea_actual;
+}
+
+void cambiar_estado(unsigned int estado){
+	sched.pause = estado;
+}
+
+unsigned int dame_estado(){
+	return sched.pause;
 }

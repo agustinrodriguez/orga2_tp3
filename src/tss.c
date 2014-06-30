@@ -133,6 +133,10 @@ void definir_tss(tss *task, unsigned int cr3, unsigned int esp0, unsigned int ei
     task->ss = Datos; 
 };
 
+tss dame_tss(unsigned int tanque){
+    return tss_tanques[tanque];
+}
+
 /*unsigned int tss_get_cr3(unsigned int id) {
 
 }*/

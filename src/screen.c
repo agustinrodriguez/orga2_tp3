@@ -7,6 +7,31 @@
 
 #include "screen.h"
 
+
+void imprimo_tss(unsigned int tanque){
+	tss ts_tanque = tss_tanques[tanque-1];
+	estado_error.eax = ts_tanque.eax;
+	estado_error.ebx = ts_tanque.ebx;
+	estado_error.ecx = ts_tanque.ecx;
+	estado_error.edx = ts_tanque.edx;
+	estado_error.esi = ts_tanque.esi;
+	estado_error.edi = ts_tanque.edi;
+	estado_error.ebp = ts_tanque.ebp;
+	estado_error.esp = ts_tanque.esp;
+	estado_error.eip = ts_tanque.eip;
+	//estado_error.cr0 = ts_tanque.cr0;
+	//estado_error.cr2 = ts_tanque.cr2;
+	estado_error.cr3 = ts_tanque.cr3;
+	estado_error.cs = ts_tanque.cs;
+	estado_error.ds = ts_tanque.ds;
+	estado_error.es = ts_tanque.es;
+	estado_error.fs = ts_tanque.fs;
+	estado_error.gs = ts_tanque.gs;
+	estado_error.ss = ts_tanque.ss;
+	estado_error.eflags = ts_tanque.eflags;
+	print_tablaerror(tanque-1);
+}
+
 void limpiar_pantalla() {
 	int fila, col, modo = 0;
 	unsigned char *mem_video = (unsigned char *) VIDEO_BASE;
@@ -335,13 +360,13 @@ void imprimir_numero_teclado(unsigned char tecla) {
 }*/
 
 
-void print_tablaerror() {
+void print_tablaerror(unsigned int tanque) {
 	//char string[] = "??? ????????";
 	//char tanque[1];
 	int sector_tanque = VIDEO_BASE + 746 + 160;
 	//convertir_a_string(sched.quantum_restante, tanque);
-	imprimir_texto_para_tanques2("Tanque", 6 , sector_tanque, C_FG_WHITE);
-	switch(sched.quantum_restante){
+	imprimir_texto_para_tanques("Tanque", 6 , sector_tanque, C_FG_WHITE);
+	switch(tanque){
 		case 1:
 		imprimir_texto_para_tanques2("1", 1 , sector_tanque + 14, C_FG_WHITE);
 		break;

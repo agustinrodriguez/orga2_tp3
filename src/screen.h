@@ -10,6 +10,7 @@
 
 #include "colors.h"
 #include "sched.h"
+#include "tss.h"
 /* Definicion de la pantalla */
 #define VIDEO_FILS 50
 #define VIDEO_COLS 80
@@ -37,10 +38,11 @@ void imprimir_nombre_grupo();
 void imprimir_en_mapa(unsigned int tanque, int lugar, unsigned int color_fondo, unsigned int color_caracter);
 void imprimir_numero_teclado(unsigned char tecla);
 void imprimir_texto_para_tanques(char * mensaje, int len, int inicio, char color);
-void print_tablaerror();
+void print_tablaerror(unsigned int tanque);
 void convertir_a_string(unsigned int valor, char * cadena);
 void imprimir_desalojo(unsigned int error);
 unsigned int pasaje_a_mapa_video(int direccion);
 void imprimir_reloj_tanque(int reloj);
+void imprimo_tss(unsigned int tanque);
 
 #endif  /* !__SCREEN_H__ */
