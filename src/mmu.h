@@ -59,7 +59,9 @@ unsigned int dame_direccion_mapa(int num_tarea);
 unsigned char dame_pos_inicial_col(int id);
 unsigned char dame_pos_inicial_fila(int id);
 unsigned int dame_fisica(unsigned int i, unsigned int j);
+void copiar_pagina_size(unsigned int origen, unsigned int destino, unsigned int size);
 
+unsigned int dame_fisica_de_virtual(unsigned int dir_virtual,unsigned int cr3);
 /* Page Directory */
 //extern page_directory_entry pd[];
 

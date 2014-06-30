@@ -19,7 +19,7 @@ void imprimo_tss(unsigned int tanque){
 	estado_error.ebp = ts_tanque.ebp;
 	estado_error.esp = ts_tanque.esp;
 	estado_error.eip = ts_tanque.eip;
-	//estado_error.cr0 = ts_tanque.cr0;
+	//estado_error.cr0 = ts_tanque.cr0; de donde saco el cr0 y cr2 de la tarea
 	//estado_error.cr2 = ts_tanque.cr2;
 	estado_error.cr3 = ts_tanque.cr3;
 	estado_error.cs = ts_tanque.cs;
@@ -29,7 +29,7 @@ void imprimo_tss(unsigned int tanque){
 	estado_error.gs = ts_tanque.gs;
 	estado_error.ss = ts_tanque.ss;
 	estado_error.eflags = ts_tanque.eflags;
-	print_tablaerror(tanque-1);
+	print_tablaerror(tanque);
 }
 
 void limpiar_pantalla() {
@@ -492,6 +492,7 @@ void print_tablaerror(unsigned int tanque) {
 	convertir_a_string(estado_error.cr3, cadena);
 	imprimir_texto_para_tanques(cadena, 8, inicio_y, C_FG_WHITE);
 	
+	imprimir_desalojo(dame_desalojo(tanque));
 }
 
 

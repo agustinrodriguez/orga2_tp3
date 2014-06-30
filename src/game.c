@@ -132,10 +132,10 @@ unsigned int game_mover(unsigned int id, direccion d) {
     }
 
     if (tablero[tanque_actual->fila][tanque_actual->col] == -1) {
-    	//destruir tanque
-    	matar_tarea_actual();
+    	guardar_desalojo(52);
+        matar_tarea_actual();
     	pintar_tanque_destruido(tanque_actual);
-    	tablero[tanque_actual->fila][tanque_actual->col] = 0;
+        tablero[tanque_actual->fila][tanque_actual->col] = 0;
     } else {
 	    if (tablero[tanque_actual->fila][tanque_actual->col] != id
 	    	&& tablero[tanque_actual->fila][tanque_actual->col] != 0) {
@@ -153,6 +153,29 @@ unsigned int game_mover(unsigned int id, direccion d) {
 }
 
 unsigned int game_misil(unsigned int id, int val_x, int val_y, unsigned int misil, unsigned int size) {
+    tanque_g *tanque_actual = &tanques[id - 1];
+    unsigned int destino;
+    int fila, columna;
+
+    fila = tanque_actual->fila + val_y;
+    columna = tanque_actual->col + val_x;
+    if (fila < 0) {
+        fila += 50;
+    } else if (fila > 49) {
+        fila -= 50; 
+    }
+    
+    if (columna < 0) {
+        columna += 50;
+    } else if (columna > 49) {
+        columna -= 50; 
+    }
+
+    pintar_misil(id, fila, columna);
+
+    destino = dame_fisica(fila, columna);
+    unsigned int misil_a_fisica = dame_fisica_de_virtual(misil,get_cr3_task(id));
+    copiar_pagina_size(misil_a_fisica, destino, size);
     return TRUE;
 }
 
@@ -231,4 +254,10 @@ void pintar_tanque_destruido(tanque_g *tanque) {
 	unsigned int pos_video;
 	pos_video = pasaje_a_mapa_video(dame_fisica(tanque->fila, tanque->col));
 	imprimir_en_mapa(tanque->id + 48, pos_video, C_FG_RED, C_FG_WHITE);
+}
+
+void pintar_misil(unsigned int id, unsigned int fila, unsigned int columna) {
+    unsigned int pos_video;
+    pos_video = pasaje_a_mapa_video(dame_fisica(fila, columna));
+    imprimir_en_mapa(id + 48, pos_video, C_FG_MAGENTA, C_FG_RED);
 }

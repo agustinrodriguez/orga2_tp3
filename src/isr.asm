@@ -38,6 +38,7 @@ extern imprimo_tss
 extern sched
 extern cambiar_estado
 extern dame_estado
+extern guardar_desalojo
 ;;
 ;; Definición de MACROS
 ;; -------------------------------------------------------------------------- ;;
@@ -102,6 +103,10 @@ _isr%1:
 
     push ecx
   ;  call imprimir_desalojo
+    pop ecx
+    mov ecx, %1
+    push ecx
+    call guardar_desalojo
     pop ecx
   ;  call print_tablaerror
     call matar_tarea_actual
@@ -179,7 +184,7 @@ _isr32:
       call screen_proximo_reloj   
       ;xchg bx, bx
       call dame_estado
-      CMP eax, 1
+      CMP ax, 1
       JE .vuelvo_idle
 
       call sched_proximo_indice   
@@ -205,7 +210,7 @@ _isr32:
         jmp .end 
 
     .vuelvo_idle:
-      ;  xchg bx,bx
+       ; xchg bx,bx
          call vuelvo_idle
 
 
@@ -335,47 +340,55 @@ int_teclado:
 
 .el1:
     ;mov eax, al
+    dec eax
     push eax
     call imprimo_tss
     jmp .fin_teclado
 
 .el2:
+    dec eax
     push eax
     call imprimo_tss
     jmp .fin_teclado
 
 .el3:
+    dec eax
     push eax
     call imprimo_tss
     jmp .fin_teclado
 
 .el4:
+    dec eax
     push eax
     call imprimo_tss
     jmp .fin_teclado
 
 .el5:
+    dec eax
     push eax
     call imprimo_tss
     jmp .fin_teclado
 
 .el6:
+    dec eax
     push eax
     call imprimo_tss
     jmp .fin_teclado
 
 .el7:
+    dec eax
     push eax
     call imprimo_tss
     jmp .fin_teclado
 
 .el8:
+    dec eax
     push eax
     call imprimo_tss
     jmp .fin_teclado
 
 .elp:
-    xchg bx,bx
+    ;xchg bx,bx
     mov ecx, [contador_reloj]
     CMP ecx , 1
     jne .aPause
@@ -427,10 +440,10 @@ int_task:
         add esp, 8
         jmp .fin
     .misil:
-        push ebx
-        push ecx
-        push edx
         push esi
+        push edx
+        push ecx
+        push ebx
         push edi
         call game_misil
         add esp, 20

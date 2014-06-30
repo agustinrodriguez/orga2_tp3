@@ -292,6 +292,17 @@ void copiar_pagina(unsigned int origen, unsigned int destino) {
 	}
 }
 
+void copiar_pagina_size(unsigned int origen, unsigned int destino, unsigned int size) {
+	int* code_origen = (int*)(origen);
+	int* code_destino= (int*)(destino);
+	int i;
+
+	for (i = 0; i < size; i++) {
+		code_destino[i] = code_origen[i];
+	}	
+}
+
+
 unsigned int dame_pagina_libre() {
 	unsigned int pagina_libre = MEMORIA_RESTANTE;
 
@@ -333,4 +344,19 @@ unsigned int dame_fisica(unsigned int i, unsigned int j) {
 	unsigned int res = 0X00400000;
 	res = res +((i*50 + j)*4096);
 	return res;
+}
+
+
+unsigned int dame_fisica_de_virtual(unsigned int dir_virtual,unsigned int cr3){
+	unsigned int offset_directorio = dir_virtual;
+	offset_directorio = offset_directorio  >> 22;
+	unsigned int offset_tabla = dir_virtual;
+	offset_tabla = (dir_virtual >> 12) & 0x3FF;
+	unsigned int offset_fisica = dir_virtual & 0xFFF;
+	
+	page_directory_entry * page_dir_base = (page_directory_entry *) cr3;
+	page_directory_entry * page_dir = &page_dir_base[offset_directorio];
+	page_table_entry * page_table;
+	page_table = (page_table_entry *) (page_dir->base_12_31 << 12) + offset_tabla;
+	return (unsigned int) &page_table[offset_fisica];
 }

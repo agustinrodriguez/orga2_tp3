@@ -17,6 +17,8 @@ typedef struct tarea_t{
     tss tarea;       // TSS Segment Selector para la tarea.
     unsigned int estado;        // Estado: si el estado == 1 entonces puedo acceder a la tarea. Si estado == 0 la tarea fue desalojada.
     unsigned int indice;
+    unsigned int desalojo;
+
 } tarea_;
 
 /*Main struct del scheduler*/
@@ -44,4 +46,6 @@ void matar_tarea_actual();
 unsigned int dame_actual();
 void cambiar_estado(unsigned int estado);
 unsigned int dame_estado();
+void guardar_desalojo(unsigned int desalojo);
+unsigned int dame_desalojo(unsigned int id);
 #endif	/* !__SCHED_H__ */

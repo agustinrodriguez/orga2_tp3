@@ -112,3 +112,11 @@ void cambiar_estado(unsigned int estado){
 unsigned int dame_estado(){
 	return sched.pause;
 }
+
+void guardar_desalojo(unsigned int desalojo){
+	sched.tareas[sched.tarea_actual-1].desalojo = desalojo;
+}
+
+unsigned int dame_desalojo(unsigned int id){
+	return sched.tareas[id-1].desalojo;
+}

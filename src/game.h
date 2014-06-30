@@ -53,4 +53,5 @@ void pintar_tanque_superpuesto(tanque_g *tanque);
 
 void pintar_tanque_destruido(tanque_g *tanque);
 
+void pintar_misil(unsigned int id, unsigned int fila, unsigned int columna);
 #endif  /* !__GAME_H__ */
