@@ -202,11 +202,7 @@ _isr32:
 
         call fin_intr_pic1
 
-        ;popad
-        ;sti
         jmp far [offset]
-        ;cli
-        ;pushad
         jmp .end
       
     .nojump:
@@ -223,10 +219,8 @@ global screen_proximo_reloj
 screen_proximo_reloj:
     ; cli
     pushad
-   ; call fin_intr_pic1
-   push ecx
+    push ecx
     mov ecx, [contador_reloj]
-   ; xchg bx, bx  ;Break para ver como va moviendose el cursor 
     
     cmp ecx, 0
     je .primero
@@ -334,6 +328,8 @@ int_teclado:
     cmp al, 0x19
     je .elp
     
+    cmp al, 0x2e
+    je .elc
     
 
 .el1:
@@ -387,24 +383,21 @@ int_teclado:
 
 .elp:
     ;xchg bx,bx
-    mov ecx, [contador_reloj]
-    CMP ecx , 1
-    jne .aPause
-    xor ecx, ecx
-    mov [contador_pause], ecx
-    push ecx
-    call cambiar_estado
-    add esp, 4
-    jmp .fin_teclado
-
 .aPause:
     mov ecx, 1
     mov [contador_reloj], ecx
     push ecx
     call cambiar_estado
     add esp, 4
+    jmp .fin_teclado
 
-.el0:
+.elc:
+    xor ecx, ecx
+    mov [contador_pause], ecx
+    push ecx
+    call cambiar_estado
+    add esp, 4
+    jmp .fin_teclado
    
 
 .fin_teclado:

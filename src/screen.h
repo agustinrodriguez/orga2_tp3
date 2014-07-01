@@ -25,7 +25,9 @@ typedef struct video_elem {
 typedef struct str_estado_de_tarea {
 	unsigned int eax; unsigned int ebx;  unsigned int ecx;  unsigned int edx;  unsigned int esi; 
 	unsigned int edi;  unsigned int ebp;  unsigned int esp;  unsigned int eip;  unsigned int cr0;  unsigned int cr2;  unsigned int cr3 ;
-	unsigned int cs;  unsigned int ds;  unsigned int es;  unsigned int fs;  unsigned int gs;  unsigned int ss;  unsigned int eflags;
+	unsigned int cs;  unsigned int ds;  unsigned int es;  unsigned int fs;  unsigned int gs; 
+	 unsigned int ss;  unsigned int eflags; unsigned int stack_0; unsigned int stack_1; unsigned int stack_2;
+	 unsigned int stack_3; unsigned int stack_4;
 } __attribute__((__packed__)) estado_task;
 estado_task estado_error;
 

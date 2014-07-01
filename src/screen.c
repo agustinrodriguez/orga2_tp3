@@ -9,7 +9,7 @@
 
 
 void imprimo_tss(unsigned int tanque){
-	tss ts_tanque = tss_tanques[tanque-1];
+	tss ts_tanque = sched.tareas[tanque].tarea;
 	estado_error.eax = ts_tanque.eax;
 	estado_error.ebx = ts_tanque.ebx;
 	estado_error.ecx = ts_tanque.ecx;
@@ -29,6 +29,20 @@ void imprimo_tss(unsigned int tanque){
 	estado_error.gs = ts_tanque.gs;
 	estado_error.ss = ts_tanque.ss;
 	estado_error.eflags = ts_tanque.eflags;
+
+	unsigned int * stack = (unsigned int*)ts_tanque.esp;
+	estado_error.stack_0 = *stack;
+	stack += 4;
+	estado_error.stack_1 = *stack;
+	stack += 4;
+	estado_error.stack_2 = *stack;
+	stack += 4;
+	estado_error.stack_3 = *stack;
+	stack += 4;
+	estado_error.stack_4 = *stack;
+	//estado_error.stack_2 = (unsigned int)&(ts_tanque.esp+8);
+	//estado_error.stack_3 = (unsigned int)&(ts_tanque.esp+12);
+	//estado_error.stack_4 = (unsigned int)&(ts_tanque.esp+16);
 	print_tablaerror(tanque);
 }
 
@@ -495,6 +509,24 @@ void print_tablaerror(unsigned int tanque) {
 	imprimir_texto_para_tanques("cr3", 3, inicio_y, C_FG_BLACK);
 	inicio_y = inicio_y + 8;
 	convertir_a_string(estado_error.cr3, cadena);
+	imprimir_texto_para_tanques(cadena, 8, inicio_y, C_FG_WHITE);
+	
+	inicio_y = inicio_y + 1760 ;
+	imprimir_texto_para_tanques("STACK", 5, inicio_y, C_FG_BLACK);
+	inicio_y = inicio_y + 316;
+	convertir_a_string(estado_error.stack_0, cadena);
+	imprimir_texto_para_tanques(cadena, 8, inicio_y, C_FG_WHITE);
+	inicio_y = inicio_y + 320;
+	convertir_a_string(estado_error.stack_1, cadena);
+	imprimir_texto_para_tanques(cadena, 8, inicio_y, C_FG_WHITE);
+	inicio_y = inicio_y + 320;
+	convertir_a_string(estado_error.stack_2, cadena);
+	imprimir_texto_para_tanques(cadena, 8, inicio_y, C_FG_WHITE);
+	inicio_y = inicio_y + 320;
+	convertir_a_string(estado_error.stack_3, cadena);
+	imprimir_texto_para_tanques(cadena, 8, inicio_y, C_FG_WHITE);
+	inicio_y = inicio_y + 320;
+	convertir_a_string(estado_error.stack_4, cadena);
 	imprimir_texto_para_tanques(cadena, 8, inicio_y, C_FG_WHITE);
 	
 	imprimir_desalojo(dame_desalojo(tanque));
