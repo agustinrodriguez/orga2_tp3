@@ -66,6 +66,8 @@ unsigned int pasaje_a_mapa_video(int direccion){
 
 void imprimir_desalojo(unsigned int error){
 	int inicio = VIDEO_BASE + 6666;
+	imprimir_texto_para_tanques2("                           ", 21 , inicio, C_FG_RED);
+
 	if (error < 20 && error >= 0){
 		imprimir_texto_para_tanques2("Interrupcion Intel", 18 , inicio, C_FG_WHITE);
 	}
@@ -77,6 +79,9 @@ void imprimir_desalojo(unsigned int error){
 	}
 	if (error == 54){
 		imprimir_texto_para_tanques2("Destruccion por Superposición", 29 , inicio, C_FG_WHITE);
+	}
+	if (error == 55){
+		imprimir_texto_para_tanques2("                           ", 21 , inicio, C_FG_RED);
 	}
 			
 }

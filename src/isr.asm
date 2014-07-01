@@ -176,46 +176,44 @@ invalida:
 
 global _isr32
 _isr32:
-      cli  
-      pushad   
-      
-      call proximo_reloj
-      
-      call screen_proximo_reloj   
-      ;xchg bx, bx
-      call dame_estado
-      CMP ax, 1
-      JE .vuelvo_idle
+    cli  
+    pushad   
 
-      call sched_proximo_indice   
-      
-      cmp ax, 0   
-      je  .nojump  
+    call proximo_reloj
+
+    call screen_proximo_reloj   
+    ;xchg bx, bx
+    call dame_estado
+    CMP ax, 1
+    jne .prox_indice
+
+    call sched_proximo_idle
+   ; xchg bx,bx
+    jmp .sigo_jump_far
+
+    .prox_indice:
+        call sched_proximo_indice
+
+    .sigo_jump_far:
+        cmp ax, 0   
+        je  .nojump  
               
-      mov [selector], ax
-      
-      call fin_intr_pic1
+        mov [selector], ax
 
-      popad
-      sti
-     ; xchg bx,bx
-      jmp far [offset]
-      cli
-      pushad
-      jmp .end   
+        call fin_intr_pic1
+
+        ;popad
+        ;sti
+        jmp far [offset]
+        ;cli
+        ;pushad
+        jmp .end
       
-    .nojump:   
-  
+    .nojump:
         call fin_intr_pic1
         jmp .end 
 
-    .vuelvo_idle:
-       ; xchg bx,bx
-         call vuelvo_idle
-
-
-    .end: 
-
+    .end:
         popad
         sti
         iret
