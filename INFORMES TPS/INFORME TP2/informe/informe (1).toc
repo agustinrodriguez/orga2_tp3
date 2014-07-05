@@ -1,0 +1,17 @@
+\contentsline {section}{\numberline {1}Introducci\IeC {\'o}n}{3}
+\contentsline {section}{\numberline {2}Desarrollo y Resultados}{4}
+\contentsline {subsection}{\numberline {2.1}Filtro Tiles}{4}
+\contentsline {subsubsection}{\numberline {2.1.1}Experimento 1 - an\IeC {\'a}lisis el c\IeC {\'o}digo generado}{4}
+\contentsline {subsubsection}{\numberline {2.1.2}Experimento 2 - optimizaciones del compilador}{4}
+\contentsline {subsubsection}{\numberline {2.1.3}Experimento 3 - secuencial vs. vectorial}{4}
+\contentsline {subsubsection}{\numberline {2.1.4}Experimento 4 - cpu vs. bus de memoria}{5}
+\contentsline {subsection}{\numberline {2.2}Filtro Popart}{6}
+\contentsline {subsubsection}{\numberline {2.2.1}Experimento 1 - saltos condicionales}{6}
+\contentsline {subsubsection}{\numberline {2.2.2}Experimento 2 - cpu vs. bus de memoria}{6}
+\contentsline {subsubsection}{\numberline {2.2.3}Experimento 3 - prefetch}{6}
+\contentsline {subsubsection}{\numberline {2.2.4}Experimento 3 - secuencial vs. vectorial}{6}
+\contentsline {subsection}{\numberline {2.3}Filtro Temperature}{7}
+\contentsline {subsubsection}{\numberline {2.3.1}Experimento 1}{7}
+\contentsline {subsection}{\numberline {2.4}Filtro LDR}{9}
+\contentsline {subsubsection}{\numberline {2.4.1}Experimento 1}{9}
+\contentsline {section}{\numberline {3}Conclusi\IeC {\'o}n}{11}

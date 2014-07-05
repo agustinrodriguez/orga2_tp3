@@ -1,0 +1,121 @@
+\subsubsection{Experimento 1 - saltos condicionales}
+
+	Se desea conocer que tanto impactan los saltos condicionales
+	en el código del ejercicio anterior con \verb|-O1|.\\
+	Para poder medir esto, una posibilidad es quitar las comparaciones
+	al procesar cada pixel. Por más que la imagen resultante no sea correcta,
+	será posible tomar una medida del impacto de los saltos condicionales.
+	Analizar como varía la performance. 
+	
+	Si se le ocurren, mencionar otras posibles formas de medir el impacto de los saltos condicionales.
+	
+	
+  \vspace*{0.3cm} 
+
+
+ Para poder conocer como impactaban los saltos condicionales en la implementacion realizamos distintas mediciones;
+ quitando los saltos con y sin optimizacion obteniendo los siguientes resultados:
+ Quitando los saltos sin optimizar, para imagenes de tamaño pequeño (50x100) con 100 iteraciones, el mencionado codigo insume
+ una cantidad de 389596 ciclos por cada llamada. A su vez, con imagenes de tamaño mas grande (200x200) utilizando la misma cantidad de iteraciones,
+ el codigo nos insume  una cantidad de 1803084 ciclos por llamada, mientras que con imagenes aun mas grande como por ejemplo 512x512 y 1024x768, demanda
+ 10745530 y 32020980 por llamada respectivamente.
+ \vspace*{0.3cm} 
+ Mientras que la implementación sin saltos luego de realizar la respectiva medicion 
+ para conocer la performace obtenemos que:
+ Para imagenes de tamaño pequeño (50x100) con la misma cantidad de iteraciones insume 167132 ciclos por llamada. 
+ Con imagenes de mayor tamaño (200x200), demanda 805378 de ciclos.
+ Por ultimo con imagenes de tamaño aun mayor (512x512) y (1024x768), emplea 4719143 y 13811050 de ciclos por llamada correspondientemente.
+  \vspace*{0.3cm}
+ Por ultimo, habiendo quitado ambas instrucciones cosechamos los siguientes resultados:
+ para imagenes de tamaño pequeño (50x100) la nueva version del codigo cuesta
+ una cantidad de 56127 ciclos por cada llamada. Luego, con imagenes de tamaño mas grande (200x200),
+ el codigo nos insume  una cantidad de 270857 ciclos por llamada, mientras que con imagenes sustancialmente mayores como por ejemplo 512x512 y 1024x768, demanda
+ 1149692 y 3466523 por llamada respectivamente.
+ \vspace*{0.3cm} \vspace*{0.3cm} 
+ 
+ 
+ Para una mejor representación se realizo un grafico mostrando a simple vista
+ las diferencias entre cada tipo de version de la implementacion implementacion.
+ \vspace*{0.3cm} \vspace*{0.3cm}
+  \begin{center}
+ \includegraphics[scale=0.7]{popartbien.png}
+ \end{center}
+  \vspace*{0.3cm} 
+
+Concluimos que en imagenes grandes es muy notoria la diferencia en performace entre las versiones con y sin saltos.
+
+\vspace*{0.3cm} \noindent
+\subsubsection{Experimento 2 - cpu vs. bus de memoria}
+
+	¿Cuál es el factor que limita la performance en este caso? 
+	
+	Realizar un experimento, agregando múltiples instrucciones de un mismo tipo
+	y realizar un análisis 	del resultado. Acompañar con un gráfico.
+
+
+\vspace*{0.3cm} \noindent
+\subsubsection{Experimento 3 - prefetch}
+
+  La técnica de \textit{prefetch} es otra forma de optimización que puede
+  realizarse. Su sustento teórico es el siguiente:
+  
+  Suponga un algoritmo que en cada iteración tarda n ciclos en obtener un dato y una cantidad
+  similar en procesarlo. Si el algoritmo lee el dato $i$ y luego lo procesa,
+  desperdiciará siempre n ciclos esperando entre que el dato llega y que se comienza
+  a procesar efectivamente. Un algoritmo más inteligente podría pedir el 
+  dato $i+1$ al comienzo del ciclo de proceso del dato $i$ (siempre suponiendo
+  que el dato $i$ pidió en la iteración $i-1$. De esta manera, a la vez que el
+  procesador computa todas las instrucciones de la iteración $i$, se estáran trayendo
+  los datos de la siguiente iteración, y cuando esta última comience, los datos ya
+  habrán llegado.
+
+  \vspace*{0.2cm}
+  Estudiar esta técnica y proponer una aplicación al código del filtro en la versión ASM.
+  Programarla y analizar el resultado. ¿Vale la pena hacer prefetching?
+
+\vspace*{0.3cm} \noindent
+\subsubsection{Experimento 3 - secuencial vs. vectorial}
+
+  Analizar cuales son las diferencias de performace entre las versiones de C y ASM. 
+  Realizar gráficos que representen estas diferencias.
+
+  
+   Realizando nuestras mediciones en la implementacion de C de nuestro codigo obtenemos que;
+ ara imagenes de tamaño pequeño (50x100) con 100 iteraciones, el mencionado codigo insume
+ una cantidad de 444959 ciclos por cada llamada. A su vez, con imagenes de tamaño mas grande (200x200) 
+ utilizando la misma cantidad de iteraciones, el codigo nos insume  una cantidad de 631827 ciclos por 
+ llamada, mientras que con imagenes aun mas grande como por ejemplo 512x512 y 1024x768, demanda
+ 3261260 y 9107332 por llamada respectivamente. \vspace*{0.2cm}
+ 
+ Mientras que nuestra implementacion realizada en ASM luego de realizar la respectiva medicion 
+ para conocer la performace de esta version obtenemos que:
+  Para imagenes de tamaño pequeño (50x100) con la misma cantidad de iteraciones insume 128763 
+  ciclos por llamada. 
+ Con imagenes de mayor tamaño (200x200), demanda 628630 de ciclos.
+ Por ultimo con imagenes de tamaño aun mayor (512x512) y (1024x768), emplea 3098234 y 8978195 
+ de ciclos por llamada correspondientemente.
+  \vspace*{0.3cm}
+
+ Para una mejor representación se realizaron distintos graficos mostrando a simple vista
+ las diferencias entre cada tipo de implementacion en cada tipo de imagen.
+ \vspace*{0.3cm} \vspace*{0.3cm}
+  \begin{center}
+ \includegraphics[scale=0.7]{asmc.png}
+ \end{center}
+  \vspace*{0.3cm} 
+  
+  La diferencia principal entre el c\'odigo escrito en lenguaje C y el c\'odigo ASM, es la cantidad de accesos 
+a memoria realizados en cada iteraci\'on. Otra diferencia puede verse en la cantidad de bytes que pueden 
+ser procesados simultaneamente durante el mismo ciclo. 
+Mientras que en C leemos y procesamos un byte por vez, el c\'odigo ASM nos permite acceder y procesar 
+16 bytes en simultaneos. De todas maneras, en este caso trabajamos con 12 bytes que es un numero mas \'util 
+ya que es m\'ultiplo de 3 (cantidad de bytes por p\'ixel)  y de 4 (cantidad de bytes por cada caracter).
+Pudiendo levantar de a 16 bytes en memoria, podr\'ia esperarse que el c\'odigo asm demorase una 
+diesiseiava parte de la cantidad de ciclos que demora el c\'odigo en C.
+Pero debemos tener en cuenta que en nuestro caso estamos aprovechando solo 15 de los 16 bytes que leemos 
+en cada iteraci\'on por lo tanto es más acertado evaluar como si solo leyeramos 15 bytes. 
+Adem\'as, hay que tener en cuenta que las instrucciones SSE pueden necesitar más ciclos que las operaciones 
+comunes que usamos en el C, eso disminuye un poco la performance en la comparación. 
+Por mas que como hemos visto los saltos condicionales empeoran la performace en ASM, dicha implementacion
+sigue siendo mas optima que la de C.
+\vspace*{0.3cm} \vspace*{0.3cm} 

@@ -1,0 +1,75 @@
+\vspace*{0.3cm} \noindent
+\subsubsection{Experimento 1}
+
+  Analizar cuales son las diferencias de performace entre las versiones de C y ASM. 
+  Realizar gráficos que representen estas diferencias.
+  
+\vspace*{0.3cm} 
+
+ En este filtro a diferencia de los anteriores existe un alfa el cual da valores positivos y negativos,
+ por ende realizamos mediciones con alfa positivo y negativo.
+ 
+ Realizando nuestras mediciones en la implementacion de C de nuestro codigo con alfa positivo obtenemos que;
+ para imagenes de tamaño pequeño (50x100) con 100 iteraciones, el mencionado codigo insume
+ una cantidad de 3431854 ciclos por cada llamada. A su vez, con imagenes de tamaño mas grande (200x200) 
+ utilizando la misma cantidad de iteraciones, el codigo nos insume  una cantidad de 21743294 ciclos por 
+ llamada, luego con imagenes aun mas grande como por ejemplo 512x512 y 1024x768, demanda
+ 145683856 y 438512256 por llamada respectivamente. \vspace*{0.2cm}
+ 
+ Mientras que nuestra implementacion realizada en ASM luego de realizar la respectiva medicion 
+ para conocer la performace de esta version obtenemos que:
+  Para imagenes de tamaño pequeño (50x100) con la misma cantidad de iteraciones insume 1460376 
+  ciclos por llamada. 
+ Con imagenes de mayor tamaño (200x200), demanda 9112044 de ciclos.
+ Por ultimo con imagenes de tamaño aun mayor (512x512) y (1024x768), emplea 64050524 y 193531520 
+ de ciclos por llamada correspondientemente.
+  \vspace*{0.3cm}
+
+ Para una mejor representación se realizo un grafico mostrando a simple vista
+ las diferencias entre cada tipo de implementacion con dicho alfa.
+ \vspace*{0.3cm} \vspace*{0.3cm}
+  \begin{center}
+ \includegraphics[scale=0.7]{ldr+.png}
+ \end{center}
+  \vspace*{0.3cm} 
+
+  Por consiguiente, con un valor alfa negativo realizamos las pertinentes mediciones en las distintas implementaciones 
+  obteniendo que;\vspace*{0.2cm}
+  
+  En C, para imagenes de tamaño pequeño (50x100) con 100 iteraciones, el mencionado codigo insume
+ una cantidad de 3450531 ciclos por cada llamada. A su vez, con imagenes de tamaño mas grande (200x200) 
+ utilizando la misma cantidad de iteraciones, el codigo nos insume  una cantidad de 21783128 ciclos por 
+ llamada, luego con imagenes aun mas grande como por ejemplo 512x512 y 1024x768, demanda
+ 145574048 y 437996160 por llamada respectivamente. \vspace*{0.2cm}
+ 
+ Mientras que la implementacion realizada en ASM obtenemos tenemos que:
+  Para imagenes de tamaño pequeño (50x100) con la misma cantidad de iteraciones insume 1438545 
+  ciclos por llamada. 
+ Con imagenes de mayor tamaño (200x200), demanda 9026611 de ciclos.
+ Por ultimo con imagenes de tamaño aun mayor (512x512) y (1024x768), emplea 63927320 y 193388816 
+ de ciclos por llamada correspondientemente.
+  \vspace*{0.3cm}
+
+ Para una mejor representación se realizo un grafico mostrando a simple vista
+ las diferencias entre cada tipo de implementacion con dicho alfa.
+ \vspace*{0.3cm} \vspace*{0.3cm}
+  \begin{center}
+ \includegraphics[scale=0.7]{ldr-.png}
+ \end{center}
+  \vspace*{0.3cm} 
+  
+  
+La diferencia principal entre el c\'odigo escrito en lenguaje C y el c\'odigo ASM, es la cantidad de accesos 
+a memoria realizados en cada iteraci\'on.Otra diferencia puede verse en la cantidad de bytes que pueden 
+ser procesados simultaneamente durante el mismo ciclo. En nuestra implamentacion de ASM en una sola iteracion ya
+obtenemos la sumas correspondientes de los pixeles vecinos, mientras que en la implamentacion del c por cada iteracion
+se realizan dentro de esa misma varias iteraciones mas sumando los pixeles vecinos y por este motivo principal
+la diferencia notoria en la performance.\vspace*{0.2cm}
+
+Pudiendo levantar de a 16 bytes en memoria, podr\'ia esperarse que el c\'odigo asm demorase una 
+diesiseiava parte de la cantidad de ciclos que demora el c\'odigo en C.
+Pero debemos tener en cuenta que en nuestro caso estamos aprovechando solo 15 de los 16 bytes que leemos 
+en cada iteraci\'on por lo tanto es más acertado evaluar como si solo leyeramos 15 bytes. 
+Adem\'as, hay que tener en cuenta que las instrucciones SSE pueden necesitar más ciclos que las operaciones 
+comunes que usamos en el C, eso disminuye un poco la performance en la comparación. 
+\vspace*{0.3cm} \vspace*{0.3cm} 

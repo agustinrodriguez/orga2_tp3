@@ -1,0 +1,46 @@
+\subsubsection{Experimento 1}
+
+  Analizar cuales son las diferencias de performace entre las versiones de C y ASM. 
+  Realizar gráficos que representen estas diferencias.
+
+  \vspace*{0.3cm} 
+
+
+ Realizando nuestras mediciones en la implementacion de C de nuestro codigo obtenemos que;
+ para imagenes de tamaño pequeño (50x100) con 100 iteraciones, el mencionado codigo insume
+ una cantidad de 783041 ciclos por cada llamada. A su vez, con imagenes de tamaño mas grande (200x200) utilizando la misma cantidad de iteraciones,
+ el codigo nos insume  una cantidad de 5708085 ciclos por llamada, mientras que con imagenes aun mas grande como por ejemplo 512x512 y 1024x768, demanda
+ 5708085 y 109464584 por llamada respectivamente.\vspace*{0.2cm}
+ Mientras que nuestra implementacion realizada en ASM luego de realizar la respectiva medicion 
+ para conocer la performace de esta version obtenemos que:
+ Para imagenes de tamaño inferior (50x100) con la misma cantidad de iteraciones insume 234468 ciclos por llamada. 
+ Con imagenes de mayor tamaño (200x200), demanda 1289310 de ciclos.
+ Por ultimo con imagenes de tamaño aun mayor (512x512) y (1024x768), emplea 1289310 y 27479906 de ciclos por llamada correspondientemente.
+ \vspace*{0.3cm}
+ 
+ Para una mejor representación se realizaron distintos graficos mostrando a simple vista
+ las diferencias entre cada tipo de implementacion en cada tipo de imagen.
+ \vspace*{0.3cm} \vspace*{0.3cm}
+  \begin{center}
+ \includegraphics[scale=0.7]{temperature.png}
+ \end{center}
+  \vspace*{0.3cm} 
+La diferencia principal entre el c\'odigo escrito en lenguaje C y el c\'odigo ASM, es la cantidad de accesos 
+a memoria realizados en cada iteraci\'on. Otra diferencia puede verse en la cantidad de bytes que pueden 
+ser procesados simultaneamente durante el mismo ciclo. 
+Mientras que en C leemos y procesamos un byte por vez, el c\'odigo ASM nos permite acceder y procesar 
+16 bytes en simultaneos. De todas maneras, en este caso trabajamos con 12 bytes que es un numero mas \'util 
+ya que es m\'ultiplo de 3 (cantidad de bytes por p\'ixel)  y de 4 (cantidad de bytes por cada caracter).
+Pudiendo levantar de a 16 bytes en memoria, podr\'ia esperarse que el c\'odigo asm demorase una 
+diesiseiava parte de la cantidad de ciclos que demora el c\'odigo en C.
+Pero debemos tener en cuenta que en nuestro caso estamos aprovechando solo 15 de los 16 bytes que leemos 
+en cada iteraci\'on por lo tanto es más acertado evaluar como si solo leyeramos 15 bytes. 
+Adem\'as, hay que tener en cuenta que las instrucciones SSE pueden necesitar más ciclos que las operaciones 
+comunes que usamos en el C, eso disminuye un poco la performance en la comparación. 
+\vspace*{0.3cm} \vspace*{0.3cm} 
+ %Luego de dichas mediciones podemos concluir en que la implementacion en ASM por el uso del 
+ %paralelismo con instrucciones sse posee una mejor performance.
+ %Además teniendo en cuenta que los accesos a memoria son muy costosos, 
+ %el paralelismo hace que se reduzcan estos mismos.
+ 
+ 
