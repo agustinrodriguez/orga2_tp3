@@ -143,13 +143,12 @@ unsigned int game_mover(unsigned int id, direccion d) {
 	    } else {
 	    	pintar_tanque(tanque_actual, C_FG_LIGHT_GREY, C_FG_BLACK);
 	    }
-
 	    // en el tablero dejamos el ultimo tanque que paso
 	    tablero[tanque_actual->fila][tanque_actual->col] = id;
     }
 
 
-    return TRUE;
+    return tanque_actual->dir_virtual;
 }
 
 unsigned int game_misil(unsigned int id, int val_x, int val_y, unsigned int misil, unsigned int size) {

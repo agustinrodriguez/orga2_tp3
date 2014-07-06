@@ -80,10 +80,71 @@ unsigned int pasaje_a_mapa_video(int direccion){
 
 void imprimir_desalojo(unsigned int error){
 	int inicio = VIDEO_BASE + 6666;
-	imprimir_texto_para_tanques2("                           ", 21 , inicio, C_FG_RED);
+	imprimir_texto_para_tanques2("                               ", 25 , inicio, C_FG_RED);
 
 	if (error < 20 && error >= 0){
-		imprimir_texto_para_tanques2("Interrupcion Intel", 18 , inicio, C_FG_WHITE);
+		switch(error){
+			case 0:
+			imprimir_texto_para_tanques2("Divide Error (#DE)", 18, inicio, C_FG_WHITE);
+			break;
+		case 1:
+			imprimir_texto_para_tanques2("Debug (#DB)", 11, inicio, C_FG_WHITE);
+			break;
+		case 2:
+			imprimir_texto_para_tanques2("NMI Interrupt", 13, inicio, C_FG_WHITE);
+			break;
+		case 3:
+			imprimir_texto_para_tanques2("Breakpoint (#BP)", 16, inicio, C_FG_WHITE);
+			break;
+		case 4:
+			imprimir_texto_para_tanques2("Overflow (#OF)", 14, inicio, C_FG_WHITE);
+			break;
+		case 5:
+			imprimir_texto_para_tanques2("BOUND Range Exceeded (#BR)", 26, inicio, C_FG_WHITE);
+			break;
+		case 6:
+			imprimir_texto_para_tanques2("Invalid Opcode (#UD)", 20, inicio, C_FG_WHITE);
+			break;
+		case 7:
+			imprimir_texto_para_tanques2("Device Not Available (#NM)", 26, inicio, C_FG_WHITE);
+			break;
+		case 8:
+			imprimir_texto_para_tanques2("Double Fault (#DF)", 18, inicio, C_FG_WHITE);
+			break;
+		case 9:
+			imprimir_texto_para_tanques2("Coprocessor Segment Overrun (reserved)", 38, inicio, C_FG_WHITE);
+			break;
+		case 10:
+			imprimir_texto_para_tanques2("Invalid TSS (#TS)", 17, inicio, C_FG_WHITE);
+			break;
+		case 11:
+			imprimir_texto_para_tanques2("Segment Not Present (#NP)", 25, inicio, C_FG_WHITE);
+			break;
+		case 12:
+			imprimir_texto_para_tanques2("Stack Fault (#SS)", 17, inicio, C_FG_WHITE);
+			break;
+		case 13:
+			imprimir_texto_para_tanques2("General Protection (#GP)", 24, inicio, C_FG_WHITE);
+			break;
+		case 14:
+			imprimir_texto_para_tanques2("Page-Fault (#PF)", 16, inicio, C_FG_WHITE);
+			break;
+		case 15:
+			imprimir_texto_para_tanques2("Intel reserved. Do not use.", 27, inicio, C_FG_WHITE);
+			break;
+		case 16:
+			imprimir_texto_para_tanques2("x87 FPU Floating-Point Error (#MF)", 34, inicio, C_FG_WHITE);
+			break;
+		case 17:
+			imprimir_texto_para_tanques2("Alignment Check (#AC)", 21, inicio, C_FG_WHITE);
+			break;
+		case 18:
+			imprimir_texto_para_tanques2("Machine-Check (#MC)", 30, inicio, C_FG_WHITE);
+			break;
+		case 19:
+			imprimir_texto_para_tanques2("SIMD Floating-Point (#XM)", 25, inicio, C_FG_WHITE);
+			break;
+		}
 	}
 	if (error == 52){
 		imprimir_texto_para_tanques2("Destruccion por Mina", 20 , inicio, C_FG_WHITE);
@@ -165,49 +226,49 @@ void imprimir_texto(char * mensaje, int len) {
 void print_error(int error_code) {
 	switch(error_code) {
 		case 0:
-			imprimir_texto("Divide Error Exception (#DE)", 28);
+			imprimir_texto("Divide Error (#DE)", 28);
 			break;
 		case 1:
-			imprimir_texto("Debug Exception (#DB)", 21);
+			imprimir_texto("Debug (#DB)", 21);
 			break;
 		case 2:
 			imprimir_texto("NMI Interrupt", 13);
 			break;
 		case 3:
-			imprimir_texto("Breakpoint Exception (#BP)", 26);
+			imprimir_texto("Breakpoint (#BP)", 26);
 			break;
 		case 4:
-			imprimir_texto("Overflow Exception (#OF)", 25);
+			imprimir_texto("Overflow (#OF)", 25);
 			break;
 		case 5:
-			imprimir_texto("BOUND Range Exceeded Exception (#BR)", 37);
+			imprimir_texto("BOUND Range Exceeded (#BR)", 37);
 			break;
 		case 6:
-			imprimir_texto("Invalid Opcode Exception (#UD)", 31);
+			imprimir_texto("Invalid Opcode (#UD)", 31);
 			break;
 		case 7:
-			imprimir_texto("Device Not Available Exception (#NM)", 36);
+			imprimir_texto("Device Not Available (#NM)", 36);
 			break;
 		case 8:
-			imprimir_texto("Double Fault Exception (#DF)", 28);
+			imprimir_texto("Double Fault (#DF)", 28);
 			break;
 		case 9:
 			imprimir_texto("Coprocessor Segment Overrun (reserved)", 38);
 			break;
 		case 10:
-			imprimir_texto("Invalid TSS Exception (#TS)", 27);
+			imprimir_texto("Invalid TSS (#TS)", 27);
 			break;
 		case 11:
 			imprimir_texto("Segment Not Present (#NP)", 25);
 			break;
 		case 12:
-			imprimir_texto("Stack Fault Exception (#SS)", 27);
+			imprimir_texto("Stack Fault (#SS)", 27);
 			break;
 		case 13:
-			imprimir_texto("General Protection Exception (#GP)", 34);
+			imprimir_texto("General Protection (#GP)", 34);
 			break;
 		case 14:
-			imprimir_texto("Page-Fault Exception (#PF)", 26);
+			imprimir_texto("Page-Fault (#PF)", 26);
 			break;
 		case 15:
 			imprimir_texto("Intel reserved. Do not use.", 27);
@@ -216,13 +277,13 @@ void print_error(int error_code) {
 			imprimir_texto("x87 FPU Floating-Point Error (#MF)", 34);
 			break;
 		case 17:
-			imprimir_texto("Alignment Check Exception (#AC)", 31);
+			imprimir_texto("Alignment Check (#AC)", 31);
 			break;
 		case 18:
-			imprimir_texto("Machine-Check Exception (#MC)", 30);
+			imprimir_texto("Machine-Check (#MC)", 30);
 			break;
 		case 19:
-			imprimir_texto("SIMD Floating-Point Exception (#XM)", 35);
+			imprimir_texto("SIMD Floating-Point (#XM)", 35);
 			break;
 	}
 }

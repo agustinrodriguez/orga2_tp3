@@ -50,9 +50,9 @@ _isr%1:
 .loopear:
     ; To Infinity And Beyond!!
     cli
-   ; xchg bx,bx
     xor ecx, ecx
     mov ecx, %1
+    xchg bx,bx
     ;hago los q tengo en pila
     mov [estado_error], eax ; EAX
     mov eax, ds
@@ -301,36 +301,8 @@ int_teclado:
     and ah, 0x80            ;me quedo con el valor sacandole el 80 
     jnz .fin_teclado
     
-    cmp al, 0x02
-    je .el1
-    
-    cmp al, 0x03
-    je .el2
-    
-    cmp al, 0x04
-    je .el3
-    
-    cmp al, 0x05
-    je .el4
-    
-    cmp al, 0x06
-    je .el5
-    
-    cmp al, 0x07
-    je .el6
-    
-    cmp al, 0x08
-    je .el7
-    
-    cmp al, 0x09
-    je .el8
-    
-    cmp al, 0x19
-    je .elp
-    
-    cmp al, 0x2e
-    je .elc
-    
+    MOV ecx, 0x00
+    jmp .losQueNoSeUsan
 
 .el1:
     ;mov eax, al
@@ -398,12 +370,46 @@ int_teclado:
     call cambiar_estado
     add esp, 4
     jmp .fin_teclado
-   
+
+.losQueNoSeUsan:
+    cmp al, 0x02
+    je .el1
+    
+    cmp al, 0x03
+    je .el2
+    
+    cmp al, 0x04
+    je .el3
+    
+    cmp al, 0x05
+    je .el4
+    
+    cmp al, 0x06
+    je .el5
+    
+    cmp al, 0x07
+    je .el6
+    
+    cmp al, 0x08
+    je .el7
+    
+    cmp al, 0x09
+    je .el8
+    
+    cmp al, 0x19
+    je .elp
+    
+    cmp al, 0x2e
+    je .elc
+    CMP EAX, ecx
+    je .fin_teclado
+    ADD ecx, 0x01
+    jmp .losQueNoSeUsan
+
 
 .fin_teclado:
     call fin_intr_pic1
     popad
-    sti
     iret
 
 ;; TASK
