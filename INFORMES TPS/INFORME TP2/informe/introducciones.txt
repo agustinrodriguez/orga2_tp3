@@ -1,0 +1,41 @@
+Tiles
+El objetivo del filtro "tiles" es seleccionar una porción de la imagen fuente e ir copiándola en otra imagen destino, la cual tiene el mismo tamaño que la fuente. Logrando así, que una parte de la imagen fuente se vea repetidamente.
+Formalizando lo anterior, el filtro debe respetar la siguiente fórmula:
+<esto es del enunciado>
+dst(i,j) = src[(i.mod tamy)+offsety][(j mod tamx)+offsetx
+
+El desarrollo en C
+Recorremos la imagen "destino" mediante dos ciclos anidados, un ciclo para filas, y otro para columnas. Dentro de estas iteraciones, vamos copiando pixel por pixel desde fuente a destino.
+Para llevar la cuenta de lo que vamos recorriendo de la imagen fuente, tenemos 2 contadores, uno para fila y otro para columna. Cuando se recorrió la "porción" de imagen que se solicitó (por parámetros), se vuelven a reiniciar esos contadores.
+
+
+------------------------------------
+Popart
+El objetivo de este filtro es transformar el color de una forma determinada llamada "popart". Se trata de sumar los 3 colores de cada pixel, y según el resultado de esa suma, ir poniendo colores predeterminados.
+Formalizando, según el resultado de la suma:
+<resultados de la suma segun enunciado>
+ 
+ El desarrollo en C:
+ La implementación en C fue simple. Mediante 2 ciclos anidados recorremos la imagen fuente, uno para filas y otro para columnas. Dentro de la iteración sumamos los colores de cada pixel de la imagen fuente, y según el resultado, pegamos valores predeterminados en la imagen destino.
+
+ -------------------------------------
+ Temperature
+ El objetivo del filtro "temperature" es, al igual que el popart, transformar el color, con la diferencia de que el resultado simula un efecto de calor.
+Para esto, se suman los 3 colores de cada pixel y se lo divide por 3. Y según el resultado de eso, al que llamaremos "t", se ponen valores predeterminados.
+<segun enunciado>
+
+El desarrollo en C:
+Similiar al de popart. Recorremos mediante dos ciclos la imagen fuente para sumar y dividimos por 3 cada pixel, y según el resultado de eso, pegar un valor predetermiado.
+
+----------------------------------------
+Low dynamic range (LDR)
+El objevtivo de este filtro, es tomar una imagen y transformar el color, pero dándole un efecto de iluminación.
+Para lograrlo, se toma el valor de un pixel y le agrega un porcentaje alfa de sus pixels vecinos. Si ese porcentaje es positivo, los pixels claros, se vuelven aún más claros y los oscuros se mantienen igual.
+
+
+
+
+
+
+
+
