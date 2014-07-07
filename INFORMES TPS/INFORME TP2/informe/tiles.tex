@@ -1,6 +1,35 @@
 %\usepackage[utf8]{inputenc}
 \vspace*{0.3cm} \noindent
+\subsubsection{Objetivo}
+El objetivo del filtro "tiles" es seleccionar una porción de la imagen fuente e ir copiándola en otra imagen destino, 
+la cual tiene el mismo tamaño que la fuente. \newline
+Logrando así, que una parte de la imagen fuente se vea repetidamente.
+Formalizando lo anterior, el filtro debe respetar la siguiente fórmula:\newline
+
+$dst(i,j) = src[(i.mod\ tamy)+offsety][(j mod tamx)+offsetx]$
+
+
+\vspace*{0.3cm} \noindent
+
 \subsubsection{Desarrollo Implementacion C}
+
+\begin{center}
+\textbf{Sintesis de Desarrollo} 
+\end{center}
+
+Recorremos la imagen "destino" mediante dos ciclos anidados, un ciclo para filas, y otro para columnas.
+Dentro de estas iteraciones, vamos copiando pixel por pixel desde fuente a destino.
+Para llevar la cuenta de lo que vamos recorriendo de la imagen fuente, tenemos 2 contadores, uno para fila 
+y otro para columna. Cuando se recorrió la "porción" de imagen que se solicitó (por parámetros), 
+se vuelven a reiniciar esos contadores.\newline
+
+
+\begin{center}
+\textbf{Explicación detallada de Implementación}
+
+\end{center}
+
+
 
 En esta implementación, lo que se realizo primero fue crear dos punteros de matriz uno correspondiente a src y otro a dst.\newline
 Luego, realizamos dos ciclos, uno añidado dentro del otro recorriendo de la forma $'(int\ i\_d = 0;\ i\_d < filas;\ i\_d++)'$ y 

@@ -1,5 +1,30 @@
 \vspace*{0.3cm} \noindent
+\subsubsection{Objetivo}
+El objetivo de este filtro es transformar el color de una forma determinada llamada "popart".\newline
+Se trata de sumar los 3 colores de cada pixel, y según el resultado de esa suma, ir poniendo colores predeterminados.
+Formalizando, según el resultado de la suma:\newline
+
+
+\[ |dst_{(x,y)}| = \left\{ \begin{array}{ll}
+         x & \mbox{if $x \geq 0$};\\
+        -x & \mbox{if $x < 0$}.\end{array} \right. \]
+
+\vspace*{0.3cm} \noindent
+
 \subsubsection{Desarrollo Implementacion C}
+
+\begin{center}
+\textbf{Sintesis de Desarrollo} 
+\end{center}
+
+La implementación en C fue simple. Mediante 2 ciclos anidados recorremos la imagen fuente, uno para filas y otro para columnas. \newline
+Dentro de la iteración sumamos los colores de cada pixel de la imagen fuente, y según el resultado, pegamos valores predeterminados en la imagen destino.\newline
+
+
+\begin{center}
+\textbf{Explicación detallada de Implementación}
+
+\end{center}
 
 En esta implementación, inicialmente,se crearon dos punteros de matriz uno correspondiente a src y otro a dst.\newline 
 Ademas, un entero llamado $suma$ inicializado en 0. \newline
@@ -35,7 +60,7 @@ en caso de ser 0 significa que ya recorrimos toda la imagen completa por ende sa
 En caso de no ser cero, comparamos r15d con 15, en r15 teníamos guardado la cantidad de pixel que vamos a recorrer en una iteracion.
 Como vemos de a 15 pixeles si el valor es menor significa que estamos por tocar el padding y eso lo chequeamos a parte. \newline
 Si no es menor, procedemos a recorrer y trabajar con 15 pixeles de la siguiente forma: \newline
-Primero, nos guardamos en XMM0 los primeros 15 pixeles haciendo $ movdqu XMM0, [RDI]$, luego, el valor de XMM0,
+Primero, nos guardamos en XMM0 los primeros 15 pixeles haciendo $ movdqu\  XMM0, [RDI]$, luego, el valor de XMM0,
 lo guardamos en XMM1 y XMM2, limpiamos XMM7 y con 3 mascaras distintas que lo que hacen es ponernos los 5 pixeles rojos adelante y llenar con 0, 
 los 5 pixeles azules y llenar con cero y los 5 pixeles verdes y llenar con ceros. \newline
 Realizamos la operacion Pshufb con los tres xmm y las mascaras (un xmm con cada mascara) y luego desempaquetamos de byte a word,
@@ -46,22 +71,22 @@ $|b0 + g0 + r0|b1 + g1 + r1|b2 + g2 + r2|b3 + g3 + r3|b4 + g4 + r4|$. \newline
 Limpiamos todos los registros que usamos, salvo XMM10 y volvemos a guardar en XMM0 el valor de XMM10 procedemos a las comparaciones.
 Primero, vamos a comparar si nuestras sumas son mayores a 611, guardamos en XMM14 el valor 611 con una mascara en DW la cual tiene en todos los pack
 el 611. Guardamos en XMM15 el valor XMM0 y comparamos con XMM14.
-A partir del resultado en XMM15 realizamos lo siguiente:
+A partir del resultado en XMM15 realizamos lo siguiente:\newline
 
-$movdqu XMM13, [MASK_5] $\newline$
-PADDUSW XMM10, XMM15 $\newline$
-movdqu XMM11, XMM15$\newline$
-pcmpeqw XMM14, XMM14$\newline$
-pxor XMM11, XMM14$\newline$
-pand XMM0, XMM11$\newline$
-pshufb XMM15, [MASK_DE1WORDA3BYTES]$\newline$
-pand XMM13, XMM15$\newline$
-movdqu XMM5, XMM13$ \newline
+$\hspace*{2.3cm}$$movdqu\ XMM13, [MASK\_5] $\newline$ 
+$\hspace*{2.8cm}$PADDUSW\ XMM10,\ XMM15 $\newline$
+$\hspace*{2.8cm}$movdqu\ XMM11,\ XMM15$\newline$
+$\hspace*{2.8cm}$pcmpeqw\ XMM14,\ XMM14$\newline$
+$\hspace*{2.8cm}$pxor\ XMM11,\ XMM14$\newline$
+$\hspace*{2.8cm}$pand\ XMM0,\ XMM11$\newline$
+$\hspace*{2.8cm}$pshufb\ XMM15, [MASK\_DE1WORDA3BYTES]$\newline$
+$\hspace*{2.8cm}$pand\ XMM13,\ XMM15$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM5,\ XMM13$ \newline
 
-En MASK_5 tenemos en DW los pack de los resultados que da el caso 5 osea 0|FF|FF. Luego, en XMM10 lo usamos para saturar en 1 los casos que ya 
+En MASK\_5 tenemos en DW los pack de los resultados que da el caso 5 osea $0|FF|FF$. Luego, en\ XMM10 lo usamos para saturar en 1 los casos que ya 
 son chequeados para así no pisarlos con los otros casos. \newline
-Lo salvamos y lo invertimos osea de 00 a FF y viceversa y luego hacemos un AND con los pack de XMM0 para quedarnos con los valores que no dieron TRUE. \newline
-Usamos una mascara para que nos acomode todo de 1word a 3 bytes, hacemos otro AND con los valores TRUE y lo guardamos en XMM5. \newline
+Lo salvamos y lo invertimos osea de 00 a FF y viceversa y luego hacemos un AND con los pack de\ XMM0 para quedarnos con los valores que no dieron TRUE. \newline
+Usamos una mascara para que nos acomode todo de 1word a 3 bytes, hacemos otro AND con los valores TRUE y lo guardamos en\ XMM5. \newline
 
 Despues de chequear este caso pasamos al caso 4: \newline
 
@@ -69,17 +94,17 @@ Primero, vamos a comparar si nuestras sumas son mayores a 458, guardamos en XMM1
 el 458. Guardamos en XMM15 el valor XMM0 y comparamos con XMM14.
 A partir del resultado en XMM15 realizamos lo siguiente:
 
-$movdqu XMM13, [MASK_4] $\newline$
-PADDUSW XMM10, XMM15 $\newline$
-movdqu XMM11, XMM15$\newline$
-pcmpeqw XMM14, XMM14$\newline$
-pxor XMM11, XMM14$\newline$
-pand XMM0, XMM11$\newline$
-pshufb XMM15, [MASK_DE1WORDA3BYTES]$\newline$
-pand XMM13, XMM15$\newline$
-movdqu XMM4, XMM13$ \newline
+$\hspace*{2.3cm}$$movdqu\ XMM13, [MASK\_4] $\newline$
+$\hspace*{2.8cm}$PADDUSW\ XMM10,\ XMM15 $\newline$
+$\hspace*{2.8cm}$movdqu\ XMM11,\ XMM15$\newline$
+$\hspace*{2.8cm}$pcmpeqw\ XMM14,\ XMM14$\newline$
+$\hspace*{2.8cm}$pxor\ XMM11,\ XMM14$\newline$
+$\hspace*{2.8cm}$pand\ XMM0,\ XMM11$\newline$
+$\hspace*{2.8cm}$pshufb\ XMM15, [MASK\_DE1WORDA3BYTES]$\newline$
+$\hspace*{2.8cm}$pand\ XMM13,\ XMM15$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM4,\ XMM13$ \newline
 
-En MASK_4 tenemos en DW los pack de los resultados que da el caso 4 osea 0|0|FF. Luego, en XMM10 lo usamos para saturar en 1 los casos que ya 
+En MASK\_4 tenemos en DW los pack de los resultados que da el caso 4 osea $0|0|FF$. Luego, en XMM10 lo usamos para saturar en 1 los casos que ya 
 son chequeados para así no pisarlos con los otros casos. \newline
 Lo salvamos y lo invertimos osea de 00 a FF y viceversa y luego hacemos un AND con los pack de XMM0 para quedarnos con los valores que no dieron TRUE. \newline
 Usamos una mascara para que nos acomode todo de 1word a 3 bytes, hacemos otro AND con los valores TRUE y lo guardamos en XMM4. \newline
@@ -88,19 +113,19 @@ Despues de chequear este caso pasamos al caso 3: \newline
 
 Primero, vamos a comparar si nuestras sumas son mayores a 305, guardamos en XMM14 el valor 305 con una mascara en DW la cual tiene en todos los pack
 el 305. Guardamos en XMM15 el valor XMM0 y comparamos con XMM14.
-A partir del resultado en XMM15 realizamos lo siguiente:
+A partir del resultado en XMM15 realizamos lo siguiente:\newline
 
-$movdqu XMM13, [MASK_3] $\newline$
-PADDUSW XMM10, XMM15 $\newline$
-movdqu XMM11, XMM15$\newline$
-pcmpeqw XMM14, XMM14$\newline$
-pxor XMM11, XMM14$\newline$
-pand XMM0, XMM11$\newline$
-pshufb XMM15, [MASK_DE1WORDA3BYTES]$\newline$
-pand XMM13, XMM15$\newline$
-movdqu XMM3, XMM13$ \newline
+$\hspace*{2.3cm}$$movdqu\ XMM13, [MASK\_3] $\newline$
+$\hspace*{2.8cm}$PADDUSW\ XMM10,\ XMM15 $\newline$
+$\hspace*{2.8cm}$movdqu\ XMM11,\ XMM15$\newline$
+$\hspace*{2.8cm}$pcmpeqw\ XMM14,\ XMM14$\newline$
+$\hspace*{2.8cm}$pxor\ XMM11,\ XMM14$\newline$
+$\hspace*{2.8cm}$pand\ XMM0,\ XMM11$\newline$
+$\hspace*{2.8cm}$pshufb\ XMM15, [MASK\_DE1WORDA3BYTES]$\newline$
+$\hspace*{2.8cm}$pand\ XMM13,\ XMM15$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM3,\ XMM13$ \newline
 
-En MASK_3 tenemos en DW los pack de los resultados que da el caso 3 osea FF|0|FF. Luego, en XMM10 lo usamos para saturar en 1 los casos que ya 
+En MASK\_3 tenemos en DW los pack de los resultados que da el caso 3 osea $FF|0|FF$. Luego, en XMM10 lo usamos para saturar en 1 los casos que ya 
 son chequeados para así no pisarlos con los otros casos. \newline
 Lo salvamos y lo invertimos osea de 00 a FF y viceversa y luego hacemos un AND con los pack de XMM0 para quedarnos con los valores que no dieron TRUE. \newline
 Usamos una mascara para que nos acomode todo de 1word a 3 bytes, hacemos otro AND con los valores TRUE y lo guardamos en XMM3. \newline
@@ -111,17 +136,17 @@ Primero, vamos a comparar si nuestras sumas son mayores a 152, guardamos en XMM1
 el 152. Guardamos en XMM15 el valor XMM0 y comparamos con XMM14.
 A partir del resultado en XMM15 realizamos lo siguiente:
 
-$movdqu XMM13, [MASK_2] $\newline$
-PADDUSW XMM10, XMM15 $\newline$
-movdqu XMM11, XMM15$\newline$
-pcmpeqw XMM14, XMM14$\newline$
-pxor XMM11, XMM14$\newline$
-pand XMM0, XMM11$\newline$
-pshufb XMM15, [MASK_DE1WORDA3BYTES]$\newline$
-pand XMM13, XMM15$\newline$
-movdqu XMM2, XMM13$ \newline
+$\hspace*{2.3cm}$$movdqu\ XMM13, [MASK\_2] $\newline$
+$\hspace*{2.8cm}$PADDUSW\ XMM10,\ XMM15 $\newline$
+$\hspace*{2.8cm}$movdqu\ XMM11,\ XMM15$\newline$
+$\hspace*{2.8cm}$pcmpeqw\ XMM14,\ XMM14$\newline$
+$\hspace*{2.8cm}$pxor\ XMM11,\ XMM14$\newline$
+$\hspace*{2.8cm}$pand\ XMM0,\ XMM11$\newline$
+$\hspace*{2.8cm}$pshufb\ XMM15, [MASK\_DE1WORDA3BYTES]$\newline$
+$\hspace*{2.8cm}$pand\ XMM13,\ XMM15$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM2,\ XMM13$ \newline
 
-En MASK_2 tenemos en DW los pack de los resultados que da el caso 2 osea 7F|0|7F. Luego, en XMM10 lo usamos para saturar en 1 los casos que ya 
+En MASK\_2 tenemos en DW los pack de los resultados que da el caso 2 osea $7F|0|7F$. Luego, en XMM10 lo usamos para saturar en 1 los casos que ya 
 son chequeados para así no pisarlos con los otros casos. \newline
 Lo salvamos y lo invertimos osea de 00 a FF y viceversa y luego hacemos un AND con los pack de XMM0 para quedarnos con los valores que no dieron TRUE. \newline
 Usamos una mascara para que nos acomode todo de 1word a 3 bytes, hacemos otro AND con los valores TRUE y lo guardamos en XMM2. \newline
@@ -130,50 +155,50 @@ Y por último, el caso 1:\newline
 
 Este caso, es particular, ya que invertimos, y chequeamos si los packs que quedan son menores a 153: \newline
 
-$movdqa XMM14,[MASK_153]$\newline$
-			movdqu XMM6, XMM10 ; me quedo con XMM10 y trabajamos  el de XMM6$\newline$
-			pcmpeqw XMM7, XMM7 ; XMM7 = |1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1$\newline$
-			pxor XMM6, XMM7 ; deja en 1 este caso y 0 los casos ya checkeados$\newline$
-			pand XMM14, XMM6 ; en XMM14 queda los 153 en los lugares que tengo que comparar$\newline$
-			movdqu XMM15, XMM0$\newline$
-			pcmpgtw XMM14, XMM15 $$\newline$
+$\hspace*{2.3cm}$$movdqa\ XMM14,[MASK\_153]$\newline$
+$\hspace*{2.8cm}$			movdqu\ XMM6,\ XMM10 ; me quedo con\ XMM10 y trabajamos  el de\ XMM6$\newline$
+$\hspace*{2.8cm}$			pcmpeqw\ XMM7,\ XMM7 ;\ XMM7 = |1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1$\newline$
+$\hspace*{2.8cm}$			pxor\ XMM6,\ XMM7 ; deja en 1 este caso y 0 los casos ya checkeados$\newline$
+$\hspace*{2.8cm}$			pand\ XMM14,\ XMM6 ; en\ XMM14 queda los 153 en los lugares que tengo que comparar$\newline$
+$\hspace*{2.8cm}$			movdqu\ XMM15,\ XMM0$\newline$
+$\hspace*{2.8cm}$			pcmpgtw\ XMM14,\ XMM15 $$\newline$
 
 			A partir del resultado en XMM14 realizamos lo siguiente:\newline
 
-$movdqu XMM13, [MASK_1] $\newline$
-PADDUSW XMM10, XMM14 $\newline$
-movdqu XMM11, XMM14$\newline$
-pcmpeqw XMM15, XMM15$\newline$
-pxor XMM11, XMM15$\newline$
-pand XMM0, XMM11$\newline$
-pshufb XMM14, [MASK_DE1WORDA3BYTES]$\newline$
-pand XMM13, XMM14$\newline$
-movdqu XMM1, XMM13$ \newline
+$\hspace*{2.3cm}$$movdqu\ XMM13, [MASK\_1] $\newline$
+$\hspace*{2.8cm}$PADDUSW\ XMM10,\ XMM14 $\newline$
+$\hspace*{2.8cm}$movdqu\ XMM11,\ XMM14$\newline$
+$\hspace*{2.8cm}$pcmpeqw\ XMM15,\ XMM15$\newline$
+$\hspace*{2.8cm}$pxor\ XMM11,\ XMM15$\newline$
+$\hspace*{2.8cm}$pand\ XMM0,\ XMM11$\newline$
+$\hspace*{2.8cm}$pshufb\ XMM14, [MASK\_DE1WORDA3BYTES]$\newline$
+$\hspace*{2.8cm}$pand\ XMM13,\ XMM14$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM1,\ XMM13$ \newline
 
-En MASK_1 tenemos en DW los pack de los resultados que da el caso 1 osea FF|0|0. Luego, en XMM10 lo usamos para saturar en 1 los casos que ya 
+En MASK\_1 tenemos en DW los pack de los resultados que da el caso 1 osea $FF|0|0$. Luego, en XMM10 lo usamos para saturar en 1 los casos que ya 
 son chequeados para así no pisarlos con los otros casos. \newline
 Lo salvamos y lo invertimos osea de 00 a FF y viceversa y luego hacemos un AND con los pack de XMM0 para quedarnos con los valores que no dieron TRUE. \newline
 Usamos una mascara para que nos acomode todo de 1word a 3 bytes, hacemos otro AND con los valores TRUE y lo guardamos en XMM1. \newline
 
 Por finalizado, hacemos or entre los XMM1, 2, 3, 4 y 5, y movemos el valor final de XMM1 a XMM0. \newline Comparamos si estamos 
-chequeando el borde haciendo $ cmp r15d, 15 jl .terminoBorde $ en caso de no ser menor movemos los packs del XMM0 al puntero
-en RDI $movdqu [RSI], XMM0$, le restamos a r15d y a r10d, la cantidad de pixeles por ciclo y le sumamos a rdi y rsi la cantidad
+chequeando el borde haciendo $ cmp\  r15d, 15 jl .terminoBorde $ en caso de no ser menor movemos los packs del XMM0 al puntero
+en RDI $movdqu\  [RSI], XMM0$, le restamos a r15d y a r10d, la cantidad de pixeles por ciclo y le sumamos a rdi y rsi la cantidad
 de pixeles por ciclo. \newline
 
 En caso de que nuestra comparacion diera que es menor a 15, procedemos a: \newline
 
-$movdqu [RSI- pixels_por_ciclo + r12], XMM0 $\newline$
-		add r11, r8 $\newline$
-		add r13, r8 $\newline$
-		mov RDI, r11 $\newline$
-		mov r11, rdi  $\newline$
-		mov RSI, r13 $\newline$
-		mov r13, rsi $\newline$
-		sub R10D, r15d $\newline$
-		mov r15d, r14d$ \newline
+$\hspace*{2.3cm}$$movdqu [RSI- pixels\_por\_ciclo + r12],\ XMM0 $\newline$
+$\hspace*{2.8cm}$		add r11, r8 $\newline$
+$\hspace*{2.8cm}$		add r13, r8 $\newline$
+$\hspace*{2.8cm}$		mov RDI, r11 $\newline$
+$\hspace*{2.8cm}$		mov r11, rdi  $\newline$
+$\hspace*{2.8cm}$		mov RSI, r13 $\newline$
+$\hspace*{2.8cm}$		mov r13, rsi $\newline$
+$\hspace*{2.8cm}$		sub R10D, r15d $\newline$
+$\hspace*{2.8cm}$		mov r15d, r14d$ \newline
 
 Como habiamos enuciado inicialmente, en R11 y R13 nos habiamos guardado RDI y RSI respectivamente y en R8 tenemos por parametro
-$src_row_size$. De esta forma hacemos que en dst se guarden los ultimos pixeles de la linea y baje a la siguiente sin tocar padding.\newline
+$src\_row\_size$. De esta forma hacemos que en dst se guarden los ultimos pixeles de la linea y baje a la siguiente sin tocar padding.\newline
 
 Esto, como fue explicado, se recorre, hasta que R10D sea igual a 0.
 

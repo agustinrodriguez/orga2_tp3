@@ -1,5 +1,33 @@
 \vspace*{0.3cm} \noindent
+\subsubsection{Objetivo}
+El objetivo de este filtro es transformar el color de una forma determinada llamada "popart".\newline
+Se trata de sumar los 3 colores de cada pixel, y según el resultado de esa suma, ir poniendo colores predeterminados.
+Formalizando, según el resultado de la suma:\newline
+
+
+\[ dst_{(x,y)} < r, g, b > = \left\{ \begin{array}{ll}
+        < 0, 0, 255 > & \mbox{si $suma(i,j) <153 $}\\
+       < 127, 0, 127 > & \mbox{si $153 \leq suma(i,j) <306 $}\\
+        < 255, 0, 255 > & \mbox{si $306 \leq suma(i,j) <459 $}\\
+       < 255, 0, 0 > & \mbox{si $459 \leq suma(i,j) <612 $}\\
+        < 255, 255, 0 > & \mbox{si no}\\\end{array} \right. \]
+
+\vspace*{0.3cm} \noindent
+
 \subsubsection{Desarrollo Implementacion C}
+
+\begin{center}
+\textbf{Sintesis de Desarrollo} 
+\end{center}
+
+La implementación en C fue simple. Mediante 2 ciclos anidados recorremos la imagen fuente, uno para filas y otro para columnas. \newline
+Dentro de la iteración sumamos los colores de cada pixel de la imagen fuente, y según el resultado, pegamos valores predeterminados en la imagen destino.\newline
+
+
+\begin{center}
+\textbf{Explicación detallada de Implementación}
+
+\end{center}
 
 En esta implementación, inicialmente,se crearon dos punteros de matriz uno correspondiente a src y otro a dst.\newline 
 Ademas, un entero llamado $suma$ inicializado en 0. \newline
