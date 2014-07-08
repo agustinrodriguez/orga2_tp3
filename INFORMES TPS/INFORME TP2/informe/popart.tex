@@ -60,7 +60,7 @@ obtenemos en R10 el valor completo de la cantidad de pixeles a recorrer.\newline
 Guardamos en R11 el valor de RDI donde venia *src y en R13 el valor de RSI donde venia *dst. \newline
 Luego, realizamos la seccion donde chequeamos si estamos en el final de la linea o mejor dicho en el padding, comparamos con R10D si es cero \newline
 en caso de ser 0 significa que ya recorrimos toda la imagen completa por ende saltamos a la etiqueta fin. \newline
-En caso de no ser cero, comparamos r15d con 15, en r15 teníamos guardado la cantidad de pixel que vamos a recorrer en una iteracion.
+En caso de no ser cero, comparamos R15D con 15, en r15 teníamos guardado la cantidad de pixel que vamos a recorrer en una iteracion.
 Como vemos de a 15 pixeles si el valor es menor significa que estamos por tocar el padding y eso lo chequeamos a parte. \newline
 Si no es menor, procedemos a recorrer y trabajar con 15 pixeles de la siguiente forma: \newline
 Primero, nos guardamos en XMM0 los primeros 15 pixeles haciendo $ movdqu\  XMM0, [RDI]$, luego, el valor de XMM0,
@@ -77,7 +77,7 @@ el 611. Guardamos en XMM15 el valor XMM0 y comparamos con XMM14.
 A partir del resultado en XMM15 realizamos lo siguiente:\newline
 
 $\hspace*{2.3cm}$$movdqu\ XMM13, [MASK\_5] $\newline$ 
-$\hspace*{2.8cm}$PADDUSW\ XMM10,\ XMM15 $\newline$
+$\hspace*{2.8cm}$paddusdw\ XMM10,\ XMM15 $\newline$
 $\hspace*{2.8cm}$movdqu\ XMM11,\ XMM15$\newline$
 $\hspace*{2.8cm}$pcmpeqw\ XMM14,\ XMM14$\newline$
 $\hspace*{2.8cm}$pxor\ XMM11,\ XMM14$\newline$
@@ -119,7 +119,7 @@ el 305. Guardamos en XMM15 el valor XMM0 y comparamos con XMM14.
 A partir del resultado en XMM15 realizamos lo siguiente:\newline
 
 $\hspace*{2.3cm}$$movdqu\ XMM13, [MASK\_3] $\newline$
-$\hspace*{2.8cm}$PADDUSW\ XMM10,\ XMM15 $\newline$
+$\hspace*{2.8cm}$paddusw\ XMM10,\ XMM15 $\newline$
 $\hspace*{2.8cm}$movdqu\ XMM11,\ XMM15$\newline$
 $\hspace*{2.8cm}$pcmpeqw\ XMM14,\ XMM14$\newline$
 $\hspace*{2.8cm}$pxor\ XMM11,\ XMM14$\newline$
@@ -140,7 +140,7 @@ el 152. Guardamos en XMM15 el valor XMM0 y comparamos con XMM14.
 A partir del resultado en XMM15 realizamos lo siguiente:
 
 $\hspace*{2.3cm}$$movdqu\ XMM13, [MASK\_2] $\newline$
-$\hspace*{2.8cm}$PADDUSW\ XMM10,\ XMM15 $\newline$
+$\hspace*{2.8cm}$paddusw\ XMM10,\ XMM15 $\newline$
 $\hspace*{2.8cm}$movdqu\ XMM11,\ XMM15$\newline$
 $\hspace*{2.8cm}$pcmpeqw\ XMM14,\ XMM14$\newline$
 $\hspace*{2.8cm}$pxor\ XMM11,\ XMM14$\newline$
@@ -159,17 +159,17 @@ Y por último, el caso 1:\newline
 Este caso, es particular, ya que invertimos, y chequeamos si los packs que quedan son menores a 153: \newline
 
 $\hspace*{2.3cm}$$movdqa\ XMM14,[MASK\_153]$\newline$
-$\hspace*{2.8cm}$			movdqu\ XMM6,\ XMM10 ; me quedo con\ XMM10 y trabajamos  el de\ XMM6$\newline$
-$\hspace*{2.8cm}$			pcmpeqw\ XMM7,\ XMM7 ;\ XMM7 = |1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1$\newline$
-$\hspace*{2.8cm}$			pxor\ XMM6,\ XMM7 ; deja en 1 este caso y 0 los casos ya checkeados$\newline$
-$\hspace*{2.8cm}$			pand\ XMM14,\ XMM6 ; en\ XMM14 queda los 153 en los lugares que tengo que comparar$\newline$
+$\hspace*{2.8cm}$			movdqu\ XMM6,\ XMM10 $\newline$
+$\hspace*{2.8cm}$			pcmpeqw\ XMM7,\ XMM7 $\newline$
+$\hspace*{2.8cm}$			pxor\ XMM6,\ XMM7 $\newline$
+$\hspace*{2.8cm}$			pand\ XMM14,\ XMM6$\newline$
 $\hspace*{2.8cm}$			movdqu\ XMM15,\ XMM0$\newline$
 $\hspace*{2.8cm}$			pcmpgtw\ XMM14,\ XMM15 $$\newline$
 
 			A partir del resultado en XMM14 realizamos lo siguiente:\newline
 
 $\hspace*{2.3cm}$$movdqu\ XMM13, [MASK\_1] $\newline$
-$\hspace*{2.8cm}$PADDUSW\ XMM10,\ XMM14 $\newline$
+$\hspace*{2.8cm}$paddusw\ XMM10,\ XMM14 $\newline$
 $\hspace*{2.8cm}$movdqu\ XMM11,\ XMM14$\newline$
 $\hspace*{2.8cm}$pcmpeqw\ XMM15,\ XMM15$\newline$
 $\hspace*{2.8cm}$pxor\ XMM11,\ XMM15$\newline$
@@ -184,21 +184,21 @@ Lo salvamos y lo invertimos osea de 00 a FF y viceversa y luego hacemos un AND c
 Usamos una mascara para que nos acomode todo de 1word a 3 bytes, hacemos otro AND con los valores TRUE y lo guardamos en XMM1. \newline
 
 Por finalizado, hacemos or entre los XMM1, 2, 3, 4 y 5, y movemos el valor final de XMM1 a XMM0. \newline Comparamos si estamos 
-chequeando el borde haciendo $ cmp\  r15d, 15 jl .terminoBorde $ en caso de no ser menor movemos los packs del XMM0 al puntero
-en RDI $movdqu\  [RSI], XMM0$, le restamos a r15d y a r10d, la cantidad de pixeles por ciclo y le sumamos a rdi y rsi la cantidad
+chequeando el borde haciendo $ cmp\  R15D, 15 jl .terminoBorde $ en caso de no ser menor movemos los packs del XMM0 al puntero
+en RDI $movdqu\  [RSI], XMM0$, le restamos a R15D y a r10d, la cantidad de pixeles por ciclo y le sumamos a RDI y RSI la cantidad
 de pixeles por ciclo. \newline
 
 En caso de que nuestra comparacion diera que es menor a 15, procedemos a: \newline
 
-$\hspace*{2.3cm}$$movdqu [RSI- pixels\_por\_ciclo + r12],\ XMM0 $\newline$
-$\hspace*{2.8cm}$		add r11, r8 $\newline$
-$\hspace*{2.8cm}$		add r13, r8 $\newline$
-$\hspace*{2.8cm}$		mov RDI, r11 $\newline$
-$\hspace*{2.8cm}$		mov r11, rdi  $\newline$
-$\hspace*{2.8cm}$		mov RSI, r13 $\newline$
-$\hspace*{2.8cm}$		mov r13, rsi $\newline$
-$\hspace*{2.8cm}$		sub R10D, r15d $\newline$
-$\hspace*{2.8cm}$		mov r15d, r14d$ \newline
+$\hspace*{2.3cm}$$movdqu\  [RSI- pixels\_por\_ciclo + r12],\ XMM0 $\newline$
+$\hspace*{2.8cm}$		add\  R11, R8 $\newline$
+$\hspace*{2.8cm}$		add\  R13, R8 $\newline$
+$\hspace*{2.8cm}$		mov\  RDI, R11 $\newline$
+$\hspace*{2.8cm}$		mov\  R11, RDI  $\newline$
+$\hspace*{2.8cm}$		mov\  RSI, R13 $\newline$
+$\hspace*{2.8cm}$		mov\  R13, RSI $\newline$
+$\hspace*{2.8cm}$		sub\  R10D, R15D $\newline$
+$\hspace*{2.8cm}$		mov\  R15D, R14D$ \newline
 
 Como habiamos enuciado inicialmente, en R11 y R13 nos habiamos guardado RDI y RSI respectivamente y en R8 tenemos por parametro
 $src\_row\_size$. De esta forma hacemos que en dst se guarden los ultimos pixeles de la linea y baje a la siguiente sin tocar padding.\newline
@@ -236,14 +236,14 @@ Esto, como fue explicado, se recorre, hasta que R10D sea igual a 0.
   \vspace*{0.3cm}
  
   Para una mejor representación se realizo un grafico mostrando a simple vista
-  las diferencias entre cada tipo de version de la implementacion implementacion.
+  las diferencias entre cada tipo de veRSIon de la implementacion implementacion.
  \vspace*{0.3cm} \vspace*{0.3cm}
   \begin{center}
  \includegraphics[scale=0.7]{popartbien.png}
  \end{center}
   \vspace*{0.3cm} 
 
-  Concluimos que en imagenes grandes es muy notoria la diferencia en performace entre las versiones con y sin saltos.
+  Concluimos que en imagenes grandes es muy notoria la diferencia en performace entre las veRSIones con y sin saltos.
 
 \vspace*{0.3cm} \noindent
 \subsubsection{Experimento 2 - cpu vs. bus de memoria}
@@ -258,7 +258,7 @@ Esto, como fue explicado, se recorre, hasta que R10D sea igual a 0.
 
 
   En este caso lo que limita a la performance son las comparaciones y saltos condicionales.
-  Para probar esto agregamos instrucciones de varios tipos en la versión de ASM: accesos a memoria, 
+  Para probar esto agregamos instrucciones de varios tipos en la veRSIón de ASM: accesos a memoria, 
   movimiento de registros, sumas, comparaciones y finalmente comparaciones y saltos. \vspace*{0.2cm} \noindent
 
 
@@ -354,7 +354,7 @@ Esto, como fue explicado, se recorre, hasta que R10D sea igual a 0.
   
   Suponga un algoritmo que en cada iteración tarda n ciclos en obtener un dato y una cantidad
   similar en procesarlo. Si el algoritmo lee el dato $i$ y luego lo procesa,
-  desperdiciará siempre n ciclos esperando entre que el dato llega y que se comienza
+  despeRDIciará siempre n ciclos esperando entre que el dato llega y que se comienza
   a procesar efectivamente. Un algoritmo más inteligente podría pedir el 
   dato $i+1$ al comienzo del ciclo de proceso del dato $i$ (siempre suponiendo
   que el dato $i$ pidió en la iteración $i-1$. De esta manera, a la vez que el
@@ -364,7 +364,7 @@ Esto, como fue explicado, se recorre, hasta que R10D sea igual a 0.
 
   
 
-  Estudiar esta técnica y proponer una aplicación al código del filtro en la versión ASM.
+  Estudiar esta técnica y proponer una aplicación al código del filtro en la veRSIón ASM.
   Programarla y analizar el resultado. ¿Vale la pena hacer prefetching?\vspace*{0.2cm}
   
   
@@ -450,7 +450,7 @@ con prefetch: 7434984.500
 \vspace*{0.3cm} \noindent
 \subsubsection{Experimento 4 - secuencial vs. vectorial}
 
-  Analizar cuales son las diferencias de performace entre las versiones de C y ASM. 
+  Analizar cuales son las diferencias de performace entre las veRSIones de C y ASM. 
   Realizar gráficos que representen estas diferencias.
 
   

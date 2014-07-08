@@ -301,77 +301,87 @@ int_teclado:
     and ah, 0x80            ;me quedo con el valor sacandole el 80 
     jnz .fin_teclado
     
-    MOV ecx, 0x00
-    jmp .losQueNoSeUsan
+    MOV ebx, 0x00
+    jmp .losQueSiSeUsan
 
 .el1:
     ;mov eax, al
     dec eax
     push eax
     call imprimo_tss
+    pop eax
     jmp .fin_teclado
 
 .el2:
     dec eax
     push eax
     call imprimo_tss
+    pop eax
     jmp .fin_teclado
 
 .el3:
     dec eax
     push eax
     call imprimo_tss
+    pop eax
     jmp .fin_teclado
 
 .el4:
     dec eax
     push eax
     call imprimo_tss
+    pop eax
     jmp .fin_teclado
 
 .el5:
     dec eax
     push eax
     call imprimo_tss
+    pop eax
     jmp .fin_teclado
 
 .el6:
     dec eax
     push eax
     call imprimo_tss
+    pop eax
     jmp .fin_teclado
 
 .el7:
     dec eax
     push eax
     call imprimo_tss
+    pop eax
     jmp .fin_teclado
 
 .el8:
     dec eax
     push eax
     call imprimo_tss
+    pop eax
     jmp .fin_teclado
 
 .elp:
     ;xchg bx,bx
 .aPause:
-    mov ecx, 1
-    mov [contador_reloj], ecx
-    push ecx
+    call dame_estado
+    CMP eax, 0
+    jne .continuo
+    xchg bx,bx
+    mov eax, 1
+    push eax
     call cambiar_estado
-    add esp, 4
+    pop eax
     jmp .fin_teclado
 
-.elc:
-    xor ecx, ecx
-    mov [contador_pause], ecx
-    push ecx
+.continuo:
+    MOV EAX, 0
+    push eax
     call cambiar_estado
-    add esp, 4
+    pop eax
     jmp .fin_teclado
 
-.losQueNoSeUsan:
+.losQueSiSeUsan:
     cmp al, 0x02
     je .el1
     
@@ -399,11 +409,13 @@ int_teclado:
     cmp al, 0x19
     je .elp
     
-    cmp al, 0x2e
-    je .elc
-    CMP EAX, ecx
+   ; cmp al, 0x2e
+   ; je .elc
+
+.losQueNoSeUsan:
+    CMP EAX, ebx
     je .fin_teclado
-    ADD ecx, 0x01
+    ADD ebx, 0x01
     jmp .losQueNoSeUsan
 
 

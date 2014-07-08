@@ -1,5 +1,37 @@
 \vspace*{0.3cm} \noindent
+\subsubsection{Objetivo}
+El objetivo del filtro "temperature" es, al igual que el popart, transformar el color, 
+con la diferencia de que el resultado simula un efecto de calor.
+Para esto, se suman los 3 colores de cada pixel y se lo divide por 3. 
+Y según el resultado de eso, al que llamaremos "t", se ponen valores predeterminados:\newline
+
+
+\[ dst_{(x,y)} < r, g, b > = \left\{ \begin{array}{ll}
+        < 0, 0, 128 + t * 4> & \mbox{si $t < 32 $}\\
+       < 0  (t - 32) * 4, 255> & \mbox{si $32 \leq t < 96 $}\\
+        < (t - 96) * 4, 255, 255 - (t - 96) * 4 > & \mbox{si $96\leq t <160 $}\\
+       < 255, 255 - (t - 160) * 4, 0> & \mbox{si $160 \leq t < 224 $}\\
+        < 255 - (t - 224) * 4, 0, 0 > & \mbox{si no}\\\end{array} \right. \]
+
+
+
+
+\vspace*{0.3cm} \noindent
+
 \subsubsection{Desarrollo Implementacion C}
+
+\begin{center}
+\textbf{Sintesis de Desarrollo} 
+\end{center}
+
+Similiar al de popart. Recorremos mediante dos ciclos la imagen fuente para sumar y dividimos por 3 cada pixel,
+y según el resultado de eso, pegar un valor predetermiado. \newline
+
+\begin{center}
+\textbf{Explicación detallada de Implementación}
+
+\end{center}
+
 
 En esta implementación, inicialmente,se crearon dos punteros de matriz uno correspondiente a src y otro a dst.\newline 
 Ademas, un entero llamado $suma$ y otro $divido$ inicializados en 0. \newline
@@ -32,32 +64,32 @@ en caso de ser 0 significa que ya recorrimos toda la imagen completa por ende sa
 En caso de no ser cero, comparamos r15d con 15, en r15 teníamos guardado la cantidad de pixel que vamos a recorrer en una iteracion.
 Como vemos de a 15 pixeles si el valor es menor significa que estamos por tocar el padding y eso lo chequeamos a parte. \newline
 Si no es menor, procedemos a recorrer y trabajar con 15 pixeles de la siguiente forma: \newline
-Primero, nos guardamos en XMM0 los primeros 15 pixeles haciendo $ movdqu\  XMM0, [RDI]$, luego, el valor de XMM0,
+Primero, nos guardamos en XMM0 los primeros 15 pixeles haciendo $ MOVDQU\  XMM0, [RDI]$, luego, el valor de XMM0,
 lo guardamos en XMM1 y XMM2, limpiamos XMM7 y con 3 mascaras distintas que lo que hacen es ponernos los 5 pixeles rojos adelante y llenar con 0, 
 los 5 pixeles azules y llenar con cero y los 5 pixeles verdes y llenar con ceros. \newline
 Realizamos la operacion Pshufb con los tres xmm y las mascaras (un xmm con cada mascara) y luego desempaquetamos de byte a word,
-usando el xmm7 que habiamos llenado de 0. \newline
+usando el XMM7 que habiamos llenado de 0. \newline
 El desempaquetado hace que nos queden los valores en word en los registros XMM10, XMM12, XMM14 respectivamente, y luego
 los sumamos con PADDW guardando el valor en XMM10. De esta forma obtenemos en word 
 $|b0 + g0 + r0|b1 + g1 + r1|b2 + g2 + r2|b3 + g3 + r3|b4 + g4 + r4|$. \newline
 Limpiamos todos los registros que usamos, salvo XMM10 y volvemos a guardar en XMM0 el valor de XMM10. Luego, procedemos
 a realizar la division correspondiente de los packs de la siguiente manera:\newline
 
-$movdqu xmm10, [DIVIDO]$\newline$
-	movdqu xmm1, xmm0$\newline$
-		movdqu xmm2, xmm0$\newline$
-		XORPD xmm15, xmm15$\newline$
-		punpcklwd xmm1, xmm15$\newline$
-		punpckhwd xmm2, xmm15$\newline$
-		cvtdq2ps xmm1, xmm1$\newline$
-		cvtdq2ps xmm2, xmm2$\newline$
-		cvtdq2ps xmm10,xmm10$\newline$
-		divps XMM1, xmm10$\newline$
-		divps XMM2, xmm10$\newline$
-		CVTTPS2DQ xmm1,xmm1$\newline$
-		CVTTPS2DQ xmm2, xmm2$\newline$
-		PACKUSDW xmm1, xmm2$\newline$
-		movdqu xmm0, xmm1$\newline$
+$\hspace*{2.3cm}$$MOVDQU\ XMM10, [DIVIDO]$\newline$
+$\hspace*{2.8cm}$MOVDQU\ XMM1,\ XMM0$\newline$
+$\hspace*{2.8cm}$MOVDQU\ XMM2,\ XMM0$\newline$
+$\hspace*{2.8cm}$XORPD\ XMM15,\ XMM15$\newline$
+$\hspace*{2.8cm}$PUNPCKLWD\ XMM1,\ XMM15$\newline$
+$\hspace*{2.8cm}$PUNPCKWD\ XMM2,\ XMM15$\newline$
+$\hspace*{2.8cm}$CVTDQ2PS\ XMM1,\ XMM1$\newline$
+		$\hspace*{2.8cm}$CVTDQ2PS\ XMM2,\ XMM2$\newline$
+		$\hspace*{2.8cm}$CVTDQ2PS\ XMM10,XMM10$\newline$
+		$\hspace*{2.8cm}$DIVPS\ XMM1,\ XMM10$\newline$
+		$\hspace*{2.8cm}$DIVPS\ XMM2,\ XMM10$\newline$
+		$\hspace*{2.8cm}$CVTTPS2DQ\ XMM1,XMM1$\newline$
+		$\hspace*{2.8cm}$CVTTPS2DQ\ XMM2,\ XMM2$\newline$
+		$\hspace*{2.8cm}$PACKUSDW\ XMM1,\ XMM2$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM0,\ XMM1$\newline$
 		 $$\newline$
 	
 En la mascara DIVIDO tenemos el valor 3 en DD. Desempaquetamos de Word a Dword para luego podes convertir a float.
@@ -69,40 +101,38 @@ Primero, vamos a comparar si nuestras sumas son mayores a 223, guardamos en XMM1
 el 223. Guardamos en XMM15 el valor XMM0 y comparamos con XMM14.
 A partir del resultado en XMM15 realizamos lo siguiente:\newline
 
-$movdqu\ xmm13,\ xmm0$\newline$
-		movdqu\ xmm11, [M224]$\newline$		
-		psubb\ XMM13,\ xmm11$\newline$
-		pand\ xmm13,\ xmm15$\newline$
-			;convierto a float para multiplicar
-		movdqu\ xmm11, [M4]$\newline$
-		movdqu\ xmm7,\ xmm13$\newline$
-		movdqu\ xmm8,\ xmm13$\newline$
-		XORPD\ xmm9,\ xmm9$\newline$
-		punpcklwd\ xmm7,\ xmm9$\newline$
-		punpckhwd\ xmm8,\ xmm9$\newline$
-		cvtdq2ps\ xmm7,\ xmm7$\newline$
-		cvtdq2ps\ xmm8,\ xmm8$\newline$
-		cvtdq2ps\ xmm11,xmm11$\newline$
-		mulps\ XMM7,\ xmm11$\newline$
-		mulps\ XMM8,\ xmm11$\newline$
-		CVTPS2DQ\ xmm7,xmm7$\newline$
-		CVTPS2DQ\ xmm8,\ xmm8$\newline$
-		PACKUSDW\ xmm7,\ xmm8$\newline$
-		movdqu\ xmm13,\ xmm7$\newline$
-		;ya multipliocado vuelvo el valor a\ xmm13 y continuo
-		movdqu\ xmm11, [M255]$\newline$
-		pand\ xmm11,\ xmm15$\newline$
-		psubb\ xmm11,\ xmm13$\newline$
-		movdqu\ xmm13,\ xmm11$\newline$		
-		pshufb\ xmm13, [MASK_5] $\newline$
-		PADDUSW\ XMM10,\ XMM15 $\newline$
-		movdqu\ xmm11,\ xmm15 $\newline$
-		pcmpeqw\ XMM14,XMM14$\newline$
-		pxor\ xmm11,\ xmm14$\newline$
-		pand\ xmm0,xmm11$\newline$		
-		pshufb\ XMM15, [MASK_DE1WORDA3BYTES]$\newline$
-		pand\ xmm13,\ xmm15$\newline$
-		movdqu\ xmm5,\ xmm13$$\newline$
+$\hspace*{2.3cm}$$MOVDQU\ XMM13,\ XMM0$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM11, [M224]$\newline$		
+		$\hspace*{2.8cm}$PSUBB\ XMM13,\ XMM11$\newline$
+		$\hspace*{2.8cm}$PAND\ XMM13,\ XMM15$\newline$
+			$\hspace*{2.8cm}$MOVDQU\ XMM11, [M4]$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM7,\ XMM13$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM8,\ XMM13$\newline$
+		$\hspace*{2.8cm}$XORPD\ XMM9,\ XMM9$\newline$
+		$\hspace*{2.8cm}$PUNPCKLWD\ XMM7,\ XMM9$\newline$
+		$\hspace*{2.8cm}$PUNPCKWD\ XMM8,\ XMM9$\newline$
+		$\hspace*{2.8cm}$CVTDQ2PS\ XMM7,\ XMM7$\newline$
+		$\hspace*{2.8cm}$CVTDQ2PS\ XMM8,\ XMM8$\newline$
+		$\hspace*{2.8cm}$CVTDQ2PS\ XMM11,XMM11$\newline$
+		$\hspace*{2.8cm}$MULPS\ XMM7,\ XMM11$\newline$
+		$\hspace*{2.8cm}$MULPS\ XMM8,\ XMM11$\newline$
+		$\hspace*{2.8cm}$CVTPS2DQ\ XMM7,XMM7$\newline$
+		$\hspace*{2.8cm}$CVTPS2DQ\ XMM8,\ XMM8$\newline$
+		$\hspace*{2.8cm}$PACKUSDW\ XMM7,\ XMM8$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM13,\ XMM7$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM11, [M255]$\newline$
+		$\hspace*{2.8cm}$PAND\ XMM11,\ XMM15$\newline$
+		$\hspace*{2.8cm}$PSUBB\ XMM11,\ XMM13$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM13,\ XMM11$\newline$		
+		$\hspace*{2.8cm}$PSHUFB\ XMM13, [MASK_5] $\newline$
+		$\hspace*{2.8cm}$PADDUSW\ XMM10,\ XMM15 $\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM11,\ XMM15 $\newline$
+		$\hspace*{2.8cm}$PCMPEQW\ XMM14,XMM14$\newline$
+		$\hspace*{2.8cm}$PXOR\ XMM11,\ XMM14$\newline$
+		$\hspace*{2.8cm}$PAND\ XMM0,XMM11$\newline$		
+		$\hspace*{2.8cm}$PSHUFB\ XMM15, [MASK_DE1WORDA3BYTES]$\newline$
+		$\hspace*{2.8cm}$PAND\ XMM13,\ XMM15$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM5,\ XMM13$$\newline$
 
 Copiamos en XMM13, el valor de XMM0, guardamos en XMM11 una mascara en DW con 224, realizamos la resta de los packs y luego un and 
 con XMM15 para quedarnos con los packs que cumplieron esta comparacion. Despues, guardamos en XMM11 una mascara en DW con 4.
@@ -120,40 +150,40 @@ Despues de chequear este caso pasamos al caso 4: \newline
 
 Primero, vamos a comparar si nuestras sumas son mayores a 159, guardamos en XMM14 el valor 159 con una mascara en DW la cual tiene en todos los pack
 el 159. Guardamos en XMM15 el valor XMM0 y comparamos con XMM14.
-A partir del resultado en XMM15 realizamos lo siguiente:
+A partir del resultado en XMM15 realizamos lo siguiente: \newline
 
-$movdqu\ xmm13,\ xmm0$\newline$
-		movdqu\ xmm11, [M160]$\newline$	
-		psubb\ XMM13,\ xmm11$\newline$
-		pand\ xmm13,\ xmm15$\newline$
-		movdqu\ xmm11, [M4]$\newline$
-		movdqu\ xmm7,\ xmm13$\newline$
-		movdqu\ xmm8,\ xmm13$\newline$
-		XORPD\ xmm9,\ xmm9$\newline$
-		punpcklwd\ xmm7,\ xmm9$\newline$
-		punpckhwd\ xmm8,\ xmm9$\newline$
-		cvtdq2ps\ xmm7,\ xmm7$\newline$
-		cvtdq2ps\ xmm8,\ xmm8$\newline$
-		cvtdq2ps\ xmm11,xmm11$\newline$
-		mulps\ XMM7,\ xmm11$\newline$
-		mulps\ XMM8,\ xmm11$\newline$
-		CVTPS2DQ\ xmm7,xmm7$\newline$
-		CVTPS2DQ\ xmm8,\ xmm8$\newline$
-		PACKUSDW\ xmm7,\ xmm8$\newline$
-		movdqu\ xmm13,\ xmm7
+$\hspace*{2.3cm}$$MOVDQU\ XMM13,\ XMM0$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM11, [M160]$\newline$	
+		$\hspace*{2.8cm}$PSUBB\ XMM13,\ XMM11$\newline$
+		$\hspace*{2.8cm}$PAND\ XMM13,\ XMM15$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM11, [M4]$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM7,\ XMM13$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM8,\ XMM13$\newline$
+		$\hspace*{2.8cm}$XORPD\ XMM9,\ XMM9$\newline$
+		$\hspace*{2.8cm}$PUNPCKLWD\ XMM7,\ XMM9$\newline$
+		$\hspace*{2.8cm}$PUNPCKWD\ XMM8,\ XMM9$\newline$
+		$\hspace*{2.8cm}$CVTDQ2PS\ XMM7,\ XMM7$\newline$
+		$\hspace*{2.8cm}$CVTDQ2PS\ XMM8,\ XMM8$\newline$
+		$\hspace*{2.8cm}$CVTDQ2PS\ XMM11,XMM11$\newline$
+		$\hspace*{2.8cm}$MULPS\ XMM7,\ XMM11$\newline$
+		$\hspace*{2.8cm}$MULPS\ XMM8,\ XMM11$\newline$
+		$\hspace*{2.8cm}$CVTPS2DQ\ XMM7,XMM7$\newline$
+		$\hspace*{2.8cm}$CVTPS2DQ\ XMM8,\ XMM8$\newline$
+		$\hspace*{2.8cm}$PACKUSDW\ XMM7,\ XMM8$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM13,\ XMM7
 		$\newline$
-		movdqu\ xmm11, [MASK\_4]$\newline$
-		pshufb\ xmm13, [MASK\_4\_2]$\newline$
-		psubb\ xmm11,\ xmm13 $\newline$
-		movdqu\ xmm13,\ xmm11$\newline$
-		movdqu\ xmm11,\ xmm15$\newline$
-		pcmpeqw\ XMM14,XMM14$\newline$
-		pxor\ xmm11,\ xmm14$\newline$
-		pand\ xmm0,xmm11$\newline$
-		PADDUSW\ XMM10,\ XMM15 $\newline$
-		pshufb\ XMM15, [MASK\_DE1WORDA3BYTES]$\newline$
-		pand\ xmm13,\ xmm15$\newline$
-		movdqu\ xmm4,\ xmm13$$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM11, [MASK\_4]$\newline$
+		$\hspace*{2.8cm}$PSHUFB\ XMM13, [MASK\_4\_2]$\newline$
+		$\hspace*{2.8cm}$PSUBB\ XMM11,\ XMM13 $\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM13,\ XMM11$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM11,\ XMM15$\newline$
+		$\hspace*{2.8cm}$PCMPEQW\ XMM14,XMM14$\newline$
+		$\hspace*{2.8cm}$PXOR\ XMM11,\ XMM14$\newline$
+		$\hspace*{2.8cm}$PAND\ XMM0,XMM11$\newline$
+		$\hspace*{2.8cm}$PADDUSW\ XMM10,\ XMM15 $\newline$
+		$\hspace*{2.8cm}$PSHUFB\ XMM15, [MASK\_DE1WORDA3BYTES]$\newline$
+		$\hspace*{2.8cm}$PAND\ XMM13,\ XMM15$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM4,\ XMM13$$\newline$
 
 		
 
@@ -174,46 +204,46 @@ Primero, vamos a comparar si nuestras sumas son mayores a 95, guardamos en\ XMM1
 el 95. Guardamos en\ XMM15 el valor\ XMM0 y comparamos con\ XMM14.
 A partir del resultado en\ XMM15 realizamos lo siguiente:\newline
 
-	$movdqu\ xmm13,\ xmm0$\newline$
-		movdqu\ xmm11, [M96]$\newline$	
-		psubb\ XMM13,\ XMM11$\newline$
-		pand\ xmm13,\ xmm15$\newline$
-		movdqu\ xmm11, [M4]$\newline$
-		movdqu\ xmm7,\ xmm13$\newline$
-		movdqu\ xmm8,\ xmm13$\newline$
-		XORPD\ xmm9,\ xmm9$\newline$
-		punpcklwd\ xmm7,\ xmm9$\newline$
-		punpckhwd\ xmm8,\ xmm9$\newline$
-		cvtdq2ps\ xmm7,\ xmm7$\newline$
-		cvtdq2ps\ xmm8,\ xmm8$\newline$
-		cvtdq2ps\ xmm11,xmm11$\newline$
-		mulps\ XMM7,\ xmm11$\newline$
-		mulps\ XMM8,\ xmm11$\newline$
-		CVTPS2DQ\ xmm7,xmm7$\newline$
-		CVTPS2DQ\ xmm8,\ xmm8$\newline$
-		PACKUSDW\ xmm7,\ xmm8$\newline$
-		movdqu\ xmm13,\ xmm7$\newline$
-		pshufb\ xmm13, [MASK\_3] $\newline$
-		movdqu\ xmm11, [MASK\_CON255]$\newline$
-		psubb\ xmm11,\ xmm13$\newline$
-		pshufb\ xmm13, [MASK\_3\_2]$\newline$
-		pshufb\ xmm11, [MASK\_3\_3]$\newline$
-		paddb\ xmm13,\ xmm11  $\newline$
-		PADDUSW\ XMM10,\ XMM15 $\newline$
-		movdqu\ xmm11,\ xmm15$\newline$
-		pcmpeqw\ XMM14,XMM14$\newline$
-		pxor\ xmm11,\ xmm14$\newline$
-		pand\ xmm0,xmm11$\newline$
-		pshufb\ XMM15, [MASK\_DE1WORDA3BYTES]$\newline$
-		pand\ xmm13,\ xmm15$\newline$
-		movdqu\ xmm3,\ xmm13$$\newline$
+	$\hspace*{2.3cm}$$MOVDQU\ XMM13,\ XMM0$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM11, [M96]$\newline$	
+		$\hspace*{2.8cm}$PSUBB\ XMM13,\ XMM11$\newline$
+		$\hspace*{2.8cm}$PAND\ XMM13,\ XMM15$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM11, [M4]$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM7,\ XMM13$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM8,\ XMM13$\newline$
+		$\hspace*{2.8cm}$XORPD\ XMM9,\ XMM9$\newline$
+		$\hspace*{2.8cm}$PUNPCKLWD\ XMM7,\ XMM9$\newline$
+		$\hspace*{2.8cm}$PUNPCKWD\ XMM8,\ XMM9$\newline$
+		$\hspace*{2.8cm}$CVTDQ2PS\ XMM7,\ XMM7$\newline$
+		$\hspace*{2.8cm}$CVTDQ2PS\ XMM8,\ XMM8$\newline$
+		$\hspace*{2.8cm}$CVTDQ2PS\ XMM11,XMM11$\newline$
+		$\hspace*{2.8cm}$MULPS\ XMM7,\ XMM11$\newline$
+		$\hspace*{2.8cm}$MULPS\ XMM8,\ XMM11$\newline$
+		$\hspace*{2.8cm}$CVTPS2DQ\ XMM7,XMM7$\newline$
+		$\hspace*{2.8cm}$CVTPS2DQ\ XMM8,\ XMM8$\newline$
+		$\hspace*{2.8cm}$PACKUSDW\ XMM7,\ XMM8$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM13,\ XMM7$\newline$
+		$\hspace*{2.8cm}$PSHUFB\ XMM13, [MASK\_3] $\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM11, [MASK\_CON255]$\newline$
+		$\hspace*{2.8cm}$PSUBB\ XMM11,\ XMM13$\newline$
+		$\hspace*{2.8cm}$PSHUFB\ XMM13, [MASK\_3\_2]$\newline$
+		$\hspace*{2.8cm}$PSHUFB\ XMM11, [MASK\_3\_3]$\newline$
+		$\hspace*{2.8cm}$paddb\ XMM13,\ XMM11  $\newline$
+		$\hspace*{2.8cm}$PADDUSW\ XMM10,\ XMM15 $\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM11,\ XMM15$\newline$
+		$\hspace*{2.8cm}$PCMPEQW\ XMM14,XMM14$\newline$
+		$\hspace*{2.8cm}$PXOR\ XMM11,\ XMM14$\newline$
+		$\hspace*{2.8cm}$PAND\ XMM0,XMM11$\newline$
+		$\hspace*{2.8cm}$PSHUFB\ XMM15, [MASK\_DE1WORDA3BYTES]$\newline$
+		$\hspace*{2.8cm}$PAND\ XMM13,\ XMM15$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM3,\ XMM13$$\newline$
 
 Copiamos en XMM13, el valor de XMM0, guardamos en XMM11 una mascara en DW con 96, realizamos la resta de los packs y luego un and 
 con XMM15 para quedarnos con los packs que cumplieron esta comparacion. Despues, guardamos en XMM11 una mascara en DW con 4.
 Procedemos a desempaquetar de WORD a DWORD el XMM13 copiandolo previamente en otros dos XMM. Luego convertimos todo de DWORD
 a FLOAT y realizamos la multiplicacion con XMM11. Volvemos a convertir a DWORD y a empaquetar a WORD y guardamos el resultado 
 en XMM13. \newline
-Movemos en XMM13 con pshufb una mascara DW con los resultados que da el caso 3 y guardamos en XMM11 una mascara en DW con 255, 
+Movemos en XMM13 con PSHUFB una mascara DW con los resultados que da el caso 3 y guardamos en XMM11 una mascara en DW con 255, 
 realizamos la resta entre ambos. Movemos los packs de XMM11 y XMM13 con las mascaras $[MASK\_3\_2]$ $[MASK\_3\_3] $ y luego
 los sumamos. \newline
 Luego, en\ XMM10 lo usamos para saturar en 1 los casos que ya son chequeados para así no pisarlos con los otros casos. Y luego
@@ -224,37 +254,37 @@ Despues de chequear este caso pasamos al caso 2: \newline
 
 Primero, vamos a comparar si nuestras sumas son mayores a 31, guardamos en\ XMM14 el valor 31 con una mascara en DW la cual tiene en todos los pack
 el 31. Guardamos en\ XMM15 el valor\ XMM0 y comparamos con\ XMM14.
-A partir del resultado en\ XMM15 realizamos lo siguiente:
+A partir del resultado en\ XMM15 realizamos lo siguiente: \newline
 
-	$movdqu\ xmm13,\ xmm0$\newline$
-		movdqu\ xmm11, [M32]$\newline$
-		psubb\ XMM13,\ xmm11$\newline$
-		movdqu\ xmm11, [M4]$\newline$
-		movdqu\ xmm7,\ xmm13$\newline$
-		movdqu\ xmm8,\ xmm13$\newline$
-		XORPD\ xmm9,\ xmm9$\newline$
-		punpcklwd\ xmm7,\ xmm9$\newline$
-		punpckhwd\ xmm8,\ xmm9$\newline$
-		cvtdq2ps\ xmm7,\ xmm7$\newline$
-		cvtdq2ps\ xmm8,\ xmm8$\newline$
-		cvtdq2ps\ xmm11,xmm11$\newline$
-		mulps\ XMM7,\ xmm11$\newline$
-		mulps\ XMM8,\ xmm11$\newline$
-		CVTPS2DQ\ xmm7,xmm7$\newline$
-		CVTPS2DQ\ xmm8,\ xmm8$\newline$
-		PACKUSDW\ xmm7,\ xmm8$\newline$
-		movdqu\ xmm13,\ xmm7$\newline$
-		movdqu\ xmm11, [MASK\_2] $\newline$
-		pshufb\ xmm13, [MASK\_2\_2] $\newline$
-		paddb\ XMM13,\ XMM11
-		PADDUSW\ XMM10,\ XMM15 $\newline$
-		movdqu\ xmm11,\ xmm15  $\newline$
-		pcmpeqw\ XMM14,XMM14 $\newline$
-		pxor\ xmm11,\ xmm14$\newline$
-		pand\ xmm0,xmm11$\newline$
-		pshufb\ XMM15, [MASK\_DE1WORDA3BYTES]$\newline$
-		pand\ xmm13,\ xmm15$\newline$
-		movdqu\ xmm2,\ xmm13$$\newline$
+	$\hspace*{2.3cm}$$MOVDQU\ XMM13,\ XMM0$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM11, [M32]$\newline$
+		$\hspace*{2.8cm}$PSUBB\ XMM13,\ XMM11$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM11, [M4]$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM7,\ XMM13$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM8,\ XMM13$\newline$
+		$\hspace*{2.8cm}$XORPD\ XMM9,\ XMM9$\newline$
+		$\hspace*{2.8cm}$PUNPCKLWD\ XMM7,\ XMM9$\newline$
+		$\hspace*{2.8cm}$PUNPCKWD\ XMM8,\ XMM9$\newline$
+		$\hspace*{2.8cm}$CVTDQ2PS\ XMM7,\ XMM7$\newline$
+		$\hspace*{2.8cm}$CVTDQ2PS\ XMM8,\ XMM8$\newline$
+		$\hspace*{2.8cm}$CVTDQ2PS\ XMM11,XMM11$\newline$
+		$\hspace*{2.8cm}$MULPS\ XMM7,\ XMM11$\newline$
+		$\hspace*{2.8cm}$MULPS\ XMM8,\ XMM11$\newline$
+		$\hspace*{2.8cm}$CVTPS2DQ\ XMM7,XMM7$\newline$
+		$\hspace*{2.8cm}$CVTPS2DQ\ XMM8,\ XMM8$\newline$
+		$\hspace*{2.8cm}$PACKUSDW\ XMM7,\ XMM8$\newline$
+$\hspace*{2.8cm}$		MOVDQU\ XMM13,\ XMM7$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM11, [MASK\_2] $\newline$
+		$\hspace*{2.8cm}$PSHUFB\ XMM13, [MASK\_2\_2] $\newline$
+		$\hspace*{2.8cm}$paddb\ XMM13,\ XMM11$\newline$
+		$\hspace*{2.8cm}$PADDUSW\ XMM10,\ XMM15 $\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM11,\ XMM15  $\newline$
+		$\hspace*{2.8cm}$PCMPEQW\ XMM14,XMM14 $\newline$
+		$\hspace*{2.8cm}$PXOR\ XMM11,\ XMM14$\newline$
+		$\hspace*{2.8cm}$PAND\ XMM0,XMM11$\newline$
+		$\hspace*{2.8cm}$PSHUFB\ XMM15, [MASK\_DE1WORDA3BYTES]$\newline$
+		$\hspace*{2.8cm}$PAND\ XMM13,\ XMM15$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM2,\ XMM13$$\newline$
 
 Copiamos en XMM13, el valor de XMM0, guardamos en XMM11 una mascara en DW con 96, realizamos la resta de los packs y luego un and 
 con XMM15 para quedarnos con los packs que cumplieron esta comparacion. Despues, guardamos en XMM11 una mascara en DW con 4.
@@ -271,47 +301,46 @@ Y por último, el caso 1:\newline
 
 Este caso, es particular, ya que invertimos, y chequeamos si los packs que quedan son menores a 31: \newline
 
-$\hspace*{2.3cm}$$movdqa\ XMM14,[MASK\_31]$\newline$
-$\hspace*{2.8cm}$			movdqu\ XMM6,\ XMM10 ; me quedo con\ XMM10 y trabajamos  el de\ XMM6$\newline$
-$\hspace*{2.8cm}$			pcmpeqw\ XMM7,\ XMM7 ;\ XMM7 = |1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1$\newline$
-$\hspace*{2.8cm}$			pxor\ XMM6,\ XMM7 ; deja en 1 este caso y 0 los casos ya checkeados$\newline$
-$\hspace*{2.8cm}$			pand\ XMM14,\ XMM6 ; en\ XMM14 queda los 153 en los lugares que tengo que comparar$\newline$
-$\hspace*{2.8cm}$			movdqu\ XMM15,\ XMM0$\newline$
-$\hspace*{2.8cm}$			pcmpgtw\ XMM14,\ XMM15 $$\newline$
+$\hspace*{2.3cm}$$\ XMM14,[MASK\_31]$\newline$
+$\hspace*{2.8cm}$			MOVDQU\ XMM6,\ XMM10$\newline$
+$\hspace*{2.8cm}$			PCMPEQW\ XMM7,\ XMM7$\newline$
+$\hspace*{2.8cm}$			PXOR\ XMM6,\ XMM7 $\newline$
+$\hspace*{2.8cm}$			PAND\ XMM14,\ XMM6 $\newline$
+$\hspace*{2.8cm}$			MOVDQU\ XMM15,\ XMM0$\newline$
+$\hspace*{2.8cm}$			pcmpgtw\ XMM14,\ XMM15 $\newline
 
 			A partir del resultado en XMM14 realizamos lo siguiente:\newline
 
-	$movdqu\ xmm12,\ xmm15$\newline$
-		movdqu\ xmm11, [M4]$\newline$
-		movdqu\ xmm7,\ xmm12$\newline$
-		movdqu\ xmm8,\ xmm12$\newline$
-		XORPD\ xmm9,\ xmm9$\newline$
-		punpcklwd\ xmm7,\ xmm9$\newline$
-		punpckhwd\ xmm8,\ xmm9$\newline$
-		cvtdq2ps\ xmm7,\ xmm7$\newline$
-		cvtdq2ps\ xmm8,\ xmm8$\newline$
-		cvtdq2ps\ xmm11,xmm11$\newline$
-		mulps\ XMM7,\ xmm11$\newline$
-		mulps\ XMM8,\ xmm11$\newline$
-		CVTPS2DQ\ xmm7,xmm7$\newline$
-		CVTPS2DQ\ xmm8,\ xmm8$\newline$
-		PACKUSDW\ xmm7,\ xmm8$\newline$
-		movdqu\ xmm12,\ xmm7$\newline$
-		;una vez multiplcado paso valor a\ xmm2 para seguir trabajando
-		movdqu\ XMM13, [M128]$\newline$
-		pand\ xmm13,\ xmm6  $\newline$
-		paddb\ XMM13,\ xmm12 $\newline$
-		pshufb\ xmm13, [MASK\_1]  $\newline$
-		PADDUSW\ XMM10,\ XMM14  $\newline$
-		pshufb\ XMM14, [MASK\_DE1WORDA3BYTES]$\newline$
-		movdqu\ xmm1,\ xmm13$$\newline$
+	$\hspace*{2.3cm}MOVDQU\ XMM12,\ XMM15$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM11, [M4]$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM7,\ XMM12$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM8,\ XMM12$\newline$
+		$\hspace*{2.8cm}$XORPD\ XMM9,\ XMM9$\newline$
+		$\hspace*{2.8cm}$PUNPCKLWD\ XMM7,\ XMM9$\newline$
+		$\hspace*{2.8cm}$PUNPCKWD\ XMM8,\ XMM9$\newline$
+		$\hspace*{2.8cm}$CVTDQ2PS\ XMM7,\ XMM7$\newline$
+$\hspace*{2.8cm}$		CVTDQ2PS\ XMM8,\ XMM8$\newline$
+		$\hspace*{2.8cm}$CVTDQ2PS\ XMM11,XMM11$\newline$
+		$\hspace*{2.8cm}$MULPS\ XMM7,\ XMM11$\newline$
+		$\hspace*{2.8cm}$MULPS\ XMM8,\ XMM11$\newline$
+		$\hspace*{2.8cm}$CVTPS2DQ\ XMM7,XMM7$\newline$
+		$\hspace*{2.8cm}$CVTPS2DQ\ XMM8,\ XMM8$\newline$
+		$\hspace*{2.8cm}$PACKUSDW\ XMM7,\ XMM8$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM12,\ XMM7$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM13, [M128]$\newline$
+		$\hspace*{2.8cm}$PAND\ XMM13,\ xmm6  $\newline$
+		$\hspace*{2.8cm}$paddb\ XMM13,\ XMM12 $\newline$
+		$\hspace*{2.8cm}$PSHUFB\ XMM13, [MASK\_1]  $\newline$
+		$\hspace*{2.8cm}$PADDUSW\ XMM10,\ XMM14  $\newline$
+		$\hspace*{2.8cm}$PSHUFB\ XMM14, [MASK\_DE1WORDA3BYTES]$\newline$
+		$\hspace*{2.8cm}$MOVDQU\ XMM1,\ XMM13$\newline
 
 Copiamos en XMM12, el valor de XMM15, guardamos en XMM11 una mascara en DW con 4.
 Procedemos a desempaquetar de WORD a DWORD el XMM12 copiandolo previamente en otros dos XMM. Luego convertimos todo de DWORD
 a FLOAT y realizamos la multiplicacion con XMM11. Volvemos a convertir a DWORD y a empaquetar a WORD y guardamos el resultado 
 en XMM12. \newline
 Guardamos en XMM13 una mascara con 128 en cada word  y luego hacemos AND con XMM6. Sumamos XMM13, con XMM6. \newline
-Shufteamos en XMM13 con una MASK\_1 que contiene el orden de los valores para el caso 1.
+Shufteamos en XMM13 con una MASK\_1 que contiene el orden de los valores para el caso 1.\newline
 Luego, XMM10 lo usamos para saturar en 1 los casos que ya son chequeados para así no pisarlos con los otros casos. Y luego
 invertirmos XMM11 donde guardamos XMM15 para hacer un AND con XMM0 y dejar solo habilitados los packs que no cumplieron\newline
 Usamos una mascara para que nos acomode todo de 1word a 3 bytes, hacemos otro AND con los valores TRUE y lo guardamos en\ XMM1. \newline
@@ -319,12 +348,12 @@ Usamos una mascara para que nos acomode todo de 1word a 3 bytes, hacemos otro AN
 
 Por finalizado, hacemos or entre los XMM1, 2, 3, 4 y 5, y movemos el valor final de XMM1 a XMM0. \newline Comparamos si estamos 
 chequeando el borde haciendo $ cmp\  r15d, 15 jl .terminoBorde $ en caso de no ser menor movemos los packs del XMM0 al puntero
-en RDI $movdqu\  [RSI], XMM0$, le restamos a r15d y a r10d, la cantidad de pixeles por ciclo y le sumamos a rdi y rsi la cantidad
+en RDI $MOVDQU\  [RSI], XMM0$, le restamos a r15d y a r10d, la cantidad de pixeles por ciclo y le sumamos a rdi y rsi la cantidad
 de pixeles por ciclo. \newline
 
 En caso de que nuestra comparacion diera que es menor a 15, procedemos a: \newline
 
-$\hspace*{2.3cm}$$movdqu [RSI- pixels\_por\_ciclo + r12],\ XMM0 $\newline$
+$\hspace*{2.3cm}$$MOVDQU [RSI- pixels\_por\_ciclo + r12],\ XMM0 $\newline$
 $\hspace*{2.8cm}$		add r11, r8 $\newline$
 $\hspace*{2.8cm}$		add r13, r8 $\newline$
 $\hspace*{2.8cm}$		mov RDI, r11 $\newline$

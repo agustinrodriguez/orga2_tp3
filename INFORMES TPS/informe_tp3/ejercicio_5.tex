@@ -9,9 +9,30 @@ la tarea IDLE.
  \item Teclado: La interrupci\'on de teclado cumple la funci\'on de cambiar el estado del juego.
  \item Servicios o Syscalls: Esta interrupci\'on brinda al systema una serie de servicios o funciones a las tareas:
   \begin{itemize}
-   \item Minar:
-   \item Lanzar Misil:
-   \item Mover: 
+   \item Minar: Estas minas destruyen a los tanques que se quieran mover a la posicion donde esta la mina.\\
+   Las minas duran una sola vez, es decir, si un tanque es destruido por una mina, ́esta desaparece
+(tambien es destruida). Las minas tambien pueden ser destruidas si un misil cae sobre la misma.\\
+El unico parmetro de este servicio es la posicion donde colocar la mina. Un tanque puede colocar una mina 
+en alguna de las 4 posibles direcciones a su alrededor de la posicion actual donde se encuentra.\\
+Una vez llamado este servicio el scheduler desalojara al tanque y ejecutar a la proxima 
+tarea mientras se encarga de colocar la mina anti-tanque en su lugar. \\
+   \item Lanzar Misil: Los tanques tvenen ca ̃
+nones que les permiten disparar balas a sus enemigos, ahora,
+como los disparos seran dirigidos a posiciones precisas del mapa, los llamaremos misiles. \\
+Dicho esto, este servicio permitir ́a lanzar misiles a posiciones de el mapa direccionadas
+de forma relativa a la posicion del tanque. Los valores posibles para x e y no pueden
+superar en modulo el tamaño maximo de el mapa, es decir 50.\\
+El buffer donde se almacena el misil debe ser un rango dentro del area mapeada por la
+tarea, ademas el tamaño del mismo no debe superar los 4096 bytes.\\
+El servicio se debe encargar de copiar el buffer del misil dentro al principio de la pagina
+fısica idenfiticada por las coordenadas x e y dentro de el mapa. Una vez lanzado el misil,
+el scheduler dara paso a la proxima tarea.\\
+   \item Mover: El codigo de cada tanque esta mapeado incialmente en dos paginas de memoria a 
+   partir de la direccion correspondiente a los 128mb de memoria virtual. A partir de esta
+direccion, luego de las dos paginas mapeadas inicialmente, se ir ́an mapeando las 
+paginas de memoria f ́ısica que el tanque recorra. Si a la hora de mapear una nueva pagina
+fısica, esta esta ya esta mapeada dentro del espacio del tanque, entonces no se mapea
+nuevamente.
   \end{itemize}
 
 \end{itemize}

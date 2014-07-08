@@ -29,11 +29,8 @@ parametro var\'ia seg\'un cual de estos queremos implementar. Nivel 0 implica DP
 indicar el tamaño del segmento. En particular, si G = 1 entonces el valor de los 20 bits ser\'a multiplicado por 4 Kb provocando que con 
  solo 20 bits pueda representar 4Gb de memoria. En nuestro caso queremos un tamaño de 1.75Gb entonces necesitamos G = 1.
  \item Limit: Tamaño del segmento. Va para los 4 segmentos lo mismo.\\
-  \indent Tenemos que direccionar a 1.75 GB, que son 1792 MB, que equivalen a 1835008 KB.\\
-  \indent Como G vale 0x01, las unidades deben representarse de 4 KB, por eso dividimos por 4.\\
-  \indent $\frac{1835008}{4} = 458752$\\
-  \indent Pero como la memoria empieza desde el 0, debe ser un n\'umero menos: 458751\\
-  \indent $458751 = 0x6FFFF$
+ \indent El valor es: 56575\\
+  \indent $56575 = 0xDCFF$
  \item Type: Indica si es un segmento de c\'odigo o de datos. Para el segmento de c\'odigo de nivel 0 ponemos el valor de 0x08, indicando 
 que es ''Execute only''. para el segmento de c\'odigo de nivel 3 se usa 0x0A, \emph{Read / Execute}. Mientras que para los 2 de datos 
 ponemos el valor de 0x02, indicando que son de Read/Write.

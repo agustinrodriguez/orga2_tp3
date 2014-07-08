@@ -61,10 +61,10 @@ obtenemos en R10 el valor completo de la cantidad de pixeles a recorrer.\newline
 Guardamos en R11 el valor de RDI donde venia *src y en R13 el valor de RSI donde venia *dst. \newline
 Luego, realizamos la seccion donde chequeamos si estamos en el final de la linea o mejor dicho en el padding, comparamos con R10D si es cero \newline
 en caso de ser 0 significa que ya recorrimos toda la imagen completa por ende saltamos a la etiqueta fin. \newline
-En caso de no ser cero, comparamos r15d con 15, en r15 teníamos guardado la cantidad de pixel que vamos a recorrer en una iteracion.
+En caso de no ser cero, comparamos R15D con 15, en r15 teníamos guardado la cantidad de pixel que vamos a recorrer en una iteracion.
 Como vemos de a 15 pixeles si el valor es menor significa que estamos por tocar el padding y eso lo chequeamos a parte. \newline
 Si no es menor, procedemos a recorrer y trabajar con 15 pixeles de la siguiente forma: \newline
-Primero, nos guardamos en XMM0 los primeros 15 pixeles haciendo $ MOVDQU\  XMM0, [RDI]$, luego, el valor de XMM0,
+Primero, nos guardamos en XMM0 los primeros 15 pixeles haciendo $ movdqu\  XMM0, [RDI]$, luego, el valor de XMM0,
 lo guardamos en XMM1 y XMM2, limpiamos XMM7 y con 3 mascaras distintas que lo que hacen es ponernos los 5 pixeles rojos adelante y llenar con 0, 
 los 5 pixeles azules y llenar con cero y los 5 pixeles verdes y llenar con ceros. \newline
 Realizamos la operacion Pshufb con los tres xmm y las mascaras (un xmm con cada mascara) y luego desempaquetamos de byte a word,
@@ -75,21 +75,21 @@ $|b0 + g0 + r0|b1 + g1 + r1|b2 + g2 + r2|b3 + g3 + r3|b4 + g4 + r4|$. \newline
 Limpiamos todos los registros que usamos, salvo XMM10 y volvemos a guardar en XMM0 el valor de XMM10. Luego, procedemos
 a realizar la division correspondiente de los packs de la siguiente manera:\newline
 
-$\hspace*{2.3cm}$$MOVDQU\ XMM10, [DIVIDO]$\newline$
-$\hspace*{2.8cm}$MOVDQU\ XMM1,\ XMM0$\newline$
-$\hspace*{2.8cm}$MOVDQU\ XMM2,\ XMM0$\newline$
-$\hspace*{2.8cm}$XORPD\ XMM15,\ XMM15$\newline$
-$\hspace*{2.8cm}$PUNPCKLWD\ XMM1,\ XMM15$\newline$
-$\hspace*{2.8cm}$PUNPCKWD\ XMM2,\ XMM15$\newline$
-$\hspace*{2.8cm}$CVTDQ2PS\ XMM1,\ XMM1$\newline$
-		$\hspace*{2.8cm}$CVTDQ2PS\ XMM2,\ XMM2$\newline$
-		$\hspace*{2.8cm}$CVTDQ2PS\ XMM10,XMM10$\newline$
-		$\hspace*{2.8cm}$DIVPS\ XMM1,\ XMM10$\newline$
-		$\hspace*{2.8cm}$DIVPS\ XMM2,\ XMM10$\newline$
-		$\hspace*{2.8cm}$CVTTPS2DQ\ XMM1,XMM1$\newline$
-		$\hspace*{2.8cm}$CVTTPS2DQ\ XMM2,\ XMM2$\newline$
-		$\hspace*{2.8cm}$PACKUSDW\ XMM1,\ XMM2$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM0,\ XMM1$\newline$
+$\hspace*{2.3cm}$$movdqu\ XMM10, [DIVIDO]$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM1,\ XMM0$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM2,\ XMM0$\newline$
+$\hspace*{2.8cm}$xorpd\ XMM15,\ XMM15$\newline$
+$\hspace*{2.8cm}$punpcklwd\ XMM1,\ XMM15$\newline$
+$\hspace*{2.8cm}$punpckwd\ XMM2,\ XMM15$\newline$
+$\hspace*{2.8cm}$cvtdq2ps\ XMM1,\ XMM1$\newline$
+		$\hspace*{2.8cm}$cvtdq2ps\ XMM2,\ XMM2$\newline$
+		$\hspace*{2.8cm}$cvtdq2ps\ XMM10,XMM10$\newline$
+		$\hspace*{2.8cm}$divps\ XMM1,\ XMM10$\newline$
+		$\hspace*{2.8cm}$divps\ XMM2,\ XMM10$\newline$
+		$\hspace*{2.8cm}$cvttps2dq\ XMM1,XMM1$\newline$
+		$\hspace*{2.8cm}$cvttps2dq\ XMM2,\ XMM2$\newline$
+		$\hspace*{2.8cm}$packusdw\ XMM1,\ XMM2$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM0,\ XMM1$\newline$
 		 $$\newline$
 	
 En la mascara DIVIDO tenemos el valor 3 en DD. Desempaquetamos de Word a Dword para luego podes convertir a float.
@@ -101,38 +101,38 @@ Primero, vamos a comparar si nuestras sumas son mayores a 223, guardamos en XMM1
 el 223. Guardamos en XMM15 el valor XMM0 y comparamos con XMM14.
 A partir del resultado en XMM15 realizamos lo siguiente:\newline
 
-$\hspace*{2.3cm}$$MOVDQU\ XMM13,\ XMM0$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM11, [M224]$\newline$		
-		$\hspace*{2.8cm}$PSUBB\ XMM13,\ XMM11$\newline$
-		$\hspace*{2.8cm}$PAND\ XMM13,\ XMM15$\newline$
-			$\hspace*{2.8cm}$MOVDQU\ XMM11, [M4]$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM7,\ XMM13$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM8,\ XMM13$\newline$
-		$\hspace*{2.8cm}$XORPD\ XMM9,\ XMM9$\newline$
-		$\hspace*{2.8cm}$PUNPCKLWD\ XMM7,\ XMM9$\newline$
-		$\hspace*{2.8cm}$PUNPCKWD\ XMM8,\ XMM9$\newline$
-		$\hspace*{2.8cm}$CVTDQ2PS\ XMM7,\ XMM7$\newline$
-		$\hspace*{2.8cm}$CVTDQ2PS\ XMM8,\ XMM8$\newline$
-		$\hspace*{2.8cm}$CVTDQ2PS\ XMM11,XMM11$\newline$
-		$\hspace*{2.8cm}$MULPS\ XMM7,\ XMM11$\newline$
-		$\hspace*{2.8cm}$MULPS\ XMM8,\ XMM11$\newline$
-		$\hspace*{2.8cm}$CVTPS2DQ\ XMM7,XMM7$\newline$
-		$\hspace*{2.8cm}$CVTPS2DQ\ XMM8,\ XMM8$\newline$
-		$\hspace*{2.8cm}$PACKUSDW\ XMM7,\ XMM8$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM13,\ XMM7$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM11, [M255]$\newline$
-		$\hspace*{2.8cm}$PAND\ XMM11,\ XMM15$\newline$
-		$\hspace*{2.8cm}$PSUBB\ XMM11,\ XMM13$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM13,\ XMM11$\newline$		
-		$\hspace*{2.8cm}$PSHUFB\ XMM13, [MASK_5] $\newline$
-		$\hspace*{2.8cm}$PADDUSW\ XMM10,\ XMM15 $\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM11,\ XMM15 $\newline$
-		$\hspace*{2.8cm}$PCMPEQW\ XMM14,XMM14$\newline$
-		$\hspace*{2.8cm}$PXOR\ XMM11,\ XMM14$\newline$
-		$\hspace*{2.8cm}$PAND\ XMM0,XMM11$\newline$		
-		$\hspace*{2.8cm}$PSHUFB\ XMM15, [MASK_DE1WORDA3BYTES]$\newline$
-		$\hspace*{2.8cm}$PAND\ XMM13,\ XMM15$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM5,\ XMM13$$\newline$
+$\hspace*{2.3cm}$$movdqu\ XMM13,\ XMM0$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM11, [M224]$\newline$		
+		$\hspace*{2.8cm}$psubb\ XMM13,\ XMM11$\newline$
+		$\hspace*{2.8cm}$pand\ XMM13,\ XMM15$\newline$
+			$\hspace*{2.8cm}$movdqu\ XMM11, [M4]$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM7,\ XMM13$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM8,\ XMM13$\newline$
+		$\hspace*{2.8cm}$xorpd\ XMM9,\ XMM9$\newline$
+		$\hspace*{2.8cm}$punpcklwd\ XMM7,\ XMM9$\newline$
+		$\hspace*{2.8cm}$punpckwd\ XMM8,\ XMM9$\newline$
+		$\hspace*{2.8cm}$cvtdq2ps\ XMM7,\ XMM7$\newline$
+		$\hspace*{2.8cm}$cvtdq2ps\ XMM8,\ XMM8$\newline$
+		$\hspace*{2.8cm}$cvtdq2ps\ XMM11,XMM11$\newline$
+		$\hspace*{2.8cm}$mulps\ XMM7,\ XMM11$\newline$
+		$\hspace*{2.8cm}$mulps\ XMM8,\ XMM11$\newline$
+		$\hspace*{2.8cm}$cvtps2dq\ XMM7,XMM7$\newline$
+		$\hspace*{2.8cm}$cvtps2dq\ XMM8,\ XMM8$\newline$
+		$\hspace*{2.8cm}$packusdw\ XMM7,\ XMM8$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM13,\ XMM7$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM11, [M255]$\newline$
+		$\hspace*{2.8cm}$pand\ XMM11,\ XMM15$\newline$
+		$\hspace*{2.8cm}$psubb\ XMM11,\ XMM13$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM13,\ XMM11$\newline$		
+		$\hspace*{2.8cm}$pshufb\ XMM13, [MASK_5] $\newline$
+		$\hspace*{2.8cm}$paddusw\ XMM10,\ XMM15 $\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM11,\ XMM15 $\newline$
+		$\hspace*{2.8cm}$pcmpeqw\ XMM14,XMM14$\newline$
+		$\hspace*{2.8cm}$pxor\ XMM11,\ XMM14$\newline$
+		$\hspace*{2.8cm}$pand\ XMM0,XMM11$\newline$		
+		$\hspace*{2.8cm}$pshufb\ XMM15, [MASK_DE1WORDA3BYTES]$\newline$
+		$\hspace*{2.8cm}$pand\ XMM13,\ XMM15$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM5,\ XMM13$$\newline$
 
 Copiamos en XMM13, el valor de XMM0, guardamos en XMM11 una mascara en DW con 224, realizamos la resta de los packs y luego un and 
 con XMM15 para quedarnos con los packs que cumplieron esta comparacion. Despues, guardamos en XMM11 una mascara en DW con 4.
@@ -152,38 +152,38 @@ Primero, vamos a comparar si nuestras sumas son mayores a 159, guardamos en XMM1
 el 159. Guardamos en XMM15 el valor XMM0 y comparamos con XMM14.
 A partir del resultado en XMM15 realizamos lo siguiente: \newline
 
-$\hspace*{2.3cm}$$MOVDQU\ XMM13,\ XMM0$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM11, [M160]$\newline$	
-		$\hspace*{2.8cm}$PSUBB\ XMM13,\ XMM11$\newline$
-		$\hspace*{2.8cm}$PAND\ XMM13,\ XMM15$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM11, [M4]$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM7,\ XMM13$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM8,\ XMM13$\newline$
-		$\hspace*{2.8cm}$XORPD\ XMM9,\ XMM9$\newline$
-		$\hspace*{2.8cm}$PUNPCKLWD\ XMM7,\ XMM9$\newline$
-		$\hspace*{2.8cm}$PUNPCKWD\ XMM8,\ XMM9$\newline$
-		$\hspace*{2.8cm}$CVTDQ2PS\ XMM7,\ XMM7$\newline$
-		$\hspace*{2.8cm}$CVTDQ2PS\ XMM8,\ XMM8$\newline$
-		$\hspace*{2.8cm}$CVTDQ2PS\ XMM11,XMM11$\newline$
-		$\hspace*{2.8cm}$MULPS\ XMM7,\ XMM11$\newline$
-		$\hspace*{2.8cm}$MULPS\ XMM8,\ XMM11$\newline$
-		$\hspace*{2.8cm}$CVTPS2DQ\ XMM7,XMM7$\newline$
-		$\hspace*{2.8cm}$CVTPS2DQ\ XMM8,\ XMM8$\newline$
-		$\hspace*{2.8cm}$PACKUSDW\ XMM7,\ XMM8$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM13,\ XMM7
+$\hspace*{2.3cm}$$movdqu\ XMM13,\ XMM0$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM11, [M160]$\newline$	
+		$\hspace*{2.8cm}$psubb\ XMM13,\ XMM11$\newline$
+		$\hspace*{2.8cm}$pand\ XMM13,\ XMM15$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM11, [M4]$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM7,\ XMM13$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM8,\ XMM13$\newline$
+		$\hspace*{2.8cm}$xorpd\ XMM9,\ XMM9$\newline$
+		$\hspace*{2.8cm}$punpcklwd\ XMM7,\ XMM9$\newline$
+		$\hspace*{2.8cm}$punpckwd\ XMM8,\ XMM9$\newline$
+		$\hspace*{2.8cm}$cvtdq2ps\ XMM7,\ XMM7$\newline$
+		$\hspace*{2.8cm}$cvtdq2ps\ XMM8,\ XMM8$\newline$
+		$\hspace*{2.8cm}$cvtdq2ps\ XMM11,XMM11$\newline$
+		$\hspace*{2.8cm}$mulps\ XMM7,\ XMM11$\newline$
+		$\hspace*{2.8cm}$mulps\ XMM8,\ XMM11$\newline$
+		$\hspace*{2.8cm}$cvtps2dq\ XMM7,XMM7$\newline$
+		$\hspace*{2.8cm}$cvtps2dq\ XMM8,\ XMM8$\newline$
+		$\hspace*{2.8cm}$packusdw\ XMM7,\ XMM8$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM13,\ XMM7
 		$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM11, [MASK\_4]$\newline$
-		$\hspace*{2.8cm}$PSHUFB\ XMM13, [MASK\_4\_2]$\newline$
-		$\hspace*{2.8cm}$PSUBB\ XMM11,\ XMM13 $\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM13,\ XMM11$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM11,\ XMM15$\newline$
-		$\hspace*{2.8cm}$PCMPEQW\ XMM14,XMM14$\newline$
-		$\hspace*{2.8cm}$PXOR\ XMM11,\ XMM14$\newline$
-		$\hspace*{2.8cm}$PAND\ XMM0,XMM11$\newline$
-		$\hspace*{2.8cm}$PADDUSW\ XMM10,\ XMM15 $\newline$
-		$\hspace*{2.8cm}$PSHUFB\ XMM15, [MASK\_DE1WORDA3BYTES]$\newline$
-		$\hspace*{2.8cm}$PAND\ XMM13,\ XMM15$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM4,\ XMM13$$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM11, [MASK\_4]$\newline$
+		$\hspace*{2.8cm}$pshufb\ XMM13, [MASK\_4\_2]$\newline$
+		$\hspace*{2.8cm}$psubb\ XMM11,\ XMM13 $\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM13,\ XMM11$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM11,\ XMM15$\newline$
+		$\hspace*{2.8cm}$pcmpeqw\ XMM14,XMM14$\newline$
+		$\hspace*{2.8cm}$pxor\ XMM11,\ XMM14$\newline$
+		$\hspace*{2.8cm}$pand\ XMM0,XMM11$\newline$
+		$\hspace*{2.8cm}$paddusw\ XMM10,\ XMM15 $\newline$
+		$\hspace*{2.8cm}$pshufb\ XMM15, [MASK\_DE1WORDA3BYTES]$\newline$
+		$\hspace*{2.8cm}$pand\ XMM13,\ XMM15$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM4,\ XMM13$$\newline$
 
 		
 
@@ -204,39 +204,39 @@ Primero, vamos a comparar si nuestras sumas son mayores a 95, guardamos en\ XMM1
 el 95. Guardamos en\ XMM15 el valor\ XMM0 y comparamos con\ XMM14.
 A partir del resultado en\ XMM15 realizamos lo siguiente:\newline
 
-	$\hspace*{2.3cm}$$MOVDQU\ XMM13,\ XMM0$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM11, [M96]$\newline$	
-		$\hspace*{2.8cm}$PSUBB\ XMM13,\ XMM11$\newline$
-		$\hspace*{2.8cm}$PAND\ XMM13,\ XMM15$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM11, [M4]$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM7,\ XMM13$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM8,\ XMM13$\newline$
-		$\hspace*{2.8cm}$XORPD\ XMM9,\ XMM9$\newline$
-		$\hspace*{2.8cm}$PUNPCKLWD\ XMM7,\ XMM9$\newline$
-		$\hspace*{2.8cm}$PUNPCKWD\ XMM8,\ XMM9$\newline$
-		$\hspace*{2.8cm}$CVTDQ2PS\ XMM7,\ XMM7$\newline$
-		$\hspace*{2.8cm}$CVTDQ2PS\ XMM8,\ XMM8$\newline$
-		$\hspace*{2.8cm}$CVTDQ2PS\ XMM11,XMM11$\newline$
-		$\hspace*{2.8cm}$MULPS\ XMM7,\ XMM11$\newline$
-		$\hspace*{2.8cm}$MULPS\ XMM8,\ XMM11$\newline$
-		$\hspace*{2.8cm}$CVTPS2DQ\ XMM7,XMM7$\newline$
-		$\hspace*{2.8cm}$CVTPS2DQ\ XMM8,\ XMM8$\newline$
-		$\hspace*{2.8cm}$PACKUSDW\ XMM7,\ XMM8$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM13,\ XMM7$\newline$
-		$\hspace*{2.8cm}$PSHUFB\ XMM13, [MASK\_3] $\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM11, [MASK\_CON255]$\newline$
-		$\hspace*{2.8cm}$PSUBB\ XMM11,\ XMM13$\newline$
-		$\hspace*{2.8cm}$PSHUFB\ XMM13, [MASK\_3\_2]$\newline$
-		$\hspace*{2.8cm}$PSHUFB\ XMM11, [MASK\_3\_3]$\newline$
+	$\hspace*{2.3cm}$$movdqu\ XMM13,\ XMM0$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM11, [M96]$\newline$	
+		$\hspace*{2.8cm}$psubb\ XMM13,\ XMM11$\newline$
+		$\hspace*{2.8cm}$pand\ XMM13,\ XMM15$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM11, [M4]$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM7,\ XMM13$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM8,\ XMM13$\newline$
+		$\hspace*{2.8cm}$xorpd\ XMM9,\ XMM9$\newline$
+		$\hspace*{2.8cm}$punpcklwd\ XMM7,\ XMM9$\newline$
+		$\hspace*{2.8cm}$punpckwd\ XMM8,\ XMM9$\newline$
+		$\hspace*{2.8cm}$cvtdq2ps\ XMM7,\ XMM7$\newline$
+		$\hspace*{2.8cm}$cvtdq2ps\ XMM8,\ XMM8$\newline$
+		$\hspace*{2.8cm}$cvtdq2ps\ XMM11,XMM11$\newline$
+		$\hspace*{2.8cm}$mulps\ XMM7,\ XMM11$\newline$
+		$\hspace*{2.8cm}$mulps\ XMM8,\ XMM11$\newline$
+		$\hspace*{2.8cm}$cvtps2dq\ XMM7,XMM7$\newline$
+		$\hspace*{2.8cm}$cvtps2dq\ XMM8,\ XMM8$\newline$
+		$\hspace*{2.8cm}$packusdw\ XMM7,\ XMM8$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM13,\ XMM7$\newline$
+		$\hspace*{2.8cm}$pshufb\ XMM13, [MASK\_3] $\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM11, [MASK\_CON255]$\newline$
+		$\hspace*{2.8cm}$psubb\ XMM11,\ XMM13$\newline$
+		$\hspace*{2.8cm}$pshufb\ XMM13, [MASK\_3\_2]$\newline$
+		$\hspace*{2.8cm}$pshufb\ XMM11, [MASK\_3\_3]$\newline$
 		$\hspace*{2.8cm}$paddb\ XMM13,\ XMM11  $\newline$
-		$\hspace*{2.8cm}$PADDUSW\ XMM10,\ XMM15 $\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM11,\ XMM15$\newline$
-		$\hspace*{2.8cm}$PCMPEQW\ XMM14,XMM14$\newline$
-		$\hspace*{2.8cm}$PXOR\ XMM11,\ XMM14$\newline$
-		$\hspace*{2.8cm}$PAND\ XMM0,XMM11$\newline$
-		$\hspace*{2.8cm}$PSHUFB\ XMM15, [MASK\_DE1WORDA3BYTES]$\newline$
-		$\hspace*{2.8cm}$PAND\ XMM13,\ XMM15$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM3,\ XMM13$$\newline$
+		$\hspace*{2.8cm}$paddusw\ XMM10,\ XMM15 $\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM11,\ XMM15$\newline$
+		$\hspace*{2.8cm}$pcmpeqw\ XMM14,XMM14$\newline$
+		$\hspace*{2.8cm}$pxor\ XMM11,\ XMM14$\newline$
+		$\hspace*{2.8cm}$pand\ XMM0,XMM11$\newline$
+		$\hspace*{2.8cm}$pshufb\ XMM15, [MASK\_DE1WORDA3BYTES]$\newline$
+		$\hspace*{2.8cm}$pand\ XMM13,\ XMM15$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM3,\ XMM13$$\newline$
 
 Copiamos en XMM13, el valor de XMM0, guardamos en XMM11 una mascara en DW con 96, realizamos la resta de los packs y luego un and 
 con XMM15 para quedarnos con los packs que cumplieron esta comparacion. Despues, guardamos en XMM11 una mascara en DW con 4.
@@ -256,35 +256,35 @@ Primero, vamos a comparar si nuestras sumas son mayores a 31, guardamos en\ XMM1
 el 31. Guardamos en\ XMM15 el valor\ XMM0 y comparamos con\ XMM14.
 A partir del resultado en\ XMM15 realizamos lo siguiente: \newline
 
-	$\hspace*{2.3cm}$$MOVDQU\ XMM13,\ XMM0$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM11, [M32]$\newline$
-		$\hspace*{2.8cm}$PSUBB\ XMM13,\ XMM11$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM11, [M4]$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM7,\ XMM13$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM8,\ XMM13$\newline$
-		$\hspace*{2.8cm}$XORPD\ XMM9,\ XMM9$\newline$
-		$\hspace*{2.8cm}$PUNPCKLWD\ XMM7,\ XMM9$\newline$
-		$\hspace*{2.8cm}$PUNPCKWD\ XMM8,\ XMM9$\newline$
-		$\hspace*{2.8cm}$CVTDQ2PS\ XMM7,\ XMM7$\newline$
-		$\hspace*{2.8cm}$CVTDQ2PS\ XMM8,\ XMM8$\newline$
-		$\hspace*{2.8cm}$CVTDQ2PS\ XMM11,XMM11$\newline$
-		$\hspace*{2.8cm}$MULPS\ XMM7,\ XMM11$\newline$
-		$\hspace*{2.8cm}$MULPS\ XMM8,\ XMM11$\newline$
-		$\hspace*{2.8cm}$CVTPS2DQ\ XMM7,XMM7$\newline$
-		$\hspace*{2.8cm}$CVTPS2DQ\ XMM8,\ XMM8$\newline$
-		$\hspace*{2.8cm}$PACKUSDW\ XMM7,\ XMM8$\newline$
-$\hspace*{2.8cm}$		MOVDQU\ XMM13,\ XMM7$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM11, [MASK\_2] $\newline$
-		$\hspace*{2.8cm}$PSHUFB\ XMM13, [MASK\_2\_2] $\newline$
+	$\hspace*{2.3cm}$$movdqu\ XMM13,\ XMM0$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM11, [M32]$\newline$
+		$\hspace*{2.8cm}$psubb\ XMM13,\ XMM11$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM11, [M4]$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM7,\ XMM13$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM8,\ XMM13$\newline$
+		$\hspace*{2.8cm}$xorpd\ XMM9,\ XMM9$\newline$
+		$\hspace*{2.8cm}$punpcklwd\ XMM7,\ XMM9$\newline$
+		$\hspace*{2.8cm}$punpckwd\ XMM8,\ XMM9$\newline$
+		$\hspace*{2.8cm}$cvtdq2ps\ XMM7,\ XMM7$\newline$
+		$\hspace*{2.8cm}$cvtdq2ps\ XMM8,\ XMM8$\newline$
+		$\hspace*{2.8cm}$cvtdq2ps\ XMM11,XMM11$\newline$
+		$\hspace*{2.8cm}$mulps\ XMM7,\ XMM11$\newline$
+		$\hspace*{2.8cm}$mulps\ XMM8,\ XMM11$\newline$
+		$\hspace*{2.8cm}$cvtps2dq\ XMM7,XMM7$\newline$
+		$\hspace*{2.8cm}$cvtps2dq\ XMM8,\ XMM8$\newline$
+		$\hspace*{2.8cm}$packusdw\ XMM7,\ XMM8$\newline$
+$\hspace*{2.8cm}$		movdqu\ XMM13,\ XMM7$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM11, [MASK\_2] $\newline$
+		$\hspace*{2.8cm}$pshufb\ XMM13, [MASK\_2\_2] $\newline$
 		$\hspace*{2.8cm}$paddb\ XMM13,\ XMM11$\newline$
-		$\hspace*{2.8cm}$PADDUSW\ XMM10,\ XMM15 $\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM11,\ XMM15  $\newline$
-		$\hspace*{2.8cm}$PCMPEQW\ XMM14,XMM14 $\newline$
-		$\hspace*{2.8cm}$PXOR\ XMM11,\ XMM14$\newline$
-		$\hspace*{2.8cm}$PAND\ XMM0,XMM11$\newline$
-		$\hspace*{2.8cm}$PSHUFB\ XMM15, [MASK\_DE1WORDA3BYTES]$\newline$
-		$\hspace*{2.8cm}$PAND\ XMM13,\ XMM15$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM2,\ XMM13$$\newline$
+		$\hspace*{2.8cm}$paddusw\ XMM10,\ XMM15 $\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM11,\ XMM15  $\newline$
+		$\hspace*{2.8cm}$pcmpeqw\ XMM14,XMM14 $\newline$
+		$\hspace*{2.8cm}$pxor\ XMM11,\ XMM14$\newline$
+		$\hspace*{2.8cm}$pand\ XMM0,XMM11$\newline$
+		$\hspace*{2.8cm}$pshufb\ XMM15, [MASK\_DE1WORDA3BYTES]$\newline$
+		$\hspace*{2.8cm}$pand\ XMM13,\ XMM15$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM2,\ XMM13$$\newline$
 
 Copiamos en XMM13, el valor de XMM0, guardamos en XMM11 una mascara en DW con 96, realizamos la resta de los packs y luego un and 
 con XMM15 para quedarnos con los packs que cumplieron esta comparacion. Despues, guardamos en XMM11 una mascara en DW con 4.
@@ -302,38 +302,38 @@ Y por último, el caso 1:\newline
 Este caso, es particular, ya que invertimos, y chequeamos si los packs que quedan son menores a 31: \newline
 
 $\hspace*{2.3cm}$$\ XMM14,[MASK\_31]$\newline$
-$\hspace*{2.8cm}$			MOVDQU\ XMM6,\ XMM10$\newline$
+$\hspace*{2.8cm}$			movdqu\ XMM6,\ XMM10$\newline$
 $\hspace*{2.8cm}$			PCMPEQW\ XMM7,\ XMM7$\newline$
-$\hspace*{2.8cm}$			PXOR\ XMM6,\ XMM7 $\newline$
-$\hspace*{2.8cm}$			PAND\ XMM14,\ XMM6 $\newline$
-$\hspace*{2.8cm}$			MOVDQU\ XMM15,\ XMM0$\newline$
+$\hspace*{2.8cm}$			pxor\ XMM6,\ XMM7 $\newline$
+$\hspace*{2.8cm}$			pand\ XMM14,\ XMM6 $\newline$
+$\hspace*{2.8cm}$			movdqu\ XMM15,\ XMM0$\newline$
 $\hspace*{2.8cm}$			pcmpgtw\ XMM14,\ XMM15 $\newline
 
 			A partir del resultado en XMM14 realizamos lo siguiente:\newline
 
-	$\hspace*{2.3cm}MOVDQU\ XMM12,\ XMM15$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM11, [M4]$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM7,\ XMM12$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM8,\ XMM12$\newline$
-		$\hspace*{2.8cm}$XORPD\ XMM9,\ XMM9$\newline$
-		$\hspace*{2.8cm}$PUNPCKLWD\ XMM7,\ XMM9$\newline$
-		$\hspace*{2.8cm}$PUNPCKWD\ XMM8,\ XMM9$\newline$
-		$\hspace*{2.8cm}$CVTDQ2PS\ XMM7,\ XMM7$\newline$
-$\hspace*{2.8cm}$		CVTDQ2PS\ XMM8,\ XMM8$\newline$
-		$\hspace*{2.8cm}$CVTDQ2PS\ XMM11,XMM11$\newline$
-		$\hspace*{2.8cm}$MULPS\ XMM7,\ XMM11$\newline$
-		$\hspace*{2.8cm}$MULPS\ XMM8,\ XMM11$\newline$
-		$\hspace*{2.8cm}$CVTPS2DQ\ XMM7,XMM7$\newline$
-		$\hspace*{2.8cm}$CVTPS2DQ\ XMM8,\ XMM8$\newline$
-		$\hspace*{2.8cm}$PACKUSDW\ XMM7,\ XMM8$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM12,\ XMM7$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM13, [M128]$\newline$
-		$\hspace*{2.8cm}$PAND\ XMM13,\ xmm6  $\newline$
+	$\hspace*{2.3cm}movdqu\ XMM12,\ XMM15$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM11, [M4]$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM7,\ XMM12$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM8,\ XMM12$\newline$
+		$\hspace*{2.8cm}$xorpd\ XMM9,\ XMM9$\newline$
+		$\hspace*{2.8cm}$punpcklwd\ XMM7,\ XMM9$\newline$
+		$\hspace*{2.8cm}$punpckwd\ XMM8,\ XMM9$\newline$
+		$\hspace*{2.8cm}$cvtdq2ps\ XMM7,\ XMM7$\newline$
+$\hspace*{2.8cm}$		cvtdq2ps\ XMM8,\ XMM8$\newline$
+		$\hspace*{2.8cm}$cvtdq2ps\ XMM11,XMM11$\newline$
+		$\hspace*{2.8cm}$mulps\ XMM7,\ XMM11$\newline$
+		$\hspace*{2.8cm}$mulps\ XMM8,\ XMM11$\newline$
+		$\hspace*{2.8cm}$cvtps2dq\ XMM7,XMM7$\newline$
+		$\hspace*{2.8cm}$cvtps2dq\ XMM8,\ XMM8$\newline$
+		$\hspace*{2.8cm}$packusdw\ XMM7,\ XMM8$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM12,\ XMM7$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM13, [M128]$\newline$
+		$\hspace*{2.8cm}$pand\ XMM13,\ xmm6  $\newline$
 		$\hspace*{2.8cm}$paddb\ XMM13,\ XMM12 $\newline$
-		$\hspace*{2.8cm}$PSHUFB\ XMM13, [MASK\_1]  $\newline$
-		$\hspace*{2.8cm}$PADDUSW\ XMM10,\ XMM14  $\newline$
-		$\hspace*{2.8cm}$PSHUFB\ XMM14, [MASK\_DE1WORDA3BYTES]$\newline$
-		$\hspace*{2.8cm}$MOVDQU\ XMM1,\ XMM13$\newline
+		$\hspace*{2.8cm}$pshufb\ XMM13, [MASK\_1]  $\newline$
+		$\hspace*{2.8cm}$paddusw\ XMM10,\ XMM14  $\newline$
+		$\hspace*{2.8cm}$pshufb\ XMM14, [MASK\_DE1WORDA3BYTES]$\newline$
+		$\hspace*{2.8cm}$movdqu\ XMM1,\ XMM13$\newline
 
 Copiamos en XMM12, el valor de XMM15, guardamos en XMM11 una mascara en DW con 4.
 Procedemos a desempaquetar de WORD a DWORD el XMM12 copiandolo previamente en otros dos XMM. Luego convertimos todo de DWORD
@@ -347,21 +347,21 @@ Usamos una mascara para que nos acomode todo de 1word a 3 bytes, hacemos otro AN
 
 
 Por finalizado, hacemos or entre los XMM1, 2, 3, 4 y 5, y movemos el valor final de XMM1 a XMM0. \newline Comparamos si estamos 
-chequeando el borde haciendo $ cmp\  r15d, 15 jl .terminoBorde $ en caso de no ser menor movemos los packs del XMM0 al puntero
-en RDI $MOVDQU\  [RSI], XMM0$, le restamos a r15d y a r10d, la cantidad de pixeles por ciclo y le sumamos a rdi y rsi la cantidad
+chequeando el borde haciendo $ cmp\  R15D, 15 jl .terminoBorde $ en caso de no ser menor movemos los packs del XMM0 al puntero
+en RDI $movdqu\  [RSI], XMM0$, le restamos a R15D y a R10d, la cantidad de pixeles por ciclo y le sumamos a RDI y RSI la cantidad
 de pixeles por ciclo. \newline
 
 En caso de que nuestra comparacion diera que es menor a 15, procedemos a: \newline
 
-$\hspace*{2.3cm}$$MOVDQU [RSI- pixels\_por\_ciclo + r12],\ XMM0 $\newline$
-$\hspace*{2.8cm}$		add r11, r8 $\newline$
-$\hspace*{2.8cm}$		add r13, r8 $\newline$
-$\hspace*{2.8cm}$		mov RDI, r11 $\newline$
-$\hspace*{2.8cm}$		mov r11, rdi  $\newline$
-$\hspace*{2.8cm}$		mov RSI, r13 $\newline$
-$\hspace*{2.8cm}$		mov r13, rsi $\newline$
-$\hspace*{2.8cm}$		sub R10D, r15d $\newline$
-$\hspace*{2.8cm}$		mov r15d, r14d$ \newline
+$\hspace*{2.3cm}$$movdqu [RSI- pixels\_por\_ciclo + R12],\ XMM0 $\newline$
+$\hspace*{2.8cm}$		add R11, R8 $\newline$
+$\hspace*{2.8cm}$		add R13, R8 $\newline$
+$\hspace*{2.8cm}$		mov RDI, R11 $\newline$
+$\hspace*{2.8cm}$		mov R11, RDI  $\newline$
+$\hspace*{2.8cm}$		mov RSI, R13 $\newline$
+$\hspace*{2.8cm}$		mov R13, RSI $\newline$
+$\hspace*{2.8cm}$		sub R10D, R15D $\newline$
+$\hspace*{2.8cm}$		mov R15D, R14D$ \newline
 
 Como habiamos enuciado inicialmente, en R11 y R13 nos habiamos guardado RDI y RSI respectivamente y en R8 tenemos por parametro
 $src\_row\_size$. De esta forma hacemos que en dst se guarden los ultimos pixeles de la linea y baje a la siguiente sin tocar padding.\newline
@@ -372,7 +372,7 @@ Esto, como fue explicado, se recorre, hasta que R10D sea igual a 0.
 \vspace*{0.3cm} \noindent
 \subsubsection{Experimento 1}
 
-  Analizar cuales son las diferencias de performace entre las versiones de C y ASM. 
+  Analizar cuales son las diferencias de performace entre las veRSIones de C y ASM. 
   Realizar gráficos que representen estas diferencias.\vspace*{0.3cm} \noindent
   
 Realizando nuestras mediciones en la implementacion de C y en ASM obtenemos los siguientes resul-

@@ -47,6 +47,46 @@ Con lo mencionado, obtenemos el filtro tiles en c correctamente, con los valores
 \subsubsection{Desarrollo Implementacion en ASM}
 
 
+Nuestro algoritmo para el filtro TILES en su versión ASM es simple, aunque requiere varios chequeos por casos borde. \newline
+Recibimos 10 parámetros: Matriz fuente, Matriz destino, número de filas, número de columnas, tamaño de filas, tamaño 
+de columnas, tamaño de fila del cuadro a replicar, tamaño de columna del cuadro a replicar y sus respectivos offset x e y.\newline
+
+Lo primero a tener en cuenta es que el tamaño de la fila del cuadro a replicar en realidad hay que multiplicarla por tres,
+ya que los píxeles de la imagen son de tres bits cada uno.\newline
+Por éste motivo también es que, como cada píxel son tres bits, podremos procesar de a 5 por ciclo (15 bytes). \newline
+
+Ahora lo próximo a hacer, antes de empezar el ciclo principal, es ubicar el puntero a la matriz fuente en el principio
+del cuadro a replicar. \newline
+Para esto al registro RDI que contiene la matriz le sumamos tres veces el offsetx, 
+para quedar ubicado en la columna indicada, y luego le multiplicamos el offsety para finalmente obtener 
+la posición de la matriz que queríamos. \newline
+
+Ya estamos en condiciones de realizar el ciclo principal del algoritmo. Tendremos dos ciclos anidados. 
+Uno va a ser para ciclar por fila de la matriz destino (ciclo\_por\_linea\_dst), 
+ya que ésta va a ser toda lo ancho de la matriz original, y luego dentro de éste otro ciclo para la fila del 
+cuadro a replicar (ciclo\_linea\_cuadro). \newline
+
+Lo que hacemos es simple, tener un contador con el largo de el tamaño de filas de la matriz (EAX) que irá 
+decreciendo cuando cicle ciclo\_por\_linea\_dst. Luego entramos a ciclo\_linea\_cuadro donde tendremos otro contador \newline
+para ver cuando termina la fila del cuadro (r13d). Tenemos que preguntarnos dos cosas antes de levantar los píxeles: 
+Primero si el contador de linea DST (EAX) es menor a 15, ya que si es menor lo tratamos como un caso especial, levantando 15 
+bytes (5 píxeles) pero adelantando el puntero sólo los lugares que nos faltan para terminar la linea,
+para luego pasar el puntero de DST a la próxima fila y además colocar el puntero de SRC a la próxima linea del cuadro. \newline
+Por último, saltamos a ciclo\_por\_lina\_dst, ordenando y restando los valores correspondientes de los contadores. \newline
+Algo parecido nos vamos a preguntar pero con respecto a lo que queda por recorrer de la linea del cuadro a replicar, \newline
+si es menor a 15 lo tratamos como en el caso anterior, aunque en este caso tenemos que volver a colocar el \newline
+puntero al principio de la linea del cuadro, pues lo queremos replicar hasta que termine la linea de la matriz. \newline
+Después ciclar a ciclo\_linea\_cuadro. Cuando copiamos todo el cuadro volvemos a reiniciar el puntero al principio del mismo 
+Si pasa estas preguntas, significa que no estamos en el final de alguna fila, 
+levantamos 15 píxeles de [RDI] con un registro xmm y los copiamos a [RSI], 
+adelantamos los punteros sumándoles 15 y le restamos a los contadores respectivos antes de volver a 
+ciclar a ciclo\_linea\_cuadro. \newline
+ 
+Repetimos este proceso hasta que llegamos a la última fila de DST, en este caso tenemos otro caso especial. \newline
+El problema es que cuando queremos completar los últimos lugares de la última fila (cuando el contador EAX es menor a 15)
+no podemos realizar el movdqu xmm0, [RDI] ya que éste nos toma 16 lugares y esto nos estaría trayendo posiciones de memoria
+que no tenemos asignadas. Para solucionar este problema lo que hicimos es levantar de a 1 byte hasta terminar la fila. \newline
+
 
 \vspace*{0.3cm} \noindent
 \subsubsection{Experimento 1 - análisis el código generado}
