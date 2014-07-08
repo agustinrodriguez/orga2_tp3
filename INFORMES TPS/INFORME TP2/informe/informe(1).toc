@@ -7,23 +7,23 @@
 \contentsline {subsubsection}{\numberline {2.1.4}Experimento 1 - an\IeC {\'a}lisis el c\IeC {\'o}digo generado}{5}
 \contentsline {subsubsection}{\numberline {2.1.5}Experimento 2 - optimizaciones del compilador}{6}
 \contentsline {subsubsection}{\numberline {2.1.6}Experimento 3 - secuencial vs. vectorial}{6}
-\contentsline {subsubsection}{\numberline {2.1.7}Experimento 4 - cpu vs. bus de memoria}{6}
-\contentsline {subsection}{\numberline {2.2}Filtro Popart}{8}
-\contentsline {subsubsection}{\numberline {2.2.1}Objetivo}{8}
-\contentsline {subsubsection}{\numberline {2.2.2}Desarrollo Implementacion C}{8}
-\contentsline {subsubsection}{\numberline {2.2.3}Desarrollo Implementacion en ASM}{9}
-\contentsline {subsubsection}{\numberline {2.2.4}Experimento 1 - saltos condicionales}{12}
-\contentsline {subsubsection}{\numberline {2.2.5}Experimento 2 - cpu vs. bus de memoria}{12}
-\contentsline {subsubsection}{\numberline {2.2.6}Experimento 3 - prefetch}{14}
-\contentsline {subsubsection}{\numberline {2.2.7}Experimento 4 - secuencial vs. vectorial}{15}
-\contentsline {subsection}{\numberline {2.3}Filtro Temperature}{17}
-\contentsline {subsubsection}{\numberline {2.3.1}Objetivo}{17}
-\contentsline {subsubsection}{\numberline {2.3.2}Desarrollo Implementacion C}{17}
-\contentsline {subsubsection}{\numberline {2.3.3}Desarrollo Implementacion en ASM}{17}
-\contentsline {subsubsection}{\numberline {2.3.4}Experimento 1}{23}
-\contentsline {subsection}{\numberline {2.4}Filtro LDR}{25}
-\contentsline {subsubsection}{\numberline {2.4.1}Objetivo}{25}
-\contentsline {subsubsection}{\numberline {2.4.2}Desarrollo Implementacion C}{25}
-\contentsline {subsubsection}{\numberline {2.4.3}Desarrollo Implementacion en ASM}{26}
-\contentsline {subsubsection}{\numberline {2.4.4}Experimento 1}{31}
-\contentsline {section}{\numberline {3}Conclusi\IeC {\'o}n}{34}
+\contentsline {subsubsection}{\numberline {2.1.7}Experimento 4 - cpu vs. bus de memoria}{7}
+\contentsline {subsection}{\numberline {2.2}Filtro Popart}{9}
+\contentsline {subsubsection}{\numberline {2.2.1}Objetivo}{9}
+\contentsline {subsubsection}{\numberline {2.2.2}Desarrollo Implementacion C}{9}
+\contentsline {subsubsection}{\numberline {2.2.3}Desarrollo Implementacion en ASM}{10}
+\contentsline {subsubsection}{\numberline {2.2.4}Experimento 1 - saltos condicionales}{13}
+\contentsline {subsubsection}{\numberline {2.2.5}Experimento 2 - cpu vs. bus de memoria}{13}
+\contentsline {subsubsection}{\numberline {2.2.6}Experimento 3 - prefetch}{15}
+\contentsline {subsubsection}{\numberline {2.2.7}Experimento 4 - secuencial vs. vectorial}{16}
+\contentsline {subsection}{\numberline {2.3}Filtro Temperature}{18}
+\contentsline {subsubsection}{\numberline {2.3.1}Objetivo}{18}
+\contentsline {subsubsection}{\numberline {2.3.2}Desarrollo Implementacion C}{18}
+\contentsline {subsubsection}{\numberline {2.3.3}Desarrollo Implementacion en ASM}{18}
+\contentsline {subsubsection}{\numberline {2.3.4}Experimento 1}{24}
+\contentsline {subsection}{\numberline {2.4}Filtro LDR}{26}
+\contentsline {subsubsection}{\numberline {2.4.1}Objetivo}{26}
+\contentsline {subsubsection}{\numberline {2.4.2}Desarrollo Implementacion C}{26}
+\contentsline {subsubsection}{\numberline {2.4.3}Desarrollo Implementacion en ASM}{27}
+\contentsline {subsubsection}{\numberline {2.4.4}Experimento 1}{32}
+\contentsline {section}{\numberline {3}Conclusi\IeC {\'o}n}{35}

@@ -132,10 +132,45 @@ compilado con optimizacion -O1, -O2 y -O3.
 	\vspace*{0.3cm} \noindent
 	\begin{itemize}
 	 \item Haciendo uso de las optimizaciones mencionadas anteriormente, se realizaron experimentos de performance usando el c\'odigo en ASM, en C y en C 
-	  compilado con optimizacion -O1, -O2 y -O3. El siguiente gr\'afico muestra como el c\'odigo en C optimizado y el ASM son casi id\'enticos.	
+	  compilado con optimizacion -O1, -O2 y -O3. El siguiente gr\'afico y tabla muestra como el c\'odigo en C optimizado y el ASM son casi id\'enticos.	
 
+Imagen 128x50\newline
+
+C sin optimizacion:   \# de ciclos insumidos por llamada : 258917.797 \newline
+C -O1:    \# de ciclos insumidos por llamada : 43898.180 \newline
+C -02:    \# de ciclos insumidos por llamada : 39889.461 \newline
+C -03:  \# de ciclos insumidos por llamada : 39976.719 \newline
+ASM:  \# de ciclos insumidos por llamada : 21338.650 \newline
+
+
+Imagen 200x200\newline
+
+C sin optimizacion: \# de ciclos insumidos por llamada : 1233818.375\newline
+C -O1:   \# de ciclos insumidos por llamada : 225404.938\newline
+C -02: \# de ciclos insumidos por llamada : 204020.406\newline
+C -03:  \# de ciclos insumidos por llamada : 203902.484\newline
+ASM: \# de ciclos insumidos por llamada : 227139.125\newline
+
+Imagen 512x512\newline
+
+C sin optimizacion:   \# de ciclos insumidos por llamada : 8243251.000\newline
+C -O1:   \# de ciclos insumidos por llamada : 1766982.875\newline
+C -02: \# de ciclos insumidos por llamada : 1691015.250\newline
+C -03:  \# de ciclos insumidos por llamada : 1678343.875\newline
+ASM:  \# de ciclos insumidos por llamada : 1761757.500\newline
+
+Imagen 1024x768\newline
+
+C sin optimizacion: \# de ciclos insumidos por llamada : 24508108.000\newline
+C -O1:   \# de ciclos insumidos por llamada : 5047119.000\newline
+C -02: \# de ciclos insumidos por llamada : 4794775.000\newline
+C -03:   \# de ciclos insumidos por llamada : 4781654.500\newline
+ASM:   \# de ciclos insumidos por llamada : 5104437.500\newline
+
+	  
+	  
 \begin{center}
- %\includegraphics[scale=0.5]{imagenes/optimizacionC.jpg}
+ \includegraphics[scale=0.7]{tilesoptimo.jpg}
 \end{center}
 
 Esta medici\'on fue realizada cambiando la cantidad de iteraciones y midiendo cuantos ticks de procesador consume procesar el video completo. El 

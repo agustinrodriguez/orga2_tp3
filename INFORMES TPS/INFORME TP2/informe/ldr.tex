@@ -13,9 +13,9 @@ Si ese porcentaje es positivo, los pixels claros, se vuelven aún más claros y 
          src_{(i,j)} & \mbox{si $i < 2 \vee j < 2 \vee i + 2 \leq tamy \vee j + 2 \leq tamx  $}\\
         min(max(src_{(i,j)} + var_{(i,j)},0, 255)) & \mbox{si no}\\\end{array} \right. \]     
         
-Donde:
+Donde:\newline
 
-$var (i,j) = \frac{src(i, j) * \alpha * sumargb (i,j)}{max}$ \newline
+{\large$var (i,j) = \frac{{\large src(i, j) * \alpha * sumargb (i,j)}}{{\large max}}$} \newline
 
 Donde:\newline
 
@@ -258,17 +258,17 @@ $\newline$
 $\hspace*{2.8cm}$movdqu\ XMM9,\ XMM1$\newline$
 $\hspace*{2.8cm}$psrldq\  XMM9, 2D$\newline$
 $\hspace*{2.8cm}$pslldq\  XMM9, 2D$\newline$
-$\hspace*{2.8cm}$psubw\ XMM1,\ XMM9 ;resto para q no me quede basura
+$\hspace*{2.8cm}$psubw\ XMM1,\ XMM9 
 $\newline$
 $\hspace*{2.8cm}$movdqu\ XMM9,\ XMM5$\newline$
 $\hspace*{2.8cm}$psrldq\  XMM9, 2D$\newline$
 $\hspace*{2.8cm}$pslldq\  XMM9, 2D$\newline$
-$\hspace*{2.8cm}$psubw\ XMM5,\ XMM9 ;resto para q no me quede basura
+$\hspace*{2.8cm}$psubw\ XMM5,\ XMM9 
 $\newline$
 $\hspace*{2.8cm}$movdqu\ XMM9,\ XMM7$\newline$
 $\hspace*{2.8cm}$psrldq\  XMM9, 2D$\newline$
 $\hspace*{2.8cm}$pslldq\  XMM9, 2D$\newline$
-$\hspace*{2.8cm}$psubw\ XMM7,\ XMM9 ;resto para q no me quede basura
+$\hspace*{2.8cm}$psubw\ XMM7,\ XMM9 
 $\newline$
 $\hspace*{2.8cm}$;en\ XMM1 tengo blue$\newline$
 $\hspace*{2.8cm}$;en\ XMM5 tengo GREEN$\newline$

@@ -1,0 +1,36 @@
+
+Imagen 128x50
+
+C sin optimizacion:   # de ciclos insumidos por llamada : 258917.797
+C -O1:    # de ciclos insumidos por llamada : 43898.180
+C -02:    # de ciclos insumidos por llamada : 39889.461
+C -03:  # de ciclos insumidos por llamada : 39976.719
+ASM:  # de ciclos insumidos por llamada : 21338.650
+
+
+Imagen 200x200
+
+C sin optimizacion: # de ciclos insumidos por llamada : 1233818.375
+C -O1:   # de ciclos insumidos por llamada : 225404.938
+C -02: # de ciclos insumidos por llamada : 204020.406
+C -03:  # de ciclos insumidos por llamada : 203902.484
+ASM: # de ciclos insumidos por llamada : 227139.125
+
+Imagen 512x512
+
+C sin optimizacion:   # de ciclos insumidos por llamada : 8243251.000
+C -O1:   # de ciclos insumidos por llamada : 1766982.875
+C -02: # de ciclos insumidos por llamada : 1691015.250
+C -03:  # de ciclos insumidos por llamada : 1678343.875
+ASM:  # de ciclos insumidos por llamada : 1761757.500
+
+Imagen 1024x768
+
+C sin optimizacion: # de ciclos insumidos por llamada : 24508108.000
+C -O1:   # de ciclos insumidos por llamada : 5047119.000
+C -02: # de ciclos insumidos por llamada : 4794775.000
+C -03:   # de ciclos insumidos por llamada : 4781654.500
+ASM:   # de ciclos insumidos por llamada : 5104437.500
+
+ 
+

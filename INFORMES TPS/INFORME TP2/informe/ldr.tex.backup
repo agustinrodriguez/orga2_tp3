@@ -15,15 +15,15 @@ Si ese porcentaje es positivo, los pixels claros, se vuelven aún más claros y 
         
 Donde:
 
-$var (i,j) = \frac{src(i, j) * \alpha * sumargb (i,j)}{max}$ \newline
+{\large$var (i,j) = {\large\frac{src(i, j) * \alpha * sumargb (i,j)}{max}}$} \newline
 
 Donde:\newline
 
 $sumargb_{(i,j)} = suma_r{(i,j)} + suma_{g(i,j)} + suma_{b(i,j)}$ \newline
 
-$max = 5 * 5 * 255 * 3 * 255$
+$max = 5 * 5 * 255 * 3 * 255$\newline
 
-Y suma_{r} suma_{g} y suma_{b} es la suma de los pixeles vecinos desde $-2 \leq i \led 2$ y $-2 \leq j \leq 2$
+Y suma\_r suma\_g y suma\_b es la suma de los pixeles vecinos desde $-2 \leq i \leq 2$ y $-2 \leq j \leq 2$
 
 \vspace*{0.3cm} \noindent
 
@@ -32,6 +32,15 @@ Y suma_{r} suma_{g} y suma_{b} es la suma de los pixeles vecinos desde $-2 \leq 
 \begin{center}
 \textbf{Sintesis de Desarrollo} 
 \end{center}
+
+Recorremos la totalidad de la imagen fuente mediante 2 ciclos, uno para filas, y otro para columnas.
+Dentro de esta iteración, hacemos dos cosas: en los bordes (de dos pixels) copiamos la imagen fuente en destino tal cual.
+Por otra parte, procesamos la parte central que no es borde. Para procesar este centro, tomamos cada pixel y calculamos la 
+sumargb con 2 ciclos también. Al obtener esa suma, seguimos con lo indicado en el enunciado, multiplicamos por alfa y dividimos
+por max. \newline
+Finalmente, para pegar el valor final en el pixel de la imagen destino, hacemos un máximo y un mínimo, 
+para que el valor quede entre 0 y 255.
+
 
 %\newline
 
@@ -121,7 +130,7 @@ Una vez que esto ocurre pasamos a sumar cada color haciendo:\newline
 
 $\hspace*{2.2cm}$$movdqu\  XMM7, XMM0 $\newline$
 $\hspace*{2.8cm}$movdqu\  XMM8, XMM0 $\newline$
-$\hspace*{2.8cm}$XORPD\  XMM9, XMM9 $\newline$
+$\hspace*{2.8cm}$xorpd\  XMM9, XMM9 $\newline$
 $\newline$
 $\hspace*{2.8cm}$pshufb\  XMM0, [MASK\_1\_COLOR]$\newline$
 $\hspace*{2.8cm}$movdqu\  XMM10, XMM0$\newline$
@@ -140,64 +149,65 @@ Primero, nos guardamos en XMM0 los primeros 15 pixeles haciendo $ movdqu\  XMM0,
 lo guardamos en XMM7 y XMM8, limpiamos XMM9 y con 3 mascaras distintas que lo que hacen es ponernos los 5 pixeles rojos adelante y llenar con 0, 
 los 5 pixeles azules y llenar con cero y los 5 pixeles verdes y llenar con ceros. \newline
 Realizamos la operacion Pshufb con los tres xmm y las mascaras (un xmm con cada mascara) y luego desempaquetamos de byte a word,
-usando el xmm9 que habiamos llenado de 0. \newline
+usando el XMM9 que habiamos llenado de 0. \newline
 El desempaquetado hace que nos queden los valores en word en los registros XMM10, XMM12, XMM14 respectivamente, y luego
 los sumamos con PADDW guardando el valor en XMM10. De esta forma obtenemos en word 
 $|b0 + g0 + r0|b1 + g1 + r1|b2 + g2 + r2|b3 + g3 + r3|b4 + g4 + r4|$. \newline
 Esto lo realizamos 5 veces, quedandonos con los valores en XMM1, 2 ,3,4 y 5. Luego, sumamos estos XMM y nos queda
 el valor en XMM3. Proximo a esto, procedemos a sumar los vecinos: \newline
 
-$\hspace*{2.3cm}$$movdqu\ xmm8,\ xmm3$\newline$
-$\hspace*{2.8cm}$movdqu\ xmm9,\ xmm3 $\newline$
-$\hspace*{2.8cm}$PSRLDQ XMM9, 8d$\newline$
-$\hspace*{2.8cm}$paddw\ xmm3,\ xmm9$\newline$
+$\hspace*{2.3cm}$$movdqu\ XMM8,\ XMM3$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM9,\ XMM3 $\newline$
+$\hspace*{2.8cm}$psrldq XMM9, 8D$\newline$
+$\hspace*{2.8cm}$paddw\ XMM3,\ XMM9$\newline$
 $\newline$
-$\hspace*{2.8cm}$movdqu\ xmm9,\ xmm8 $\newline$
-$\hspace*{2.8cm}$PSRLDQ XMM9, 6d$\newline$
-$\hspace*{2.8cm}$paddw\ xmm3,\ xmm9$\newline$
-$\hspace*{2.8cm}$movdqu\ xmm9,\ xmm8$\newline$
-$\hspace*{2.8cm}$PSRLDQ XMM9, 4d$\newline$
-$\hspace*{2.8cm}$paddw\ xmm3,\ xmm9$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM9,\ XMM8 $\newline$
+$\hspace*{2.8cm}$psrldq XMM9, 6D$\newline$
+$\hspace*{2.8cm}$paddw\ XMM3,\ XMM9$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM9,\ XMM8$\newline$
+$\hspace*{2.8cm}$psrldq XMM9, 4D$\newline$
+$\hspace*{2.8cm}$paddw\ XMM3,\ XMM9$\newline$
 $\newline$
-$\hspace*{2.8cm}$movdqu\ xmm9,\ xmm8 $\newline$
-$\hspace*{2.8cm}$PSRLDQ\  XMM9, 2d$\newline$
-$\hspace*{2.8cm}$paddw\ xmm3,\ xmm9$\newline$
-$\hspace*{2.8cm}$movdqu\ xmm9,\ xmm3$\newline$
-$\hspace*{2.8cm}$PSRLDQ\  XMM9, 2d$\newline$
-$\hspace*{2.8cm}$PSLLDQ\  XMM9, 2d$\newline$
-$\hspace*{2.8cm}$psubw\ xmm3,\ xmm9 $\newline
+$\hspace*{2.8cm}$movdqu\ XMM9,\ XMM8 $\newline$
+$\hspace*{2.8cm}$psrldq\  XMM9, 2D$\newline$
+$\hspace*{2.8cm}$paddw\ XMM3,\ XMM9$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM9,\ XMM3$\newline$
+$\hspace*{2.8cm}$psrldq\  XMM9, 2D$\newline$
+$\hspace*{2.8cm}$pslldq\  XMM9, 2D$\newline$
+$\hspace*{2.8cm}$psubw\ XMM3,\ XMM9 $\newline
 
 En esta seccion vamos moviendo bytes a la izquierda, 8 6 4 y 2 asi logramos sumar todos los vecinos en los packs.\newline
 Guardamos en R15D el valor alfa, que nos viene por pila en $[RSP + 56]$. Y lo guardamos en XMM15\newline
 Procedemos a la multiplicación por alfa:\newline
 
-$\hspace*{2.3cm}$$movdqu\ xmm7,\ xmm3$\newline$
-$\hspace*{2.8cm}$XORPD\ xmm9,\ xmm9$\newline$
-$\hspace*{2.8cm}$punpcklwd\ xmm7,\ xmm9$\newline$
-$\hspace*{2.8cm}$cvtdq2pd\ xmm7,\ xmm7$\newline$
-$\hspace*{2.8cm}$cvtdq2pd\ xmm15,\ xmm15$\newline$
-$\hspace*{2.8cm}$mulpd XMM7,\ xmm15$\newline$
-$\hspace*{2.8cm}$CVTPD2DQ\ xmm7,xmm7$\newline$
-$\hspace*{2.8cm}$movdqu\ xmm3,\ xmm7$$\newline$
+$\hspace*{2.3cm}$$movdqu\ XMM7,\ XMM3$\newline$
+$\hspace*{2.8cm}$xorpd\ XMM9,\ XMM9$\newline$
+$\hspace*{2.8cm}$punpcklwd\ XMM7,\ XMM9$\newline$
+$\hspace*{2.8cm}$cvtdq2pd\ XMM7,\ XMM7$\newline$
+$\hspace*{2.8cm}$cvtdq2pd\ XMM15,\ XMM15$\newline$
+$\hspace*{2.8cm}$mulpd XMM7,\ XMM15$\newline$
+$\hspace*{2.8cm}$cvtpd2Dq\ XMM7,XMM7$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM3,\ XMM7$$\newline$
 
 En esta seccion desempaquetamos de WORD a DWORD y convertimos a Double para multiplicar con alfa, luego lo convertimos a DWORD.
 Guardamos en XMMO el valor de XMM6 y nos quedamos con el del medio, por consiguiente pasamos a multiplicar lo que tenemos con SUMARGB 
 y dividimos por MAX: \newline
+
 $\hspace*{2.3cm}$$movdqu XMM7, XMM0$\newline$
 $\hspace*{2.8cm}$	movdqu XMM8, XMM0 $\newline$
 $\hspace*{2.8cm}$	$\newline$
-$\hspace*{2.8cm}$	cvtdq2pd\ xmm3,\ xmm3$\newline$
+$\hspace*{2.8cm}$	cvtdq2pd\ XMM3,\ XMM3$\newline$
 $\newline$
-$\hspace*{2.8cm}$	XORPD\  XMM9, XMM9 $\newline$
+$\hspace*{2.8cm}$	xorpd\  XMM9, XMM9 $\newline$
 $\hspace*{2.8cm}	;multiplico blue \newline$
 $\hspace*{2.8cm}$	pshufb\  XMM0, [MASK\_1\_COLOR] $\newline$
 $\hspace*{2.8cm}$	movdqu\  XMM10, XMM0$\newline$
 $\hspace*{2.8cm}$	punpcklbw\  XMM10, XMM9$\newline$
-$\hspace*{2.8cm}$	movdqu\ xmm13, XMM10$\newline$
-$\hspace*{2.8cm}$	XORPD\ xmm9,\ xmm9$\newline$
-$\hspace*{2.8cm}$	punpcklwd\ xmm13,\ xmm9$\newline$
-$\hspace*{2.8cm}$	cvtdq2pd\ xmm13,\ xmm13$\newline$
-$\hspace*{2.8cm}$	mulpd\ xmm13,\ xmm3$\newline$
+$\hspace*{2.8cm}$	movdqu\ XMM13, XMM10$\newline$
+$\hspace*{2.8cm}$	xorpd\ XMM9,\ XMM9$\newline$
+$\hspace*{2.8cm}$	punpcklwd\ XMM13,\ XMM9$\newline$
+$\hspace*{2.8cm}$	cvtdq2pd\ XMM13,\ XMM13$\newline$
+$\hspace*{2.8cm}$	mulpd\ XMM13,\ XMM3$\newline$
 $\hspace*{2.8cm}$	movdqu\  XMM1, XMM13$\newline$
 $\newline$
 $\hspace*{2.8cm}	;multiplico verde
@@ -206,12 +216,12 @@ $\hspace*{2.8cm}$	pshufb\  XMM7, [MASK\_1\_COLORGREEN] $\newline$
 $\hspace*{2.8cm}$	movdqu\  XMM11, XMM7$\newline$
 $\hspace*{2.8cm}$	punpcklbw\  XMM11, XMM9$\newline$
 $\hspace*{2.8cm}$	$\newline$
-$\hspace*{2.8cm}$	movdqu\ xmm13, XMM11$\newline$
-$\hspace*{2.8cm}$	XORPD\ xmm9,\ xmm9 $\newline$
-$\hspace*{2.8cm}$	punpcklwd\ xmm13,\ xmm9$\newline$
-$\hspace*{2.8cm}$	cvtdq2pd\ xmm13,\ xmm13$\newline$
+$\hspace*{2.8cm}$	movdqu\ XMM13, XMM11$\newline$
+$\hspace*{2.8cm}$	xorpd\ XMM9,\ XMM9 $\newline$
+$\hspace*{2.8cm}$	punpcklwd\ XMM13,\ XMM9$\newline$
+$\hspace*{2.8cm}$	cvtdq2pd\ XMM13,\ XMM13$\newline$
 $\newline$
-$\hspace*{2.8cm}$	mulpd\ xmm13,\ xmm3$\newline$
+$\hspace*{2.8cm}$	mulpd\ XMM13,\ XMM3$\newline$
 $\newline$
 $\hspace*{2.8cm}$	movdqu XMM5, XMM13$\newline$
 $\newline$
@@ -219,12 +229,12 @@ $\hspace*{2.8cm}	;multiplico red\newline$
 $\hspace*{2.8cm}$	pshufb\  XMM8, [MASK\_1\_COLORBLUE]$\newline$
 $\hspace*{2.8cm}$	movdqu\  XMM12, XMM8$\newline$
 $\hspace*{2.8cm}$	punpcklbw\  XMM12, XMM9$\newline$
-$\hspace*{2.8cm}$	movdqu\ xmm13, XMM12$\newline$
+$\hspace*{2.8cm}$	movdqu\ XMM13, XMM12$\newline$
 $\newline$
-$\hspace*{2.8cm}$	XORPD\ xmm9,\ xmm9$\newline$
-$\hspace*{2.8cm}$	punpcklwd\ xmm13,\ xmm9$\newline$
-$\hspace*{2.8cm}$	cvtdq2pd\ xmm13,\ xmm13$\newline$
-$\hspace*{2.8cm}$	mulpd\ xmm13,\ xmm3$\newline$
+$\hspace*{2.8cm}$	xorpd\ XMM9,\ XMM9$\newline$
+$\hspace*{2.8cm}$	punpcklwd\ XMM13,\ XMM9$\newline$
+$\hspace*{2.8cm}$	cvtdq2pd\ XMM13,\ XMM13$\newline$
+$\hspace*{2.8cm}$	mulpd\ XMM13,\ XMM3$\newline$
 $\hspace*{2.8cm}$	movdqu\  XMM7, XMM13$\newline
 
 En esta parte procedemos a realizar la multiplicacion de cada color por separado con lo que ya teniamos. Desempaquetando,
@@ -234,47 +244,47 @@ Luego, realizamos la division por max:\newline
 $\hspace*{2.3cm}$$ movdqu\  XMM11, [MASK\_MAX]$\newline$
 $\hspace*{2.8cm}$cvtdq2pd\  XMM11,XMM11$\newline$
 $\hspace*{2.8cm}$divpd\  XMM1, XMM11 $\newline$
-$\hspace*{2.8cm}$cvttpd2dq\  XMM1,XMM1 $\newline$
+$\hspace*{2.8cm}$cvttpd2Dq\  XMM1,XMM1 $\newline$
 $\hspace*{2.8cm}$packssdw\  XMM1, XMM1$\newline$
 $\hspace*{2.8cm}$;GREEN$\newline$
-$\hspace*{2.8cm}$divpd\ xmm5,XMM11 $\newline$
-$\hspace*{2.8cm}$cvttpd2dq\ xmm5,xmm5$\newline$
-$\hspace*{2.8cm}$packssdw\ xmm5,\ xmm5$\newline$
+$\hspace*{2.8cm}$divpd\ XMM5,XMM11 $\newline$
+$\hspace*{2.8cm}$cvttpd2Dq\ XMM5,XMM5$\newline$
+$\hspace*{2.8cm}$packssdw\ XMM5,\ XMM5$\newline$
 $\hspace*{2.8cm}$;rojo$\newline$
-$\hspace*{2.8cm}$divpd\ xmm7,XMM11 $\newline$
-$\hspace*{2.8cm}$cvttpd2dq\ xmm7,xmm7$\newline$
-$\hspace*{2.8cm}$packssdw\ xmm7,\ xmm7$\newline$
+$\hspace*{2.8cm}$divpd\ XMM7,XMM11 $\newline$
+$\hspace*{2.8cm}$cvttpd2Dq\ XMM7,XMM7$\newline$
+$\hspace*{2.8cm}$packssdw\ XMM7,\ XMM7$\newline$
 $\newline$
-$\hspace*{2.8cm}$movdqu\ xmm9,\ xmm1$\newline$
-$\hspace*{2.8cm}$PSRLDQ\  XMM9, 2d$\newline$
-$\hspace*{2.8cm}$PSLLDQ\  XMM9, 2d$\newline$
-$\hspace*{2.8cm}$psubw\ xmm1,\ xmm9 ;resto para q no me quede basura
+$\hspace*{2.8cm}$movdqu\ XMM9,\ XMM1$\newline$
+$\hspace*{2.8cm}$psrldq\  XMM9, 2D$\newline$
+$\hspace*{2.8cm}$pslldq\  XMM9, 2D$\newline$
+$\hspace*{2.8cm}$psubw\ XMM1,\ XMM9 ;resto para q no me quede basura
 $\newline$
-$\hspace*{2.8cm}$movdqu\ xmm9,\ xmm5$\newline$
-$\hspace*{2.8cm}$PSRLDQ\  XMM9, 2d$\newline$
-$\hspace*{2.8cm}$PSLLDQ\  XMM9, 2d$\newline$
-$\hspace*{2.8cm}$psubw\ xmm5,\ xmm9 ;resto para q no me quede basura
+$\hspace*{2.8cm}$movdqu\ XMM9,\ XMM5$\newline$
+$\hspace*{2.8cm}$psrldq\  XMM9, 2D$\newline$
+$\hspace*{2.8cm}$pslldq\  XMM9, 2D$\newline$
+$\hspace*{2.8cm}$psubw\ XMM5,\ XMM9 ;resto para q no me quede basura
 $\newline$
-$\hspace*{2.8cm}$movdqu\ xmm9,\ xmm7$\newline$
-$\hspace*{2.8cm}$PSRLDQ\  XMM9, 2d$\newline$
-$\hspace*{2.8cm}$PSLLDQ\  XMM9, 2d$\newline$
-$\hspace*{2.8cm}$psubw\ xmm7,\ xmm9 ;resto para q no me quede basura
+$\hspace*{2.8cm}$movdqu\ XMM9,\ XMM7$\newline$
+$\hspace*{2.8cm}$psrldq\  XMM9, 2D$\newline$
+$\hspace*{2.8cm}$pslldq\  XMM9, 2D$\newline$
+$\hspace*{2.8cm}$psubw\ XMM7,\ XMM9 ;resto para q no me quede basura
 $\newline$
-$\hspace*{2.8cm}$;en\ xmm1 tengo blue$\newline$
-$\hspace*{2.8cm}$;en\ xmm5 tengo GREEN$\newline$
-$\hspace*{2.8cm}$;en\ xmm7 tengo rojo$\newline$
-$\hspace*{2.8cm}$; en\ xmm6 me quede con el actual$\newline$
-$\hspace*{2.8cm}$movdqu\ xmm15,\ xmm6$\newline$
-$\hspace*{2.8cm}$pshufb\ xmm15, [MEQUEDOCONELDELMEDIO]$\newline$
-$\hspace*{2.8cm}$movdqu\ xmm8,\ xmm15$\newline$
-$\hspace*{2.8cm}$movdqu\ xmm9,\ xmm15$\newline$
-$\hspace*{2.8cm}$movdqu\ xmm10,\ xmm15$\newline$
-$\hspace*{2.8cm}$pshufb\ xmm8, [MASKCOLORROJO] $\newline$
-$\hspace*{2.8cm}$paddw\ xmm8,\ xmm1$\newline$
-$\hspace*{2.8cm}$pshufb\ xmm9, [MASKCOLORVERDE]$\newline$
-$\hspace*{2.8cm}$paddw\ xmm9,\ xmm5$\newline$
-$\hspace*{2.8cm}$pshufb\ xmm10, [MASKCOLORAZUL]$\newline$
-$\hspace*{2.8cm}$paddw\ xmm10,\ xmm7$\newline
+$\hspace*{2.8cm}$;en\ XMM1 tengo blue$\newline$
+$\hspace*{2.8cm}$;en\ XMM5 tengo GREEN$\newline$
+$\hspace*{2.8cm}$;en\ XMM7 tengo rojo$\newline$
+$\hspace*{2.8cm}$; en\ XMM6 me quede con el actual$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM15,\ XMM6$\newline$
+$\hspace*{2.8cm}$pshufb\ XMM15, [MEQUEDOCONELDELMEDIO]$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM8,\ XMM15$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM9,\ XMM15$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM10,\ XMM15$\newline$
+$\hspace*{2.8cm}$pshufb\ XMM8, [MASKCOLORROJO] $\newline$
+$\hspace*{2.8cm}$paddw\ XMM8,\ XMM1$\newline$
+$\hspace*{2.8cm}$pshufb\ XMM9, [MASKCOLORVERDE]$\newline$
+$\hspace*{2.8cm}$paddw\ XMM9,\ XMM5$\newline$
+$\hspace*{2.8cm}$pshufb\ XMM10, [MASKCOLORAZUL]$\newline$
+$\hspace*{2.8cm}$paddw\ XMM10,\ XMM7$\newline
 
 En esta seccion realizamos la division por max, a diferencia de las otras conversiones, en esta convertimos truncado a double
 para no perder presicion en la division. Luego de dividir realizamos distintos shifteos, y proximo a esto, shufteos con mascaras
@@ -285,21 +295,21 @@ Pasamos a chequear dichos valores:\newline
 Primero, chequeando si es mayor a cero: \newline
 
 $\hspace*{2.3cm}$$movdqu\  XMM14,[M0]$\newline$
-$\hspace*{2.8cm}$movdqu\ xmm15,xmm0$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM15,XMM0$\newline$
 $\hspace*{2.8cm}$pcmpgtw\  XMM15, XMM14$$\newline$
 
 Donde, M0 es una mascara con todos 0. \newline
 
 Y procedemos a:\newline
 
-$\hspace*{2.3cm}$$movdqu\  XMM13,\ xmm0$\newline$
-$\hspace*{2.8cm}$	movdqu\ xmm11,\ xmm15  ;$\newline$
+$\hspace*{2.3cm}$$movdqu\  XMM13,\ XMM0$\newline$
+$\hspace*{2.8cm}$	movdqu\ XMM11,\ XMM15  ;$\newline$
 $\hspace*{2.8cm}$	pcmpeqw\  XMM14,XMM14 $\newline$
-$\hspace*{2.8cm}$	pxor\ xmm11,\ xmm14$\newline$
-$\hspace*{2.8cm}$	movdqu\ xmm2, [M0]$\newline$
-$\hspace*{2.8cm}$	pand\ xmm2,xmm11$\newline$
-$\hspace*{2.8cm}$	pand\ xmm13,\ xmm15$\newline$
-$\hspace*{2.8cm}$	movdqu\ xmm1,\ xmm13$\newline
+$\hspace*{2.8cm}$	pxor\ XMM11,\ XMM14$\newline$
+$\hspace*{2.8cm}$	movdqu\ XMM2, [M0]$\newline$
+$\hspace*{2.8cm}$	pand\ XMM2,XMM11$\newline$
+$\hspace*{2.8cm}$	pand\ XMM13,\ XMM15$\newline$
+$\hspace*{2.8cm}$	movdqu\ XMM1,\ XMM13$\newline
 
 Esto, similar a nuestros chequeos en las implementaciones anteriores de Popart y Temperature, guardamos el valor de la comparación,
 realizamos and con los valores chequeados, invertimos el resultado de la comparacion y lo guardamos para que esos casos no vuelvan
@@ -307,24 +317,24 @@ a ser chequeados. Luego, nuestro resultado nos queda en XMM1. \newline
 
 Segundo, si el numero es menor a 255: \newline
 
-$\hspace*{2.3cm}$$orpd\ xmm1,xmm2$\newline$
-$\hspace*{2.8cm}$movdqu\ xmm0,\ xmm1$\newline$
+$\hspace*{2.3cm}$$orpd\ XMM1,XMM2$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM0,\ XMM1$\newline$
 $\hspace*{2.8cm}$movdqu\  XMM14,[M255]$\newline$
-$\hspace*{2.8cm}$movdqu\ xmm15,xmm0$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM15,XMM0$\newline$
 $\hspace*{2.8cm}$pcmpgtw XMM14,XMM15$\newline
 
 Donde, M255 es una mascara con todos 255. \newline$\hspace*{2.8cm}$
 
 Procedemos a:\newline
 
-$\hspace*{2.3cm}$$movdqu XMM13,\ xmm0$\newline$
-$\hspace*{2.8cm}$	movdqu\ xmm11,\ xmm14  $\newline$
+$\hspace*{2.3cm}$$movdqu XMM13,\ XMM0$\newline$
+$\hspace*{2.8cm}$	movdqu\ XMM11,\ XMM14  $\newline$
 $\hspace*{2.8cm}$	pcmpeqw\  XMM15,XMM15 $\newline$
-$\hspace*{2.8cm}$	pxor\ xmm11,\ xmm15$\newline$
-$\hspace*{2.8cm}$	movdqu\ xmm4, [M255]$\newline$
-$\hspace*{2.8cm}$	pand\ xmm4,xmm11$\newline$
-$\hspace*{2.8cm}$	pand\ xmm13,\ xmm14$\newline$
-$\hspace*{2.8cm}$	movdqu\ xmm3,\ xmm13$\newline
+$\hspace*{2.8cm}$	pxor\ XMM11,\ XMM15$\newline$
+$\hspace*{2.8cm}$	movdqu\ XMM4, [M255]$\newline$
+$\hspace*{2.8cm}$	pand\ XMM4,XMM11$\newline$
+$\hspace*{2.8cm}$	pand\ XMM13,\ XMM14$\newline$
+$\hspace*{2.8cm}$	movdqu\ XMM3,\ XMM13$\newline
 
 Esta seccion, como mencionamos antes, similar a las implementaciones anteriores, guardamos el valor de la comparación,
 realizamos and con los valores chequeados, invertimos el resultado de la comparacion y lo guardamos para que esos casos no vuelvan
@@ -333,8 +343,8 @@ a ser chequeados. Luego, nuestro resultado nos queda en XMM3. \newline
 Por ultimo, en nuestra implementacion, juntamos los resultados, chequeando con un contador si pertenece a verde rojo o todo:\newline
 
 $\hspace*{2.3cm}$$add\  r15, 1$\newline$
-$\hspace*{2.8cm}$orps\ xmm3,xmm4$\newline$
-$\hspace*{2.8cm}$movdqu\ xmm0,xmm3$\newline$
+$\hspace*{2.8cm}$orps\ XMM3,XMM4$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM0,XMM3$\newline$
 $\hspace*{2.8cm}$cmp\  r15,1$\newline$
 $\hspace*{2.8cm}$je\  .verdes$\newline$
 $\hspace*{2.8cm}$cmp\  r15,2$\newline$
@@ -343,20 +353,20 @@ $\hspace*{2.8cm}$cmp\  r15,3$\newline$
 $\hspace*{2.8cm}$je\  .juntoTodo$$\newline$
 
 $.verdes:$\newline$
-$\hspace*{2.8cm}$movdqu\ xmm8,\ xmm0$\newline$
-$\hspace*{2.8cm}$movdqu\ xmm0,\ xmm9$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM8,\ XMM0$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM0,\ XMM9$\newline$
 $\hspace*{2.8cm}$jmp\  .chequeo$\newline$
 $\hspace*{2.8cm}$\ 	.rojos:$\newline$
-$\hspace*{2.8cm}$movdqu\ xmm9,\ xmm0$\newline$
-$\hspace*{2.8cm}$movdqu\ xmm0,\ xmm10$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM9,\ XMM0$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM0,\ XMM10$\newline$
 $\hspace*{2.8cm}$jmp\  .chequeo$\newline$
 $\hspace*{2.8cm}$\ 	.juntoTodo:$\newline$
-$\hspace*{2.8cm}$movdqu\ xmm10,\ xmm0$\newline$
-$\hspace*{2.8cm}$PSLLDQ\ xmm9, 1d$\newline$
-$\hspace*{2.8cm}$PSLLDQ\ xmm10, 2d$\newline$
-$\hspace*{2.8cm}$paddb\ xmm8,\ xmm9$\newline$
-$\hspace*{2.8cm}$paddb\ xmm8,\ xmm10$\newline$
-$\hspace*{2.8cm}$movdqu\ xmm0,\ xmm8$\newline
+$\hspace*{2.8cm}$movdqu\ XMM10,\ XMM0$\newline$
+$\hspace*{2.8cm}$pslldq\ XMM9, 1d$\newline$
+$\hspace*{2.8cm}$pslldq\ XMM10, 2D$\newline$
+$\hspace*{2.8cm}$paddb\ XMM8,\ XMM9$\newline$
+$\hspace*{2.8cm}$paddb\ XMM8,\ XMM10$\newline$
+$\hspace*{2.8cm}$movdqu\ XMM0,\ XMM8$\newline
 
 En esta seccion, como mencionamos, realizamos la suma de todos los xmm de los distintos colores.\newline
 Una ves terminado esto, guardamos en la imagen resultante los valores: \newline

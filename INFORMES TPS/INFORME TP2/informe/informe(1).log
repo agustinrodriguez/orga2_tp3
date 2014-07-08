@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.5.4)  7 JUL 2014 21:57
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.5.4)  8 JUL 2014 00:27
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -504,16 +504,62 @@ Underfull \hbox (badness 10000) in paragraph at lines 97--102
  []
 
 [5]
-Underfull \hbox (badness 10000) in paragraph at lines 141--147
+Underfull \hbox (badness 10000) in paragraph at lines 137--138
 
  []
 
-[6] <tilesmod.jpg, id=40, 607.26875pt x 341.275pt>
-File: tilesmod.jpg Graphic file (type jpg)
- <use tilesmod.jpg>
-Package pdftex.def Info: tilesmod.jpg used on input line 196.
+
+Underfull \hbox (badness 10000) in paragraph at lines 139--144
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 146--147
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 148--153
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 154--155
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 156--161
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 162--163
+
+ []
+
+[6]
+Underfull \hbox (badness 10000) in paragraph at lines 164--169
+
+ []
+
+<tilesoptimo.jpg, id=40, 607.26875pt x 341.275pt>
+File: tilesoptimo.jpg Graphic file (type jpg)
+ <use tilesoptimo.jpg>
+Package pdftex.def Info: tilesoptimo.jpg used on input line 173.
 (pdftex.def)             Requested size: 425.08524pt x 238.89085pt.
-) [7 <./tilesmod.jpg>] (./popart.tex
+
+Underfull \hbox (badness 10000) in paragraph at lines 176--182
+
+ []
+
+[7 <./tilesoptimo.jpg>] <tilesmod.jpg, id=45, 607.26875pt x 341.275pt>
+File: tilesmod.jpg Graphic file (type jpg)
+
+<use tilesmod.jpg>
+Package pdftex.def Info: tilesmod.jpg used on input line 231.
+(pdftex.def)             Requested size: 425.08524pt x 238.89085pt.
+) [8 <./tilesmod.jpg>] (./popart.tex
 Underfull \hbox (badness 10000) in paragraph at lines 3--6
 
  []
@@ -533,7 +579,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 57--78
 
  []
 
-[8]
+[9]
 Underfull \hbox (badness 10000) in paragraph at lines 79--88
 
  []
@@ -553,7 +599,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 100--109
 
  []
 
-[9]
+[10]
 Underfull \hbox (badness 10000) in paragraph at lines 110--114
 
  []
@@ -593,7 +639,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 152--156
 
  []
 
-[10]
+[11]
 Underfull \hbox (badness 10000) in paragraph at lines 157--158
 
  []
@@ -646,14 +692,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 203--205
 
 Underfull \vbox (badness 1895) has occurred while \output is active []
 
- [11]
-<popartbien.png, id=59, 575.14874pt x 328.22626pt>
+ [12]
+<popartbien.png, id=63, 575.14874pt x 328.22626pt>
 File: popartbien.png Graphic file (type png)
  <use popartbien.png>
 Package pdftex.def Info: popartbien.png used on input line 242.
 (pdftex.def)             Requested size: 402.60138pt x 229.7568pt.
 
-[12 <./popartbien.png>] <popart2.jpg, id=63, 656.4525pt x 421.575pt>
+[13 <./popartbien.png>] <popart2.jpg, id=68, 656.4525pt x 421.575pt>
 File: popart2.jpg Graphic file (type jpg)
 
 <use popart2.jpg>
@@ -667,10 +713,10 @@ Overfull \hbox (6.54572pt too wide) in paragraph at lines 343--344
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [13]
+ [14]
 Underfull \vbox (badness 1400) has occurred while \output is active []
 
- [14 <./popart2.jpg>] <popart3.jpg, id=71, 656.4525pt x 421.575pt>
+ [15 <./popart2.jpg>] <popart3.jpg, id=75, 656.4525pt x 421.575pt>
 File: popart3.jpg Graphic file (type jpg)
  <use popart3.jpg>
 Package pdftex.def Info: popart3.jpg used on input line 433.
@@ -680,13 +726,13 @@ Overfull \hbox (6.54572pt too wide) in paragraph at lines 433--434
  [] 
  []
 
-[15 <./popart3.jpg>] <asmc.png, id=75, 455.45157pt x 255.95625pt>
+[16 <./popart3.jpg>] <asmc.png, id=79, 455.45157pt x 255.95625pt>
 File: asmc.png Graphic file (type png)
 
 <use asmc.png>
 Package pdftex.def Info: asmc.png used on input line 497.
 (pdftex.def)             Requested size: 364.36174pt x 204.76526pt.
-) [16 <./asmc.png (PNG copy)>] (./temperature.tex
+) [17 <./asmc.png (PNG copy)>] (./temperature.tex
 Underfull \hbox (badness 10000) in paragraph at lines 3--7
 
  []
@@ -711,7 +757,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 58--77
 
  []
 
-[17]
+[18]
 Underfull \hbox (badness 10000) in paragraph at lines 78--94
 
  []
@@ -731,7 +777,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 104--136
 
  []
 
-[18]
+[19]
 Underfull \hbox (badness 10000) in paragraph at lines 137--148
 
  []
@@ -751,7 +797,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 155--187
 
  []
 
-[19]
+[20]
 Underfull \hbox (badness 10000) in paragraph at lines 190--200
 
  []
@@ -771,7 +817,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 207--240
 
  []
 
-[20]
+[21]
 Underfull \hbox (badness 10000) in paragraph at lines 241--252
 
  []
@@ -791,7 +837,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 259--288
 
  []
 
-[21]
+[22]
 Underfull \hbox (badness 10000) in paragraph at lines 289--299
 
  []
@@ -821,7 +867,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 314--337
 
  []
 
-[22]
+[23]
 Underfull \hbox (badness 10000) in paragraph at lines 338--347
 
  []
@@ -846,7 +892,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 366--368
 
  []
 
-[23] <temperature.png, id=101, 455.45157pt x 255.95625pt>
+[24] <temperature.png, id=105, 455.45157pt x 255.95625pt>
 File: temperature.png Graphic file (type png)
 
 <use temperature.png>
@@ -857,10 +903,23 @@ Overfull \hbox (2.48256pt too wide) in paragraph at lines 418--419
  [] 
  []
 
-) [24 <./temperature.png (PNG copy)>] (./ldr.tex
+) [25 <./temperature.png (PNG copy)>] (./ldr.tex
 Underfull \hbox (badness 10000) in paragraph at lines 4--7
 
  []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 16--17
+
+ []
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 18.
+
+LaTeX Font Warning: Command \large invalid in math mode on input line 18.
+
+
+LaTeX Font Warning: Command \large invalid in math mode on input line 18.
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 18--19
@@ -887,7 +946,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 52--77
 
  []
 
-[25]
+[26]
 Underfull \hbox (badness 10000) in paragraph at lines 78--80
 
  []
@@ -922,7 +981,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 116--127
 
  []
 
-[26]
+[27]
 Underfull \hbox (badness 10000) in paragraph at lines 128--130
 
  []
@@ -962,7 +1021,10 @@ Underfull \hbox (badness 10000) in paragraph at lines 179--182
 
  []
 
-[27]
+
+Underfull \vbox (badness 1019) has occurred while \output is active []
+
+ [28]
 Underfull \hbox (badness 10000) in paragraph at lines 183--191
 
  []
@@ -1010,7 +1072,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 196--239
 
 Underfull \vbox (badness 1019) has occurred while \output is active []
 
- [28]
+ [29]
 Underfull \hbox (badness 10000) in paragraph at lines 240--243
 
  []
@@ -1035,12 +1097,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 294--296
 
  []
 
-
+[30]
 Underfull \hbox (badness 10000) in paragraph at lines 297--300
 
  []
 
-[29]
+
 Underfull \hbox (badness 10000) in paragraph at lines 301--302
 
  []
@@ -1095,7 +1157,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 345--354
 
  []
 
-[30]
+[31]
 Underfull \hbox (badness 10000) in paragraph at lines 355--370
 
  []
@@ -1110,7 +1172,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 374--380
 
  []
 
-[31] <ldr+.png, id=128, 455.45157pt x 255.95625pt>
+[32] <ldr+.png, id=135, 455.45157pt x 255.95625pt>
 File: ldr+.png Graphic file (type png)
  <use ldr+.png>
 Package pdftex.def Info: ldr+.png used on input line 435.
@@ -1120,7 +1182,7 @@ Overfull \hbox (2.48256pt too wide) in paragraph at lines 435--436
  [] 
  []
 
-<ldr-.png, id=129, 455.45157pt x 255.95625pt>
+<ldr-.png, id=136, 455.45157pt x 255.95625pt>
 File: ldr-.png Graphic file (type png)
  <use ldr-.png>
 Package pdftex.def Info: ldr-.png used on input line 478.
@@ -1131,45 +1193,42 @@ Overfull \hbox (2.48256pt too wide) in paragraph at lines 478--479
  []
 
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 2762) has occurred while \output is active []
 
- [32 <./ldr+.png (PNG copy)>]) [33 <./ldr-.png (PNG copy)>]
-AED: lastpage setting LastPage
-
-Package Fancyhdr Warning: \headheight is too small (12.0pt): 
- Make it at least 13.07225pt.
- We now make it that large for the rest of the document.
- This may cause the page layout to be inconsistent, however.
-
-[34] (./informe(1).aux) ) 
+ [33 <./ldr+.png (PNG copy)>]) [34 <./ldr-.png (PNG copy)>] AED: lastpage setti
+ng LastPage
+[35] (./informe(1).aux) ) 
 Here is how much of TeX's memory you used:
- 2408 strings out of 495031
- 32851 string characters out of 6181532
- 101689 words of memory out of 5000000
- 5562 multiletter control sequences out of 15000+600000
- 8315 words of font info for 30 fonts, out of 8000000 for 9000
+ 2416 strings out of 495031
+ 32988 string characters out of 6181532
+ 102689 words of memory out of 5000000
+ 5568 multiletter control sequences out of 15000+600000
+ 8930 words of font info for 32 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  37i,12n,43p,466b,293s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsf
 onts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
 m/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex
 10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
-></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/
-share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/t
-exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/font
-s/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmsl10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
-msy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.p
-fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></u
-sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
-Output written on informe(1).pdf (34 pages, 1196631 bytes).
+></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr
+/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/
+texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+sl10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.p
+fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
+Output written on informe(1).pdf (35 pages, 1241062 bytes).
 PDF statistics:
- 194 PDF objects out of 1000 (max. 8388607)
- 128 compressed objects within 2 object streams
+ 210 PDF objects out of 1000 (max. 8388607)
+ 139 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 51 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 56 words of extra memory for PDF output out of 10000 (max. 10000000)
 
