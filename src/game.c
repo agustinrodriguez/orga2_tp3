@@ -170,6 +170,10 @@ unsigned int game_misil(unsigned int id, int val_x, int val_y, unsigned int misi
         columna -= 50; 
     }
 
+    if (tablero[fila][columna] == -1) {
+        tablero[fila][columna] = 0;
+    }
+
     pintar_misil(id, fila, columna);
 
     destino = dame_fisica(fila, columna);

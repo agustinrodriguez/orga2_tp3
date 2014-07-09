@@ -36,6 +36,7 @@ void task() {
   unsigned int i;
   for(i=0;i<10;i++) {
     unsigned int mapn = syscall_mover(N);
+
     pisar(mapn-0x1000+1);
     unsigned int mapo = syscall_mover(O);
     pisar(mapo-0x1000+1);

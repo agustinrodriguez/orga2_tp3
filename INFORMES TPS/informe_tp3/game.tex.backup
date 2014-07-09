@@ -1,0 +1,9 @@
+Para manejar toda la lógica del juego, los cambios en la pantalla y los mapeos correspondientes tenemos una estructura
+llamada Game. Básicamente se encarga de las 3 posibles acciones de una tarea: minar, mover y lanzar misiles.
+Tiene guardado internamente una matriz tablero, donde almacenamos el estado del juego actual. 
+
+\begin{enumerate}
+ \item \textbf{Minar:}Para esta acción, en la estructura tenemos guardada una matriz tablero, donde 
+ \item \textbf{Misil:}dagdsgadsgdsgdsgdsgdsgds
+ \item \textbf{Mover:}adgdsgdsgastewrewrwer
+\end{enumerate}

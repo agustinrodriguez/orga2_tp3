@@ -1,15 +1,19 @@
 El Scheduler es la estructura m\'as grande y quiz\'as m\'as compleja de nuestro trabajo. Su funcion es simple, coordinar en 
-que orden ocurren los eventos en nuestro Kernel y determinar ciertas acciones como si una bandera excedio el tiempo que le es dado.\\
-Conceptualmente nos imaginamos al Scheduler dividido en dos etapas o dos corridas: una corrida de tareas que es interrumpida por una corrida de banderas.
-Hay un timer llamado quantum que dictamina cuantos ciclos le queda a la corrida de tareas hasta que sea interrumpido por la corrida de banderas.
-La corrida de banderas se ejecuta y una vez terminada vuelve a la corrida de tareas con el quantum reiniciado.\\
+que orden ocurren los eventos en nuestro Kernel y determinar ciertas acciones como si una tarea es desalojada por una operacion ilegal o mina, o un cambio simple de tareas por tick de reloj.\\
+Conceptualmente nos imaginamos al Scheduler teniendo:
+\begin{enumerate}
+ \item Un timer llamado quantum que dictamina cuantos ciclos le queda a la corrida de tareas hasta que vuelva a empezar.
+ \item Un estado pause, que en caso de estar activo hara que corra solo la tarea Idle.
+ \item Un array donde guardamos el contexto de todas las tareas incluyendo la Idle.
+\end{enumerate}
+
 Corrida tarea:\\
 \begin{center}
-\includegraphics[scale=0.7]{imagenes/cicloBasicoTareas.png} 
+%\includegraphics[scale=0.7]{imagenes/cicloBasicoTareas.png} 
 \end{center}
 
 \begin{center}
-\includegraphics[scale=0.7]{imagenes/corridaFlags.png} 
+%\includegraphics[scale=0.7]{imagenes/corridaFlags.png} 
 \end{center}
 
 

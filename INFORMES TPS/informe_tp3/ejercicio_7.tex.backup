@@ -1,67 +1,26 @@
 El Scheduler es la estructura m\'as grande y quiz\'as m\'as compleja de nuestro trabajo. Su funcion es simple, coordinar en 
-que orden ocurren los eventos en nuestro Kernel y determinar ciertas acciones como si una bandera excedio el tiempo que le es dado.\\
-Conceptualmente nos imaginamos al Scheduler dividido en dos etapas o dos corridas: una corrida de tareas que es interrumpida por una corrida de banderas.
-Hay un timer llamado quantum que dictamina cuantos ciclos le queda a la corrida de tareas hasta que sea interrumpido por la corrida de banderas.
-La corrida de banderas se ejecuta y una vez terminada vuelve a la corrida de tareas con el quantum reiniciado.\\
+que orden ocurren los eventos en nuestro Kernel y determinar ciertas acciones como si una tarea es desalojada por una operacion ilegal o mina, o un cambio simple de tareas por tick de reloj.\\
+Conceptualmente nos imaginamos al Scheduler teniendo:
+\begin{enumerate}
+ \item Un timer llamado quantum que dictamina cuantos ciclos le queda a la corrida de tareas hasta que vuelva a empezar.
+ \item Un estado pause, que en caso de estar activo hara que corra solo la tarea Idle.
+\end{enumerate}
+
 Corrida tarea:\\
 \begin{center}
 \includegraphics[scale=0.7]{imagenes/cicloBasicoTareas.png} 
 \end{center}
-
-\begin{itemize}
- \item Estado A: Salgo de la ejecuci\'on de la tarea X. QUANTUM\_RESTANTE = 2 ya que me quedan dos tareas restantes por correr suponiendo
-que no fueron previamente desalojadas. Si ese fuera el caso vuelve a ejecutar Tarea X hasta agotar los 3 ciclos de QUANTUM. Si TASKS\_UP > 0
- entonces quiere decir que tengo tareas disponibles, es decir, tengo tareas que aun no han sido desalojadas\footnote{Esto no incluye a la 
-tarea IDLE}. Luego evaluo en CONTEXTO en el que me encuentro siendo:
-\begin{itemize}
- \item EN\_IDLE\_TOTAL: si solo se puede correr IDLE.
- \item EN\_IDLE\_TAREA: se encuentra ejecutando la tarea IDLE tras haber ejecutado una tarea y dicha tarea haya llamado a una syscall provocando 
-el salto a IDLE. Por lo tanto si QUANTUM\_RESTANTE es igual a 0 deber\'ia saltar a correr banderas.
- \item EN\_IDLE\_FLAG: se encuentra ejecutando la tarea IDLE tras haber saltado de una interrupci\'on 0x66 luego de haber llamando a la funci\'on
-bandera.
- \item EN\_TAREA: estoy ejecutando una tarea, con lo cual llegue al clock ejecutando esa tarea.
- \item EN\_FLAG: estoy ejecutando una bandera y cay\'o una interrupci\'on de clock provocando que dicha bandera y su correspondiente tareas
-deban ser desalojadas.
-\end{itemize}
-Dado este CONTEXTO, es que voy a hacer en el siguiente salto a tarea. En nuestra implementaci\'on encontraran un Switch() que dependiendo
-el dicho CONTEXTO ser\'a la ejecuci\'on que realicemos. 
-\item Estado B: salgo de la ejecuci\'on de la tarea Y. Disminuyo el QUANTUM\_RESTANTE en 1 y salto a la Tarea Z.
-\item Estado C: salgo  de la ejecuci\'on de la tarea Z. Disminuyo el QUANTUM\_RESTANTE en 1 dejando el valor igual a 0. entonces el siguiente
-estado voy a tener que ejecutar una corrida de flags.
-\item Estado D: salgo de la ejecuci\'on de todas las banderas que estaban habilitadas. Si mi tarea X no fue desalojada en la ejecuci\'on de 
-su bandera ya sea por un error en su ejecuci\'on o porque cay\'o una interrupci\'on de clock durante su ejecuci\'on si haber podido llamar 
-a la interrupci\'on 0x66,  entonces puedo saltar a X. El QUANTUM\_RESTANTE ser\'a restaurado al salir de la corrida de flags con el valor 3.
-Dado que queremos correr tareas por 3 nuevos ciclos de clock.
-\end{itemize}
-
-Con esto explicamos brevemente como est\'a compuesto nuestro scheduler y y su implementaci\'on. A continuaci\'on hay un breve esquema de la
-ejecuci\'on de las banderas y como ser\'ia una corrida suponiendo que ninguna de ellas fue desalojada previamente. En caso de que una de
-ellas fue desalojada esta ser\'a salteada.
 
 \begin{center}
 \includegraphics[scale=0.7]{imagenes/corridaFlags.png} 
 \end{center}
 
 
+La interrupci\'on de clock se encarga de realizar todos los saltos y cambios de tareas, exceptuando el salto a idle (que puede ser hecho 
+en cualquier momento). El scheduler es la estructura que le informa hacia donde ir siguiendo. De esta forma, mantenemos el c\'odigo facilmente 
+segmentado.\\
 
-/venir de corrida tarea/ -> Flag 1 -> Flag 2 -> Flag 3 -> Flag 4 -> Flag 5 -> Flag 6 -> Flag 7 -> Flag 8 -> /volver a corrida tarea/\\
-
-Ademas, separamos los estados del scheduler (llamado contexto en nuestro codigo) en 5 instancias distintas, EN\_IDLE, EN\_IDLE\_TAREA, EN\_IDLE\_BANDERA, 
-EN\_TAREA y EN\_BANDERA. Para los fines del trabajo, los dos primeros estados son precindibles, (EN\_IDLE solo se usa cuando empieza la maquina o nos quedamos,
-quedamos sin tareas / EN\_IDLE\_TAREA tiene las mismas funciones de EN\_TAREA) pero decidimos agregarlos para mantener la coherencia de la estructura. De esta 
-manera, hay 3 estados cuyas propiedas nos importan resaltar.\\
-EN\_TAREA: indica que se esta/estaba corriendo una tarea. Si vuelve al scheduler, se debera continuar con la corrida de tareas o inicializar la corrida de banderas 
-dependiendo del quantum.
-
-EN\_IDLE\_BANDERA: indica que se esta en un idle despues de haber hecho una bandera y usado la interrupcion 66. Al volver al scheduler esta bandera no debe borrarse,
-simplemente debe continuarse con la corrida de banderas. (o de haber terminado, volver a la corrida de tareas)
-
-EN\_BANDERA: indica que se esta corriendo una bandera. Si vuelve al scheduler, quiere decir que la bandera no termino de ejecutarse (A.k.a no llamo a la int 66), por lo cual 
-debe ser desalojada y luego se debe continuar con la corrida de bandera. (o de tareas de haber terminado)\\
-
-La interrupcion de clock se encarga de realizar todos los saltos y cambios de tareas, exceptuando el salto a idle (que puede ser hecho en cualquier momento). El scheduller
-es la structura que le informa hacia donde ir, siguiendo . De esta forma, mantenemos el codigo facilmente segmentado.
-
-Una excepcion interesante es el caso en el que no querramos saltar a ningun lado sino seguir en la tarea actual. Por ejemplo, si me queda una sola tarea y estoy en la corrida
-de tareas aun con quantum me gustaria pertenecer en esa tarea. Para esto el scheduller devuelve el selector de segmento 0, el cual es reconocido por el clock como una
-instruccion para volver a la tarea anterior (iret) y no realizar ningun salto. (tratar de saltar a una tarea en uso daria error)
+Una excepci\'on interesante es el caso en el que no querramos saltar a ningun lado sino seguir en la tarea actual. Por ejemplo, si me 
+queda una sola tarea y estoy en la corrida de tareas a\'un con quantum me gustar\'ia pertenecer en esa tarea. Para esto el scheduler 
+devuelve el selector de segmento 0, el cual es reconocido por el clock como una instrucci\'on para volver a la tarea anterior (iret) 
+y no realizar ningun salto. (tratar de saltar a una tarea en uso daria error).

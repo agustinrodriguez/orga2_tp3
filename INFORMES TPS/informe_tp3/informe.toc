@@ -11,7 +11,8 @@
 \contentsline {subsubsection}{\numberline {2.3.2}Activaci\'on de paginaci\'on}{7}
 \contentsline {subsection}{\numberline {2.4}Ejercicio 4. Paginaci\'on de tareas}{8}
 \contentsline {subsubsection}{\numberline {2.4.1}Paginaci\'on de las tareas}{8}
-\contentsline {subsection}{\numberline {2.5}Ejercicio 5 IDT / Clocks, Teclados, Syscalls y Banderas}{9}
+\contentsline {subsection}{\numberline {2.5}Ejercicio 5 IDT / Clocks, Teclados y Syscalls}{9}
 \contentsline {subsection}{\numberline {2.6}Ejercicio 6. TSS}{10}
 \contentsline {subsection}{\numberline {2.7}Ejercicio 7. Scheduller}{11}
 \contentsline {subsection}{\numberline {2.8}Screen}{12}
+\contentsline {subsection}{\numberline {2.9}Game}{13}

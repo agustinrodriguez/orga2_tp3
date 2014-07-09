@@ -53,12 +53,13 @@ void sched_inicializar() {
 	sched.tareas[0].tarea = tss_idle;
 	sched.tareas[0].estado = 1;
 	sched.tareas[0].indice = 0;
+	sched.tareas[0].desalojo = 255;
 
     for (i = 1; i < CANT_TAREAS; i++) {
 		sched.tareas[i].tarea = tss_tanques[i - 1];
 		sched.tareas[i].estado = 1;
 		sched.tareas[i].indice = i;
-		sched.tareas[i].desalojo = 55;
+		sched.tareas[i].desalojo = 255;
     }
 
     sched.quantum_restante = 0;

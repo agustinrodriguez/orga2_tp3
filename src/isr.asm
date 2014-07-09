@@ -52,7 +52,7 @@ _isr%1:
     cli
     xor ecx, ecx
     mov ecx, %1
-    xchg bx,bx
+    ;xchg bx,bx
     ;hago los q tengo en pila
     mov [estado_error], eax ; EAX
     mov eax, ds
@@ -182,13 +182,17 @@ _isr32:
     call proximo_reloj
 
     call screen_proximo_reloj   
-    ;xchg bx, bx
-    call dame_estado
-    CMP ax, 1
-    jne .prox_indice
 
+    call dame_estado
+    CMP eax, 1
+    jne .prox_indice
+    
+    
+    ;xchg bx,bx
+    call dame_actual
+    CMP ax, 0
+    je .nojump
     call sched_proximo_idle
-   ; xchg bx,bx
     jmp .sigo_jump_far
 
     .prox_indice:
@@ -242,7 +246,6 @@ screen_proximo_reloj:
         jmp .fin
 
     .segundo:
-        ;imprimir_texto_mp isrClock, 2, 0x0f, 47, 59
         push ecx
         call imprimir_reloj_tanque
         pop ecx
@@ -252,7 +255,6 @@ screen_proximo_reloj:
         jmp .fin
 
     .tercero:
-        ;imprimir_texto_mp isrClock, 3, 0x0f, 47, 59
         push ecx
         call imprimir_reloj_tanque
         pop ecx
@@ -261,7 +263,6 @@ screen_proximo_reloj:
         jmp .fin
 
     .cuarto:
-        ;imprimir_texto_mp isrClock, 4, 0x0f, 47, 59
         push ecx
         call imprimir_reloj_tanque
         pop ecx
@@ -273,7 +274,6 @@ screen_proximo_reloj:
         push ecx
         call imprimir_reloj_tanque
         pop ecx
-        ;imprimir_texto_mp limpieza, 4, 0x0f, 47, 59
         xor ecx,ecx
         mov [contador_reloj], ecx
         jmp .fin
@@ -362,13 +362,13 @@ int_teclado:
     jmp .fin_teclado
 
 .elp:
-    ;xchg bx,bx
 .aPause:
     call dame_estado
     CMP eax, 0
+    ;xchg bx,bx
     jne .continuo
-    xchg bx,bx
     mov eax, 1
+    mov [contador_pause],eax
     push eax
     call cambiar_estado
     pop eax
@@ -428,13 +428,11 @@ int_teclado:
 ;; ---------------------------------------------------------------
 global int_task
 int_task:
-    pushad ;esto puede no ser necesario chequear!
     cli
     push eax
     call dame_actual
     mov edi, eax
     pop eax
-   ; xchg bx, bx
     CMP EAX, 0x83D
     je .moviendo
     CMP EAX, 0x911
@@ -466,10 +464,12 @@ int_task:
         jmp .fin
 
     .fin:
+    push eax
     call fin_intr_pic1
     call vuelvo_idle
+    pop eax
     sti
-    popad
+    ;popad
     iret
 ;;
 

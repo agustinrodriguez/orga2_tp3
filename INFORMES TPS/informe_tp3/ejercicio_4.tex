@@ -3,7 +3,7 @@
 Para la paginaci\'on de tareas se necesitaron los siguientes m\'odulos por cada tarea:
 \begin{itemize}
  \item Inicializar un directorio de p\'aginas con 5 entradas, 4 para el Kernel iguales a las descriptas en el ejercicio 3 (es decir, identity mapping) 
- y dos para direccionar a las p\'aginas de c\'odigo y pilas de cada tarea. Este Page directory est\'a definido en la direccion 0x40000000
+ y otra entrada con dos entradas de tablas presentes para direccionar a las p\'aginas de c\'odigo y pilas de cada tarea. Este Page directory est\'a definido en la direccion 0x00100000
  \item Dentro de la Page Table de las tareas se encuentran definidas las entradas de cada p\'agina de la tarea. 
 \end{itemize}
 
@@ -21,13 +21,13 @@ bien cada una est\'a mapeada al mismo lugar, la base del Page Directory es disti
 propio mapeo. %Para empezar, page directory entry que corresponde a la tarea, es la 0x100 ya que 0x40000000 es una direccion virtual entonces
 %la tenemos que decodificar como 
 
-%\begin{center}
-%  \includegraphics[scale=0.6]{imagenes/ComoDividoVirtual.png} 
-%\end{center}
+\begin{center}
+  \includegraphics[scale=0.6]{imagenes/ComoDividoVirtual.png} 
+\end{center}
 
-%Y Luego de esto el esquema de paginaci\'on nos quedar\'ia algo as\'i:
+Y Luego de esto el esquema de paginaci\'on nos quedar\'ia algo as\'i:
 
-%\includegraphics[scale=0.6]{imagenes/paginacionTareas.png}
+\includegraphics[scale=0.6]{imagenes/paginacionTareas.png}
 
 Cabe destacar que para poder cumplir con los ejercicios siguientes, una tarea IDLE va a tener que ser mapeada al comienzo de la paginaci\'on
 de lo contrario, no tener una tarea mapeada me imposibilita arrancar el sistema de scheduling que ser\'a introducido mas adelante.\footnote{Ver

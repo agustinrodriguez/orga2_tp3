@@ -4,22 +4,22 @@ Nuestro Kernel cuenta con 3 interrupciones que poseen handlers. Estas fueron men
 ellas:
 \begin{itemize}
  \item Clock: El clock es una interrupci\'on que se ejecuta cada ciertos ticks de reloj. La misma se encarga de buscar el siguiente selector
-de segmento según es especificado en la secci\'on 7. y realizar el salto a dicho selector que puede corresponder a una tarea, una bandera o 
+de segmento según es especificado en la secci\'on 7. y realizar el salto a dicho selector que puede corresponder a una tarea o 
 la tarea IDLE.
- \item Teclado: La interrupci\'on de teclado cumple la funci\'on de cambiar el estado del juego.
+ \item Teclado: La interrupci\'on de teclado cumple la funci\'on de cambiar el estado del juego y mostrar por pantalla el contexto
+ de la tarea segun el numero de tecla apretado. Ej. Si se presiona la tecla 1 muestra por pantalla los datos del tanque 1.
  \item Servicios o Syscalls: Esta interrupci\'on brinda al systema una serie de servicios o funciones a las tareas:
   \begin{itemize}
    \item Minar: Estas minas destruyen a los tanques que se quieran mover a la posicion donde esta la mina.\\
-   Las minas duran una sola vez, es decir, si un tanque es destruido por una mina, ́esta desaparece
+   Las minas duran una sola vez, es decir, si un tanque es destruido por una mina, esta desaparece
 (tambien es destruida). Las minas tambien pueden ser destruidas si un misil cae sobre la misma.\\
 El unico parmetro de este servicio es la posicion donde colocar la mina. Un tanque puede colocar una mina 
 en alguna de las 4 posibles direcciones a su alrededor de la posicion actual donde se encuentra.\\
 Una vez llamado este servicio el scheduler desalojara al tanque y ejecutar a la proxima 
 tarea mientras se encarga de colocar la mina anti-tanque en su lugar. \\
-   \item Lanzar Misil: Los tanques tvenen ca ̃
-nones que les permiten disparar balas a sus enemigos, ahora,
+   \item Lanzar Misil: Los tanques tienen cañones que les permiten disparar balas a sus enemigos, ahora,
 como los disparos seran dirigidos a posiciones precisas del mapa, los llamaremos misiles. \\
-Dicho esto, este servicio permitir ́a lanzar misiles a posiciones de el mapa direccionadas
+Dicho esto, este servicio permitir a lanzar misiles a posiciones de el mapa direccionadas
 de forma relativa a la posicion del tanque. Los valores posibles para x e y no pueden
 superar en modulo el tamaño maximo de el mapa, es decir 50.\\
 El buffer donde se almacena el misil debe ser un rango dentro del area mapeada por la
@@ -29,8 +29,8 @@ fısica idenfiticada por las coordenadas x e y dentro de el mapa. Una vez lanzad
 el scheduler dara paso a la proxima tarea.\\
    \item Mover: El codigo de cada tanque esta mapeado incialmente en dos paginas de memoria a 
    partir de la direccion correspondiente a los 128mb de memoria virtual. A partir de esta
-direccion, luego de las dos paginas mapeadas inicialmente, se ir ́an mapeando las 
-paginas de memoria f ́ısica que el tanque recorra. Si a la hora de mapear una nueva pagina
+direccion, luego de las dos paginas mapeadas inicialmente, se iran mapeando las 
+paginas de memoria fısica que el tanque recorra. Si a la hora de mapear una nueva pagina
 fısica, esta esta ya esta mapeada dentro del espacio del tanque, entonces no se mapea
 nuevamente.
   \end{itemize}
