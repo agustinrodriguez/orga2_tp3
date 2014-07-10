@@ -52,62 +52,15 @@ _isr%1:
     cli
     xor ecx, ecx
     mov ecx, %1
-    ;xchg bx,bx
-    ;hago los q tengo en pila
-    mov [estado_error], eax ; EAX
-    mov eax, ds
-    mov [estado_error+52], eax ;ds
-     ;mov eax, eip
-    pop eax ; error code
-
-    pop eax
-    mov [estado_error+32], eax ;eip
-    ;mov eax, cs
-    pop eax 
-    mov [estado_error+48], eax ;cs
-   ; mov eax, ds 
-
-    pop eax
-    mov [estado_error+72], eax ;eflags
-
-    push eax ; alineo pila
-
-    mov eax, ebx
-    mov [estado_error+4], eax
-    mov eax, ecx
-    mov [estado_error+8], eax
-    mov eax, edx    
-    mov [estado_error+12], eax
-    mov eax, esi
-    mov [estado_error+16], eax
-    mov eax, edi
-    mov [estado_error+20], eax
-    mov eax, ebp
-    mov [estado_error+24], eax
-    mov eax, esp
-    mov [estado_error+28], eax
-    mov eax, cr0
-    mov [estado_error+36], eax
-    mov eax, cr2
-    mov [estado_error+40], eax
-    mov eax, cr3
-    mov [estado_error+44], eax
-    mov eax, es
-    mov [estado_error+56], eax
-    mov eax, fs
-    mov [estado_error+60], eax
-    mov eax, gs
-    mov [estado_error+64], eax
-    mov eax, ss    ;mov eax, ss
-    mov [estado_error+68], eax
-
-    push ecx
-  ;  call imprimir_desalojo
-    pop ecx
+ 
     mov ecx, %1
     push ecx
     call guardar_desalojo
     pop ecx
+    call dame_actual
+    push eax
+    call imprimo_tss
+    add esp, 4
   ;  call print_tablaerror
     call matar_tarea_actual
     call vuelvo_idle
@@ -300,7 +253,12 @@ int_teclado:
     out 0x61, al            ;Vuelvo a como estaba antes el controlador.
     and ah, 0x80            ;me quedo con el valor sacandole el 80 
     jnz .fin_teclado
-    
+    mov ecx, cr0
+    mov [estado_error+36], ecx
+    mov ecx, cr2
+    mov [estado_error+40], ecx
+    mov ecx, cr3
+    mov [estado_error+44], ecx
     MOV ebx, 0x00
     jmp .losQueSiSeUsan
 
@@ -309,56 +267,64 @@ int_teclado:
     dec eax
     push eax
     call imprimo_tss
-    pop eax
+    ;pop eax
+    add esp,4
     jmp .fin_teclado
 
 .el2:
     dec eax
     push eax
     call imprimo_tss
-    pop eax
+    ;pop eax
+    add esp,4
     jmp .fin_teclado
 
 .el3:
     dec eax
     push eax
     call imprimo_tss
-    pop eax
+    ;pop eax
+    add esp,4
     jmp .fin_teclado
 
 .el4:
     dec eax
     push eax
     call imprimo_tss
-    pop eax
+    ;pop eax
+    add esp,4
     jmp .fin_teclado
 
 .el5:
     dec eax
     push eax
     call imprimo_tss
-    pop eax
+    ;pop eax
+    add esp,4
     jmp .fin_teclado
 
 .el6:
     dec eax
     push eax
     call imprimo_tss
-    pop eax
+    ;pop eax
+    add esp,4
     jmp .fin_teclado
 
 .el7:
     dec eax
     push eax
     call imprimo_tss
-    pop eax
+    ;pop eax
+    add esp,4
     jmp .fin_teclado
 
 .el8:
     dec eax
     push eax
     call imprimo_tss
-    pop eax
+    ;pop eax
+    add esp,4
     jmp .fin_teclado
 
 .elp:
@@ -371,14 +337,16 @@ int_teclado:
     mov [contador_pause],eax
     push eax
     call cambiar_estado
-    pop eax
+    ;pop eax
+    add esp,4
     jmp .fin_teclado
 
 .continuo:
     MOV EAX, 0
     push eax
     call cambiar_estado
-    pop eax
+    ;pop eax
+    add esp,4
     jmp .fin_teclado
 
 .losQueSiSeUsan:

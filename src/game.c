@@ -133,6 +133,7 @@ unsigned int game_mover(unsigned int id, direccion d) {
 
     if (tablero[tanque_actual->fila][tanque_actual->col] == -1) {
     	guardar_desalojo(52);
+        imprimo_tss(dame_actual());
         matar_tarea_actual();
     	pintar_tanque_destruido(tanque_actual);
         tablero[tanque_actual->fila][tanque_actual->col] = 0;

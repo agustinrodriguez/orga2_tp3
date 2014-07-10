@@ -123,13 +123,7 @@ start:
     call gdt_set_tss ; primero inicializo las entradas de la gdt de las tsss
     call tss_inicializar
     
-    ;xor eax, eax
-    ;call get_cr3_task
-    ;xchg bx, bx
-    ;mov cr3, eax
-    ;call caracter_pintado
-    ;xchg bx, bx
-
+    
     ; Inicializar tss de la tarea Idle
     
     ; Inicializar tss de las tanques
@@ -144,22 +138,12 @@ start:
         call game_inicializar
     ; Cargar IDT
     lidt [IDT_DESC]
-    ;con esto supuestamente me queda remapeadas las irq
- ;       xchg bx, bx
-  ;  xor edx, edx
-  ;  xor eax, eax
-  ;  xor ecx, ecx
-  ;  mov eax, 4
-  ;  mov ecx, 0
-    ; xchg bx, bx
-    ; div ecx
-
     ; Configurar controlador de interrupciones
     
     ; pintar posiciones inciales de tanques
     
     ; Cargar tarea inicial
-    ; xchg bx, bx               0000 1110   000
+ ;               0000 1110   000
     mov ax, 0x70 ; GDT_IDX_TAREA_INICIAL ; 0x0E * 8 = 0111 0000 = 0x70
     ltr ax
 
@@ -168,7 +152,7 @@ start:
     call resetear_pic
     call habilitar_pic
     sti ; habilitamos interrupciones
-    ;nop
+  
     ; Saltar a la primera tarea: Idle
     jmp 0x78:0x0 ; GDT_IDX_TAREA_1  ;0x0F * 8 = 0111 1000 
 
