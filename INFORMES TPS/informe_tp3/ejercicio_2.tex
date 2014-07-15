@@ -11,9 +11,8 @@ de alguna forma todas las interrupciones posibles. Algunas de estas son definida
 \end{itemize}
 
 En isr.asm se encuentra el c\'odigo donde atendemos estas interrupciones. Saliendo de las 3 interrupciones mencionadas arriba (clock, teclado, syscall),
-todas las interrupciones seran atendidas de una forma similar (para esto usamos un macro). Se realizan las escrituras pertinentes en pantalla y despues se desalojara la 
-tarea que la causo. Es importante notar que no todas las interrupciones se imprimen igual, pues algunas traen opcode, asi que en pantalla tenemos un array que nos indica
-cuales instrucciones tienen opcode y cuales no.
+todas las interrupciones serán atendidas de una forma similar (para esto usamos un macro). Se realizan las escrituras pertinentes en pantalla y despues se desalojara la 
+tarea que la causo.
 
 La estructura de una entrada de la idt, definida en idt.h, es la siguiente:\\
 \begin{itemize}

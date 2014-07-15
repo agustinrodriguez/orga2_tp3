@@ -7,13 +7,14 @@ Conceptualmente nos imaginamos al Scheduler teniendo:
  \item Un array donde guardamos el contexto de todas las tareas incluyendo la Idle.
 \end{enumerate}
 
-Corrida tarea:\\
+Por ejemplo, en el siguiente gráfico se muestra que corre tarea 1 y hace un syscall, y por lo tanto se salta a la Idle:\\
 \begin{center}
-%\includegraphics[scale=0.7]{imagenes/cicloBasicoTareas.png} 
+\includegraphics[scale=0.6]{imagenes/SchedulerSyscall.jpg} 
 \end{center}
 
+Luego, estando en la idle, llega un tick de reloj y avanza a la siguiente tarea:\\
 \begin{center}
-%\includegraphics[scale=0.7]{imagenes/corridaFlags.png} 
+\includegraphics[scale=0.6]{imagenes/SchedulerTick.jpg} 
 \end{center}
 
 

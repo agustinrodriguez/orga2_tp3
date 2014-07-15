@@ -3,7 +3,7 @@ Como ya sabemos, el procesador inicia en ''modo real'', el cual direcciona a 1 M
 Por eso necesitamos que el procesador pase a ''modo protegido'', para direccionar a m\'as memoria y poder manejar distintos niveles de protecci\'on. Nuestro kernel se encargar\'a de hacer esto.\\
 \\
 Antes de iniciar en modo protegido, es imprescindible tener bien configurado la Tabla de Descriptores Globales, la cual contiene a los descriptores de segmento, con el fin de definir caracter\'isticas de varias \'areas de la memoria.\\
-En el enunciado se piden una segmentacion flat, con 4 segmentos que deben direccionar a 1.75 GB: 2 para c\'odigo de nivel 0 y 3 respectivamente, y 2 para datos, de nivel 0 y 3 tambi\'en.\\
+En el enunciado se piden una segmentacion flat, con 4 segmentos que deben direccionar a 733 MB: 2 para c\'odigo de nivel 0 y 3 respectivamente, y 2 para datos, de nivel 0 y 3 tambi\'en.\\
 
 La estructura de un descriptor de segmento es la siguiente:\\
 \begin{itemize}

@@ -1,0 +1,21 @@
+Para manejar toda la lógica del juego, los cambios en la pantalla y los mapeos correspondientes tenemos una estructura
+llamada Game. Básicamente se encarga de las 3 posibles acciones de una tarea: minar, mover y lanzar misiles.
+Tiene guardado internamente una matriz tablero, donde almacenamos el estado del juego actual. 
+Ni bien comienza el juego, procedemos a inicializarlo: ponemos todos los valores de la matriz tablero en 0
+y distruibuimos las tareas a lo largo y ancho del mapa. Para indicar que el tanque está en cierta posición,
+en la matriz tablero ubicamos el número del tanque en la posición correspondiente.
+
+\begin{enumerate}
+ \item \textbf{Minar:} Recibimos la posición relativa al tanque que quiere minar y calculamos la posición que le corresponde
+ al tablero y con esa, colocamos el valor -1 en el tablero (arbitrario, indica que es una mina) y la dibujamos en pantalla.
+ \item \textbf{Misil:} Recibimos la posición relativa a donde lanzar el misil, y además recibimos la dirección desde dónde se copiará el misil (buffer)
+ y su tamaño.
+ Esta acción es similar a lo que llamamos virus, ya que en caso de caer dicho misil en una parte del código de otro tanque se lo pisará y cambiará,
+ generando un posible error en ese tanque cuando vaya a ejecutarse ese código.
+ \item \textbf{Mover:} Para realizar esta función del juego utilizamos un struct tanque, el cual tiene su posición columna y fila.
+ Lo que hacemos es incrementar o decrementa el valor fila y/o columna según corresponda la dirección pasada como parámetro.
+ A su vez dentro de este struct tenemos la ultima dirección virtual mapeada, y se la aumentamos siempre y cuando se mueva a una posicion donde no estaba.
+ En caso de haber una superposición con otro tanque no ocurrirá nada (solo se mostrara en pantalla con una x). En cambio si en esa posición 
+ el tablero$_{[fila],[columna]}$ es igual a -1, el tanque explotará y dejara de andar, ya que como dijimos anteriormente el -1 indica 
+ que hay una mina en esa posición..
+\end{enumerate}

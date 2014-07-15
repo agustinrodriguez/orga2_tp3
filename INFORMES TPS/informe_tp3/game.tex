@@ -8,13 +8,14 @@ en la matriz tablero ubicamos el número del tanque en la posición correspondie
 \begin{enumerate}
  \item \textbf{Minar:} Recibimos la posición relativa al tanque que quiere minar y calculamos la posición que le corresponde
  al tablero y con esa, colocamos el valor -1 en el tablero (arbitrario, indica que es una mina) y la dibujamos en pantalla.
- \item \textbf{Misil:}En esta funcion, copiamos a un cierto destino dado en parte por parametro(por parametro nos dan cuanto se movera el misil de nuestra
- posicion actual)la porcion de codigo que nos dan por parametro.
- Esto, similar a lo conocido como virus, en caso de caer dicho misil en una parte del codigo de otro tanque se lo borrara o cambiara,
- generando un posible error en ese tanque.
- \item \textbf{Mover:} Para realizar esta funcion del juego utilizamos un struct tanque, el cual tiene su posicion columna y fila,
- lo que hacemos es incrementar o decrementa el valor fila y/o columna segun corresponda. A su vez dentro de este struct tenemos
- la ultima direccion virtual mapeada, y se la aumentamos siempre y cuando se mueva a una posicion donde no estaba.
- En caso de haber una superposicion con otro tanque no ocurrira nada, en cambio si en esa posicion el tablero$_{[fila],[columna]}$
- es igual a -1, el tanque explotara y dejara de andar.
+ \item \textbf{Misil:} Recibimos la posición relativa a donde lanzar el misil, y además recibimos la dirección desde dónde se copiará el misil (buffer)
+ y su tamaño.
+ Esta acción es similar a lo que llamamos virus, ya que en caso de caer dicho misil en una parte del código de otro tanque se lo pisará y cambiará,
+ generando un posible error en ese tanque cuando vaya a ejecutarse.
+ \item \textbf{Mover:} Para realizar esta función del juego utilizamos un struct tanque, el cual tiene su posición columna y fila.
+ Lo que hacemos es incrementar o decrementa el valor fila y/o columna según corresponda la dirección pasada como parámetro.
+ A su vez dentro de este struct tenemos la ultima dirección virtual mapeada, y se la aumentamos siempre y cuando se mueva a una posicion donde no estaba.
+ En caso de haber una superposición con otro tanque no ocurrirá nada (solo se mostrara en pantalla con una x). En cambio si en esa posición 
+ el tablero$_{[fila],[columna]}$ es igual a -1, el tanque explotará y dejara de andar, ya que como dijimos anteriormente el -1 indica 
+ que hay una mina en esa posición..
 \end{enumerate}
