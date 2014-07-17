@@ -23,7 +23,7 @@
   }
   while(1) { __asm __volatile("mov $7, %%eax":::"eax"); }
 }*/
-void pisar(unsigned int m);
+
 void task() {
     /* Tarea 3 */
   unsigned int i,j;
@@ -37,9 +37,8 @@ void task() {
       for(j=0;j<24;j++){
         for(i=0;i<47;i++) {
           syscall_misil( 1, 0, 512, 512);
-          unsigned int mapo = syscall_mover(E);
+          syscall_mover(E);
           syscall_misil( 0, -1, 512, 512);
-          pisar(mapo-0x1000+1);
           if (j == 0){
             syscall_minar(S);
           }
@@ -50,13 +49,8 @@ void task() {
   syscall_mover(N);
   syscall_mover(N);
 }
-    while(1) { __asm __volatile("mov $7, %%eax":::"eax"); }
-}
-
-void pisar(unsigned int m) {
-  unsigned int i;
-  char* p = (char*)m;
-  for(i=0;i<PAGE_SIZE;i++) {
-    p[i]=0xcd;
+ while(1){
+    syscall_minar(E);
   }
+    while(1) { __asm __volatile("mov $7, %%eax":::"eax"); }
 }
