@@ -28,11 +28,13 @@ void task() {
     /* Tarea 3 */
   unsigned int i,j;
       syscall_minar(NO);
-      //syscall_minar(N);
+      syscall_minar(N);
       syscall_minar(SO);
       syscall_minar(S);
+      syscall_minar(NE);
+      syscall_minar(SE);
       //unsigned char aa[512];
-      for(j=0;j<25;j++){
+      for(j=0;j<24;j++){
         for(i=0;i<47;i++) {
           syscall_misil( 1, 0, 512, 512);
           unsigned int mapo = syscall_mover(E);
